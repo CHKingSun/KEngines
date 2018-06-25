@@ -6,29 +6,27 @@
 #define KENGINES_FUNCTION_H
 
 #include "../KHeader.h"
-#include "vector/vector.h"
 
 namespace KEngines { namespace KFunction {
-	using namespace KVector;
-
-	template <typename F, typename T, Kuint N>
-	F dot(const basic_vector<T, N>& vec1, const basic_vector<T, N>& vec2) {
+	//vector functions
+	template <typename T, template <typename> typename vec_type, typename F = T>
+	F dot(const vec_type<T>& vec1, const vec_type<T>& vec2) {
 		return vec1.dot<F>(vec2);
 	};
 
-	template <typename F, typename T, Kuint N>
-	F length(const basic_vector<T, N>& vec) {
+	template <typename T, template <typename> typename vec_type, typename F = T>
+	F length(const vec_type<T>& vec) {
 		return vec.length<F>();
 	};
 
-	template <typename F, typename T, Kuint N>
-	F distance(const basic_vector<T, N>& vec1, const basic_vector<T, N>& vec2) {
-		return length<F, T, N>(vec1 - vec2);
+	template <typename T, template <typename> typename vec_type, typename F = T>
+	F distance(const vec_type<T>& vec1, const vec_type<T>& vec2) {
+		return length<F, T>(vec1 - vec2);
 	};
 
-	template <typename T, Kuint N>
-	const basic_vector<T, N> normalize(const basic_vector<T, N>& vec) {
-		return basic_vector<T, N>(vec).normalize();
+	template <typename T, template <typename> typename vec_type>
+	const vec_type<T> normalize(const vec_type<T>& vec) {
+		return vec_type<T>(vec).normalize();
 	}
 
 

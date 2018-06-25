@@ -23,9 +23,6 @@
     <ClInclude Include="src\KHeader.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\math\vector\vector.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="src\math\function.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -33,6 +30,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="src\math\vector\vec3.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\vector\vec4.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
