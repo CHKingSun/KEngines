@@ -151,6 +151,7 @@
     <ClInclude Include="src\KHeader.h" />
     <ClInclude Include="src\math\function.h" />
     <ClInclude Include="src\math\vector\vec2.h" />
+    <ClInclude Include="src\math\vector\vec3.h" />
     <ClInclude Include="src\math\vector\vector.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

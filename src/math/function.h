@@ -27,8 +27,8 @@ namespace KEngines { namespace KFunction {
 	};
 
 	template <typename T, Kuint N>
-	basic_vector<T, N> normalize(basic_vector<T, N> vec) {
-		return vec.normalize();
+	const basic_vector<T, N> normalize(const basic_vector<T, N>& vec) {
+		return basic_vector<T, N>(vec).normalize();
 	}
 
 

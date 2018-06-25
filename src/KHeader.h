@@ -68,34 +68,38 @@ namespace KEngines {
 
 	//Fundamental functions
 	template <typename T>
-	T abs(const T &c) {
+	T abs(const T& c) {
 		return c >= static_cast<T>(0) ? c : -c;
 	}
 	template <typename T>
-	Kboolean isZero(const T &c) {
+	Kboolean isZero(const T& c) {
 		return abs(c) <= static_cast<T>(EPSILON_E6);
 	}
 	template <typename T>
-	const T& min(const T &a, const T &b) {
+	Kboolean isNan(const T& c) {
+		return isnan(c) || isinf(c);
+	}
+	template <typename T>
+	const T& min(const T& a, const T& b) {
 		return a < b ? a : b;
 	}
 	template <typename T>
-	const T& max(const T &a, const T &b) {
+	const T& max(const T& a, const T& b) {
 		return a > b ? a : b;
 	}
 	template <typename T>
-	T clamp(const T &val, const T &min, const T &max) {
+	T clamp(const T& val, const T& min, const T& max) {
 		if (max < min) return static_cast<T>(KNAN);
 		if (val > max) return max;
 		if (val < min) return min;
 		return val;
 	}
 	template <typename T, typename F = Kfloat>
-	F toDegree(const T &radian) {
+	F toDegree(const T& radian) {
 		return F(radian) * static_cast<F>(180) / static_cast<F>(PI);
 	}
 	template <typename T, typename F = Kfloat>
-	F toRadian(const T &degree) {
+	F toRadian(const T& degree) {
 		return F(degree) * static_cast<F>(PI) / static_cast<F>(180);
 	}
 }

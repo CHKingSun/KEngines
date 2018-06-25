@@ -14,32 +14,43 @@ namespace KEngines { namespace KVector {
 	//define a basic vector template struct
 	template <typename T, Kuint N>
 	struct basic_vector {
-	protected:
 		template <typename T, Kuint N>
 		friend std::istream& operator >> (std::istream &is, basic_vector<T, N>& v);
 		template <typename T, Kuint N>
 		friend std::ostream& operator<<(std::ostream &os, const basic_vector<T, N>& v);
 
-		virtual inline T& at(Kuint n) = 0;
-		virtual inline const T& at(Kuint n)const = 0;
-		basic_vector<T, N>() = default;
+	protected:
+		T values[N];
 
 	public:
+		basic_vector<T, N>() { set(static_cast<T>(0)); }
+		basic_vector<T, N>(const basic_vector<T, N>& v) { this->operator=(v); }
 
 		inline Kuint dimension()const {
 			return N;
 		}
 
-		virtual inline const T* data()const = 0;
+		inline const T* data()const {
+			return values;
+		}
 		//return reference, for assign
-		virtual inline T& operator[](Kuint n) = 0;
+		inline T& operator[](Kuint n) {
+			assert(n >= 0 && n < N);
+			return this->values[n];
+		}
 		//for const object, just get value.
-		virtual inline const T& operator[](Kuint n)const = 0;
-		virtual inline void set(const T& c) = 0;
+		inline const T& operator[](Kuint n)const {
+			assert(n >= 0 && n < N);
+			return this->values[n];
+		}
+		virtual inline void set(const T& c) {
+			for (Kuint i = 0; i < N; ++i)
+				this->values[i] = c;
+		}
 
 		inline Kboolean operator==(const basic_vector<T, N>& v)const {
 			for(Kuint i = 0; i < N; ++i)
-				if (this->at(i) != v.at(i))
+				if (this->values[i] != v.values[i])
 					return false;
 			return true;
 		}
@@ -49,40 +60,40 @@ namespace KEngines { namespace KVector {
 
 		inline basic_vector<T, N>& operator=(const basic_vector<T, N>& v) {
 			for (Kuint i = 0; i < N; ++i)
-				this->at(i) = v.at(i);
+				this->values[i] = v.values[i];
 			return *this;
 		}
 		inline basic_vector<T, N>& operator+=(const basic_vector<T, N>& v) {
 			for (Kuint i = 0; i < N; ++i)
-				this->at(i) += v.at(i);
+				this->values[i] += v.values[i];
 			return *this;
 		}
 		inline basic_vector<T, N>& operator-=(const basic_vector<T, N>& v) {
 			for (Kuint i = 0; i < N; ++i)
-				this->at(i) -= v.at(i);
+				this->values[i] -= v.values[i];
 			return *this;
 		}
 		inline basic_vector<T, N>& operator*=(const basic_vector<T, N>& v) {
 			for (Kuint i = 0; i < N; ++i)
-				this->at(i) *= v.at(i);
+				this->values[i] *= v.values[i];
 			return *this;
 		}
 		inline basic_vector<T, N>& operator/=(const basic_vector<T, N>& v) {
 			for (Kuint i = 0; i < N; ++i)
-				this->at(i) /= v.at(i);
+				this->values[i] /= v.values[i];
 			return *this;
 		}
 
 		template <typename C>
 		inline basic_vector<T, N>& operator/=(const C& c) {
 			for (Kuint i = 0; i < N; ++i)
-				this->at(i) /= c;
+				this->values[i] /= c;
 			return *this;
 		}
 		template <typename C>
 		inline basic_vector<T, N>& operator*=(const C& c) {
 			for (Kuint i = 0; i < N; ++i)
-				this->at(i) /= c;
+				this->values[i] /= c;
 			return *this;
 		}
 
@@ -94,7 +105,7 @@ namespace KEngines { namespace KVector {
 		inline F dot(const basic_vector<T, N>& v)const {
 			F ret = 0;
 			for (Kuint i = 0; i < N; ++i)
-				ret += this->at(i) * v.at(i);
+				ret += this->values[i] * v.values[i];
 			return ret;
 		}
 		inline basic_vector<T, N>& normalize() {
@@ -107,53 +118,53 @@ namespace KEngines { namespace KVector {
 
 	//note: basic_vector is a abstract struct,
 	//and can not be initialized directly
-	//template <typename T, Kuint N>
-	//basic_vector<T, N> operator-(const basic_vector<T, N>& v) {
-	//	return basic_vector<T, N>() -= v;
-	//}
-	//template <typename T, Kuint N>
-	//basic_vector<T, N> operator+(const basic_vector<T, N>& v1,
-	//	const basic_vector<T, N>& v2) {
-	//	return basic_vector<T, N>(v1) += v2;
-	//}
-	//template <typename T, Kuint N>
-	//basic_vector<T, N> operator-(const basic_vector<T, N>& v1,
-	//	const basic_vector<T, N>& v2) {
-	//	return basic_vector<T, N>(v1) -= v2;
-	//}
-	//template <typename T, Kuint N>
-	//basic_vector<T, N> operator*(const basic_vector<T, N>& v1,
-	//	const basic_vector<T, N>& v2) {
-	//	return basic_vector<T, N>(v1) *= v2;
-	//}
-	//template <typename T, Kuint N>
-	//basic_vector<T, N> operator/(const basic_vector<T, N>& v1,
-	//	const basic_vector<T, N>& v2) {
-	//	return basic_vector<T, N>(v1) /= v2;
-	//}
-	//template <typename T, Kuint N, typename C>
-	//basic_vector<T, N> operator*(const basic_vector<T, N>& v, const C& c) {
-	//	return basic_vector<T, N>(v) *= c;
-	//};
-	//template <typename T, Kuint N, typename C>
-	//basic_vector<T, N> operator*(const C& c, const basic_vector<T, N>& v) {
-	//	return basic_vector<T, N>(v) *= c;
-	//};
-	//template <typename T, Kuint N, typename C>
-	//basic_vector<T, N> operator/(const basic_vector<T, N>& v, const C& c) {
-	//	return basic_vector<T, N>(v) /= c;
-	//};
+	template <typename T, Kuint N>
+	const basic_vector<T, N> operator-(const basic_vector<T, N>& v) {
+		return basic_vector<T, N>() -= v;
+	}
+	template <typename T, Kuint N>
+	const basic_vector<T, N> operator+(const basic_vector<T, N>& v1,
+		const basic_vector<T, N>& v2) {
+		return basic_vector<T, N>(v1) += v2;
+	}
+	template <typename T, Kuint N>
+	const basic_vector<T, N> operator-(const basic_vector<T, N>& v1,
+		const basic_vector<T, N>& v2) {
+		return basic_vector<T, N>(v1) -= v2;
+	}
+	template <typename T, Kuint N>
+	const basic_vector<T, N> operator*(const basic_vector<T, N>& v1,
+		const basic_vector<T, N>& v2) {
+		return basic_vector<T, N>(v1) *= v2;
+	}
+	template <typename T, Kuint N>
+	const basic_vector<T, N> operator/(const basic_vector<T, N>& v1,
+		const basic_vector<T, N>& v2) {
+		return basic_vector<T, N>(v1) /= v2;
+	}
+	template <typename T, Kuint N, typename C>
+	const basic_vector<T, N> operator*(const basic_vector<T, N>& v, const C& c) {
+		return basic_vector<T, N>(v) *= c;
+	};
+	template <typename T, Kuint N, typename C>
+	const basic_vector<T, N> operator*(const C& c, const basic_vector<T, N>& v) {
+		return basic_vector<T, N>(v) *= c;
+	};
+	template <typename T, Kuint N, typename C>
+	const basic_vector<T, N> operator/(const basic_vector<T, N>& v, const C& c) {
+		return basic_vector<T, N>(v) /= c;
+	};
 
 	template <typename T, Kuint N>
 	std::istream& operator>>(std::istream &is, basic_vector<T, N>& v) {
 		for (Kuint i = 0; i < N; ++i)
-			is >> v.at(i);
+			is >> v.values[i];
 		return is;
 	}
 	template <typename T, Kuint N>
 	std::ostream& operator<<(std::ostream &os, const basic_vector<T, N>& v) {
 		for (Kuint i = 0; i < N; ++i) {
-			os << v.at(i);
+			os << v.values[i];
 			if (i != N - 1) os << " ";
 		}
 		return os;
