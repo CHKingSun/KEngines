@@ -37,8 +37,8 @@ const std::string RES_PATH = "./res/";
 #include <iomanip>
 #define glCall(x)	x; \
 					glCheckError(#x, __FILE__, __LINE__);
-void glClearError() { while (glGetError() != GL_NO_ERROR); } //抛弃当前所有错误;
-bool glCheckError(const char* fun, const char* file, int line) {
+static void glClearError() { while (glGetError() != GL_NO_ERROR); } //抛弃当前所有错误;
+static bool glCheckError(const char* fun, const char* file, int line) {
 	GLenum error;
 	if ((error = glGetError()) != GL_NO_ERROR) {
 		std::cerr << "OpenGL error at: " << fun << " in file: " << file << " at line: " << line

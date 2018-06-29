@@ -19,7 +19,7 @@ namespace KEngines { namespace KVector{
 			struct { T s, t; };
 		};
 
-		gvec2(const T& c = static_cast<T>(0)) : x(c), y(c) {}
+		explicit gvec2(const T& c = static_cast<T>(0)) : x(c), y(c) {}
 		gvec2(const gvec2<T>& v) : x(v.x), y(v.y) {}
 		gvec2(const T& x, const T& y) : x(x), y(y) {}
 

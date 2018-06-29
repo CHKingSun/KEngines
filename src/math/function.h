@@ -29,7 +29,6 @@ namespace KEngines { namespace KFunction {
 		return vec_type<T>(vec).normalize();
 	}
 
-
 } }
 
 #endif // !KENGINES_FUNCTION_H

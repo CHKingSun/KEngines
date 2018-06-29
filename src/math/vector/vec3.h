@@ -17,7 +17,7 @@ namespace KEngines { namespace KVector {
 			struct { T r, g, b; };
 		};
 
-		gvec3(const T& c = static_cast<T>(0)) : x(c), y(c), z(c) {}
+		explicit gvec3(const T& c = static_cast<T>(0)) : x(c), y(c), z(c) {}
 		gvec3(const gvec3<T>& v) : x(v.x), y(v.y), z(v.z) {}
 		gvec3(const gvec2<T>& v, const T& c) : x(v.x), y(v.y), z(c) {}
 		gvec3(const T& x, const T& y, const T& z) : x(x), y(y), z(z) {}
