@@ -29,6 +29,52 @@ namespace KEngines { namespace KFunction {
 		return vec_type<T>(vec).normalize();
 	}
 
+	template <typename T, template <typename> typename vec_type, typename F = T>
+	vec_type<T> faceforward(const vec_type<T> &N, const vec_type<T> &I, const vec_type<T> Nref) {
+		if (dot<T, vec_type, F>(Nref, I) < static_cast<F>(0)) {
+			return N;
+		}
+		else {
+			return -N;
+		}
+	};
+
+	template <typename T, template <typename> typename vec_type>
+	vec_type<T> reflect(const vec_type<T> &I, const vec_type<T> &N) {
+		const vec_type<T> n = normalize(N);
+		return I - static_cast<T>(2) * dot(n, I) * n;
+	};
+
+	template <typename T, template <typename> typename vec_type, typename F = T>
+	vec_type<T> refract(const vec_type<T> &I, const vec_type<T> &N, const F &eta) {
+		const vec_type<T> i = normalize(I);
+		const vec_type<T> n = normalize(N);
+		const F cosni = dot<T, vec_type, F>(n, i);
+
+		const F k = static_cast<F>(1) - eta * eta * (static_cast<F>(1) - cosni * cosni);
+		if (k < static_cast<F>(0)) {
+			return vec_type<T>();
+		}
+		else {
+			return eta * i - (eta * cosni + sqrt(k)) * n;
+		}
+	};
+
+	//matrix functions
+	template <typename T, template<typename> typename mat_type>
+	mat_type<T> inverse(const mat_type<T> &m) {
+		return mat_type<T>(m).inverse();
+	};
+
+	template <typename T, template<typename> typename mat_type>
+	mat_type<T> transpose(const mat_type<T> &m) {
+		return mat_type<T>(m).transpose();
+	};
+
+	template <typename T, template<typename> typename mat_type, typename F = T>
+	F determinant(const mat_type<T> &m) {
+		return m.determinant();
+	};
 } }
 
 #endif // !KENGINES_FUNCTION_H

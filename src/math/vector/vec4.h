@@ -24,68 +24,68 @@ namespace KEngines { namespace KVector {
 		gvec4<T>(const gvec3<T>& v, const T& c) : x(v.x), y(v.y), z(v.z), w(c) {}
 		gvec4<T>(const T& x, const T& y, const T& z, const T& w) : x(x), y(y), z(z), w(w) {}
 
-		inline const T& operator[](Kuint n)const {
+		const T& operator[](Kuint n)const {
 			assert(n < 4);
 			return this->values[n];
 		}
-		inline T& operator[](Kuint n) {
+		T& operator[](Kuint n) {
 			assert(n < 4);
 			return this->values[n];
 		}
-		inline const T& data()const {
+		const T& data()const {
 			return this->values;
 		}
 
-		inline void set(const T& x, const T& y, const T& z, const T& w) {
+		void set(const T& x, const T& y, const T& z, const T& w) {
 			this->x = x;
 			this->y = y;
 			this->z = z;
 			this->w = w;
 		}
-		inline void set(const T& c) {
+		void set(const T& c) {
 			this->x = c;
 			this->y = c;
 			this->z = c;
 			this->w = c;
 		}
 
-		inline Kboolean operator==(const gvec4<T>& v)const {
+		Kboolean operator==(const gvec4<T>& v)const {
 			return this->x == v.x && this->y == v.y
 				&& this->z == v.z && this->w == w;
 		}
-		inline Kboolean operator!=(const gvec4<T>& v)const {
+		Kboolean operator!=(const gvec4<T>& v)const {
 			return !(this->operator==(v));
 		}
 
-		inline gvec4<T>& operator=(const gvec4<T>& v) {
+		gvec4<T>& operator=(const gvec4<T>& v) {
 			this->x = v.x;
 			this->y = v.y;
 			this->z = v.z;
 			this->w = v.w;
 			return *this;
 		}
-		inline gvec4<T>& operator+=(const gvec4<T>& v) {
+		gvec4<T>& operator+=(const gvec4<T>& v) {
 			this->x += v.x;
 			this->y += v.y;
 			this->z += v.z;
 			this->w += v.w;
 			return *this;
 		}
-		inline gvec4<T>& operator-=(const gvec4<T>& v) {
+		gvec4<T>& operator-=(const gvec4<T>& v) {
 			this->x -= v.x;
 			this->y -= v.y;
 			this->z -= v.z;
 			this->w -= v.w;
 			return *this;
 		}
-		inline gvec4<T>& operator*=(const gvec4<T>& v) {
+		gvec4<T>& operator*=(const gvec4<T>& v) {
 			this->x *= v.x;
 			this->y *= v.y;
 			this->z *= v.z;
 			this->w *= v.w;
 			return *this;
 		}
-		inline gvec4<T>& operator/=(const gvec4<T>& v) {
+		gvec4<T>& operator/=(const gvec4<T>& v) {
 			this->x /= v.x;
 			this->y /= v.y;
 			this->z /= v.z;
@@ -94,7 +94,7 @@ namespace KEngines { namespace KVector {
 		}
 
 		template <typename C>
-		inline gvec4<T>& operator+=(const C& c) {
+		gvec4<T>& operator+=(const C& c) {
 			this->x += c;
 			this->y += c;
 			this->z += c;
@@ -102,7 +102,7 @@ namespace KEngines { namespace KVector {
 			return *this;
 		}
 		template <typename C>
-		inline gvec4<T>& operator-=(const C& c) {
+		gvec4<T>& operator-=(const C& c) {
 			this->x -= c;
 			this->y -= c;
 			this->z -= c;
@@ -110,7 +110,7 @@ namespace KEngines { namespace KVector {
 			return *this;
 		}
 		template <typename C>
-		inline gvec4<T>& operator*=(const C& c) {
+		gvec4<T>& operator*=(const C& c) {
 			this->x *= c;
 			this->y *= c;
 			this->z *= c;
@@ -118,7 +118,7 @@ namespace KEngines { namespace KVector {
 			return *this;
 		}
 		template <typename C>
-		inline gvec4<T>& operator/=(const C& c) {
+		gvec4<T>& operator/=(const C& c) {
 			this->x /= c;
 			this->y /= c;
 			this->z /= c;
@@ -127,11 +127,11 @@ namespace KEngines { namespace KVector {
 		}
 
 		template <typename F = T>
-		inline F length()const {
+		F length()const {
 			return static_cast<F>(sqrt(this->dot(*this)));
 		}
 		template <typename F = T>
-		inline F dot(const gvec4<T>& v)const {
+		F dot(const gvec4<T>& v)const {
 			auto ret = static_cast<F>(0);
 			ret += this->x * v.x;
 			ret += this->y * v.y;
@@ -139,7 +139,7 @@ namespace KEngines { namespace KVector {
 			ret += this->w * v.w;
 			return ret;
 		}
-		inline gvec4<T>& normalize() {
+		gvec4<T>& normalize() {
 			const T len = length();
 			if (!isZero(len)) this->operator/=(len);
 			else this->set(static_cast<T>(KNAN));
@@ -208,7 +208,7 @@ namespace KEngines { namespace KVector {
 		return os;
 	}
 
-	using vec4 = gvec4<Kfloat>;
+	using  vec4 = gvec4<Kfloat>;
 	using dvec4 = gvec4<Kdouble>;
 	using ivec4 = gvec4<Kint>;
 	using uvec4 = gvec4<Kuint>;

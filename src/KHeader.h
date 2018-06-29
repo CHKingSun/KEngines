@@ -31,7 +31,7 @@
 #endif
 #define KNAN nan("Nan")
 
-const std::string RES_PATH = "./res/";
+//const std::string RES_PATH = "./res/";
 
 //debug
 #include <iomanip>
@@ -50,7 +50,7 @@ static bool glCheckError(const char* fun, const char* file, int line) {
 
 namespace KEngines {
 
-	//some basic type
+	//Some basic type
 	using Kint = int;
 	using Kuint = unsigned int;
 	using Kfloat = float;
@@ -88,17 +88,23 @@ namespace KEngines {
 		return a > b ? a : b;
 	}
 	template <typename T>
+	void swap(T& a, T& b) {
+		T t = a;
+		a = b;
+		b = t;
+	}
+	template <typename T>
 	T clamp(const T& val, const T& min, const T& max) {
 		if (max < min) return static_cast<T>(KNAN);
 		if (val > max) return max;
 		if (val < min) return min;
 		return val;
 	}
-	template <typename T, typename F = Kfloat>
+	template <typename T, typename F = T>
 	F toDegree(const T& radian) {
 		return F(radian) * static_cast<F>(180) / static_cast<F>(PI);
 	}
-	template <typename T, typename F = Kfloat>
+	template <typename T, typename F = T>
 	F toRadian(const T& degree) {
 		return F(degree) * static_cast<F>(PI) / static_cast<F>(180);
 	}

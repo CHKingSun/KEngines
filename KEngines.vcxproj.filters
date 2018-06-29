@@ -18,9 +18,6 @@
     <ClCompile Include="src\main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\math\matrix\mat3.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\KHeader.h">
@@ -39,6 +36,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="src\math\matrix\mat3.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\transform.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\matrix\mat4.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

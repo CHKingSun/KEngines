@@ -23,97 +23,97 @@ namespace KEngines { namespace KVector{
 		gvec2(const gvec2<T>& v) : x(v.x), y(v.y) {}
 		gvec2(const T& x, const T& y) : x(x), y(y) {}
 
-		inline const T& operator[](Kuint n)const {
+		const T& operator[](Kuint n)const {
 			assert(n < 2);
 			return this->values[n];
 		}
-		inline T& operator[](Kuint n) {
+		T& operator[](Kuint n) {
 			assert(n < 2);
 			return this->values[n];
 		}
-		inline const T* data()const {
+		const T* data()const {
 			return this->values;
 		 }
 
-		inline void set(const T& x, const T& y) {
+		void set(const T& x, const T& y) {
 			this->x = x;
 			this->y = y;
 		}
-		inline void set(const T& c) {
+		void set(const T& c) {
 			this->x = c;
 			this->y = c;
 		}
 
-		inline Kboolean operator==(const gvec2<T>& v)const {
+		Kboolean operator==(const gvec2<T>& v)const {
 			return this->x == v.x && this->y == v.y;
 		}
-		inline Kboolean operator!=(const gvec2<T>& v)const {
+		Kboolean operator!=(const gvec2<T>& v)const {
 			return !(this->operator==(v));
 		}
 
-		inline gvec2<T>& operator=(const gvec2<T>& v) {
+		gvec2<T>& operator=(const gvec2<T>& v) {
 			this->x = v.x;
 			this->y = v.y;
 			return *this;
 		}
-		inline gvec2<T>& operator+=(const gvec2<T>& v) {
+		gvec2<T>& operator+=(const gvec2<T>& v) {
 			this->x += v.x;
 			this->y += v.y;
 			return *this;
 		}
-		inline gvec2<T>& operator-=(const gvec2<T>& v) {
+		gvec2<T>& operator-=(const gvec2<T>& v) {
 			this->x -= v.x;
 			this->y -= v.y;
 			return *this;
 		}
-		inline gvec2<T>& operator*=(const gvec2<T>& v) {
+		gvec2<T>& operator*=(const gvec2<T>& v) {
 			this->x *= v.x;
 			this->y *= v.y;
 			return *this;
 		}
-		inline gvec2<T>& operator/=(const gvec2<T>& v) {
+		gvec2<T>& operator/=(const gvec2<T>& v) {
 			this->x /= v.x;
 			this->y /= v.y;
 			return *this;
 		}
 
 		template <typename C>
-		inline gvec2<T>& operator+=(const C& c) {
+		gvec2<T>& operator+=(const C& c) {
 			this->x += c;
 			this->y += c;
 			return *this;
 		}
 		template <typename C>
-		inline gvec2<T>& operator-=(const C& c) {
+		gvec2<T>& operator-=(const C& c) {
 			this->x -= c;
 			this->y -= c;
 			return *this;
 		}
 		template <typename C>
-		inline gvec2<T>& operator*=(const C& c) {
+		gvec2<T>& operator*=(const C& c) {
 			this->x *= c;
 			this->y *= c;
 			return *this;
 		}
 		template <typename C>
-		inline gvec2<T>& operator/=(const C& c) {
+		gvec2<T>& operator/=(const C& c) {
 			this->x /= c;
 			this->y /= c;
 			return *this;
 		}
 
 		template <typename F = T>
-		inline F length()const {
+		F length()const {
 			return static_cast<F>(sqrt(this->dot(*this)));
 		}
 		template <typename F = T>
-		inline F dot(const gvec2<T>& v)const {
+		F dot(const gvec2<T>& v)const {
 			auto ret = static_cast<F>(0);
 			ret += this->x * v.x;
 			ret += this->y * v.y;
 			return ret;
 		}
-		inline gvec2<T>& normalize() {
+		gvec2<T>& normalize() {
 			const T len = length();
 			if (!isZero(len)) this->operator/=(len);
 			else this->set(static_cast<T>(KNAN));
@@ -182,7 +182,7 @@ namespace KEngines { namespace KVector{
 		return os;
 	}
 
-	using vec2 = gvec2<Kfloat>;
+	using  vec2 = gvec2<Kfloat>;
 	using dvec2 = gvec2<Kdouble>;
 	using ivec2 = gvec2<Kint>;
 	using uvec2 = gvec2<Kuint>;
