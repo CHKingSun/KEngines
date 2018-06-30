@@ -162,6 +162,7 @@
     <ClInclude Include="src\math\function.h" />
     <ClInclude Include="src\math\matrix\mat3.h" />
     <ClInclude Include="src\math\matrix\mat4.h" />
+    <ClInclude Include="src\math\matrix\quaternion.h" />
     <ClInclude Include="src\math\transform.h" />
     <ClInclude Include="src\math\vector\vec2.h" />
     <ClInclude Include="src\math\vector\vec3.h" />

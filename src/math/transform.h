@@ -13,8 +13,8 @@ namespace KEngines { namespace KFunction {
 
 	template <typename T>
 	gmat4<T> translate(const gvec3<T>& v) {
-		auto zero = static_cast<T>(0);
-		auto one = static_cast<T>(1);
+		const auto zero = static_cast<T>(0);
+		const auto one = static_cast<T>(1);
 
 		return gmat4<T>(
 			one, zero, zero, v.x,
@@ -51,8 +51,8 @@ namespace KEngines { namespace KFunction {
 
 	template <typename T>
 	gmat4<T> scale(const gvec3<T>& v) {
-		auto zero = static_cast<T>(0);
-		auto one = static_cast<T>(1);
+		const auto zero = static_cast<T>(0);
+		const auto one = static_cast<T>(1);
 
 		return gmat4<T>(
 			v.x, zero, zero, zero,
@@ -70,8 +70,8 @@ namespace KEngines { namespace KFunction {
 		const gvec3<T> u(normalize(gvec3<T>::cross(n, up)));
 		const gvec3<T> v(normalize(gvec3<T>::cross(u, n)));
 
-		auto zero = static_cast<T>(0);
-		auto one = static_cast<T>(1);
+		const auto zero = static_cast<T>(0);
+		const auto one = static_cast<T>(1);
 
 		return gmat4<T>(
 			 u.x,  u.y,  u.z, -dot(u, eye),

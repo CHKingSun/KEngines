@@ -44,5 +44,8 @@
     <ClInclude Include="src\math\matrix\mat4.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="src\math\matrix\quaternion.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

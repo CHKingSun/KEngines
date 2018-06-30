@@ -25,7 +25,7 @@ namespace KEngines { namespace KMatrix {
 
 	public: 
 		gmat3(const T& c = static_cast<T>(1)) {
-			auto zero = static_cast<T>(0);
+			const auto zero = static_cast<T>(0);
 
 			this->values[0] = Row(c, zero, zero);
 			this->values[1] = Row(zero, c, zero);

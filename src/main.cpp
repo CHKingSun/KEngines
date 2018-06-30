@@ -4,6 +4,7 @@
 #include "math/vector/vec4.h"
 #include "math/matrix/mat3.h"
 #include "math/matrix/mat4.h"
+#include "math/matrix/quaternion.h"
 #include "math/function.h"
 #include "math/transform.h"
 
@@ -40,8 +41,10 @@ int main() {
 	std::cout << perspective(60.f, 1.f, 0.1f, 100.f) << std::endl << std::endl;
 
 	std::cout << unProject(vec3(1.f), translate(vec3(0, 1, 0)),
-				perspective(60.f, 1.f, 0.1f, 100.f), ivec4(0, 0, 100, 100))
+				 perspective(60.f, 1.f, 0.1f, 100.f), ivec4(0, 0, 100, 100))
 			  << std::endl << std::endl;
+
+	std::cout << (-quaternion(90.f, vec3(1, 0, 0)) * vec3(2, 2, 0)) << std::endl;
 
 	std::cin.get();
 	return 0;

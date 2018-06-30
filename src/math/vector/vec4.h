@@ -18,11 +18,11 @@ namespace KEngines { namespace KVector {
 			struct { T s, t, p, q; };
 		};
 
-		explicit gvec4<T>(const T& c = static_cast<T>(0)) : x(c), y(c), z(c), w(c) {}
-		gvec4<T>(const gvec4<T>& v) : x(v.x), y(v.y), z(v.z), w(v.w) {}
-		gvec4<T>(const gvec2<T>& v1, const gvec2<T>& v2) : x(v1.x), y(v1.y), z(v2.x), w(v2.y) {}
-		gvec4<T>(const gvec3<T>& v, const T& c) : x(v.x), y(v.y), z(v.z), w(c) {}
-		gvec4<T>(const T& x, const T& y, const T& z, const T& w) : x(x), y(y), z(z), w(w) {}
+		explicit gvec4(const T& c = static_cast<T>(0)) : x(c), y(c), z(c), w(c) {}
+		gvec4(const gvec4<T>& v) : x(v.x), y(v.y), z(v.z), w(v.w) {}
+		gvec4(const gvec2<T>& v1, const gvec2<T>& v2) : x(v1.x), y(v1.y), z(v2.x), w(v2.y) {}
+		gvec4(const gvec3<T>& v, const T& c) : x(v.x), y(v.y), z(v.z), w(c) {}
+		gvec4(const T& x, const T& y, const T& z, const T& w) : x(x), y(y), z(z), w(w) {}
 
 		const T& operator[](Kuint n)const {
 			assert(n < 4);
