@@ -17,7 +17,7 @@ int main() {
 	std::cout << "Hello KEngines!" << std::endl;
 	std::cout << vec2().normalize() << std::endl;
 	std::cout << (vec2(2.f) * 3) << std::endl;
-	std::cout << (3 * vec2(2.f)) << std::endl;
+	//std::cout << (3 * vec2(2.f)).normalize() << std::endl;
 	std::cout << normalize(vec4(2.f)) << std::endl;
 	std::cout << vec3::cross(vec3(1.f, 0.f, 0.f), vec3(0.f, 0.f, 1.f)) << std::endl;
 
@@ -34,6 +34,14 @@ int main() {
 	std::cout << scale(vec3(1, 2, 3)) << std::endl << std::endl;
 
 	std::cout << lookAt(vec3(0, 0, 1), vec3(0, 0, 0), vec3(0, 1, 0)) << std::endl << std::endl;
+
+	std::cout << frustum(3.f, 4.f, 5.f, 6.f, 7.f, 8.f) << std::endl << std::endl;
+
+	std::cout << perspective(60.f, 1.f, 0.1f, 100.f) << std::endl << std::endl;
+
+	std::cout << unProject(vec3(1.f), translate(vec3(0, 1, 0)),
+				perspective(60.f, 1.f, 0.1f, 100.f), ivec4(0, 0, 100, 100))
+			  << std::endl << std::endl;
 
 	std::cin.get();
 	return 0;

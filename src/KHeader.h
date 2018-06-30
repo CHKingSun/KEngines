@@ -37,8 +37,8 @@
 #include <iomanip>
 #define glCall(x)	x; \
 					glCheckError(#x, __FILE__, __LINE__);
-static void glClearError() { while (glGetError() != GL_NO_ERROR); } //抛弃当前所有错误;
-static bool glCheckError(const char* fun, const char* file, int line) {
+inline void glClearError() { while (glGetError() != GL_NO_ERROR); } //抛弃当前所有错误;
+inline bool glCheckError(const char* fun, const char* file, int line) {
 	GLenum error;
 	if ((error = glGetError()) != GL_NO_ERROR) {
 		std::cerr << "OpenGL error at: " << fun << " in file: " << file << " at line: " << line
