@@ -156,8 +156,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\render\Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Log.h" />
     <ClInclude Include="src\KHeader.h" />
     <ClInclude Include="src\math\function.h" />
     <ClInclude Include="src\math\matrix\mat3.h" />
@@ -167,6 +169,7 @@
     <ClInclude Include="src\math\vector\vec2.h" />
     <ClInclude Include="src\math\vector\vec3.h" />
     <ClInclude Include="src\math\vector\vec4.h" />
+    <ClInclude Include="src\render\Shader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

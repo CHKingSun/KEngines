@@ -118,7 +118,7 @@ namespace KEngines { namespace KFunction {
 	gmat4<T> perspective(const T& fovy, const T& aspect, const T& zNear, const T& zFar) {
 		if ((aspect <= static_cast<T>(EPSILON_E6)) &&
 			zFar <= zNear && fovy <= 0 && fovy > 180.0)
-			return gmat4<T>(KNAN);
+			return gmat4<T>(KNAN<T>);
 
 		const auto cot = static_cast<T>(1.0 / tan(toRadian<Kdouble>(fovy / 2.0)));
 		gmat4<T> m(0);

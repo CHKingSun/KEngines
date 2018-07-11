@@ -6,7 +6,6 @@
 #define KENGINES_VEC2_H
 
 #include "../../KHeader.h"
-
 #include <cassert>
 #include <iosfwd>
 
@@ -116,7 +115,7 @@ namespace KEngines { namespace KVector{
 		gvec2<T>& normalize() {
 			const T len = length();
 			if (!isZero(len)) this->operator/=(len);
-			else this->set(static_cast<T>(KNAN));
+			else this->set(KNAN<T>);
 			return *this;
 		}
 	};

@@ -64,7 +64,7 @@ namespace KEngines { namespace KMatrix {
 			this->values[3] = Row(zero, zero, zero, one);
 		}
 
-		const T *data()const {
+		const T* data()const {
 			return &this->values[0][0];
 		}
 		const Row& operator[](Kuint n)const {
@@ -223,7 +223,7 @@ namespace KEngines { namespace KMatrix {
 			if (fabs(detM) <= 1E-6) {
 				for (auto &value : values)
 					for (int j = 0; j < 4; ++j)
-						value[j] = static_cast<T>(KNAN);
+						value[j] = KNAN<T>;
 				return *this;
 			}
 

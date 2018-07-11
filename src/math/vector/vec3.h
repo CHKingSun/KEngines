@@ -30,7 +30,7 @@ namespace KEngines { namespace KVector {
 			assert(n < 3);
 			return this->values[n];
 		}
-		const T& data()const {
+		const T* data()const {
 			return this->values;
 		}
 
@@ -127,7 +127,7 @@ namespace KEngines { namespace KVector {
 		gvec3<T>& normalize() {
 			const T len = length();
 			if (!isZero(len)) this->operator/=(len);
-			else this->set(static_cast<T>(KNAN));
+			else this->set(KNAN<T>);
 			return *this;
 		}
 
@@ -148,7 +148,7 @@ namespace KEngines { namespace KVector {
 			auto len1 = this->length<F>();
 			auto len2 = v.length<F>();
 
-			if (isZero(len1) || isZero(len2)) return static_cast<F>(KNAN);
+			if (isZero(len1) || isZero(len2)) return KNAN<F>;
 
 			return toDegree<F>(acos(dot<F>(v) / (len1 * len2)));
 		}

@@ -8,13 +8,13 @@
 //A definition header for project.
 
 //Standard header
-#include <iostream>
 #include <string>
 #include <cmath>
+#include <limits>
 
 //OpenGL header
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
+//#include <GL/glew.h>
+//#include <GLFW/glfw3.h>
 
 #define IMGUI_ENABLE
 #ifdef IMGUI_ENABLE
@@ -25,28 +25,12 @@
 
 //Some definition
 #define EPSILON_E6 1E-6
-#define PI 3.1415926535
-#ifdef KNAN
-#undef KNAN
-#endif
-#define KNAN nan("Nan")
+#define PI 3.14159265358979323846
+
+template <typename T>
+static const T KNAN = std::numeric_limits<T>::quiet_NaN();
 
 //const std::string RES_PATH = "./res/";
-
-//debug
-#include <iomanip>
-#define glCall(x)	x; \
-					glCheckError(#x, __FILE__, __LINE__);
-inline void glClearError() { while (glGetError() != GL_NO_ERROR); } //抛弃当前所有错误;
-inline bool glCheckError(const char* fun, const char* file, int line) {
-	GLenum error;
-	if ((error = glGetError()) != GL_NO_ERROR) {
-		std::cerr << "OpenGL error at: " << fun << " in file: " << file << " at line: " << line
-			<< " with error code: 0x0" << std::setbase(16) << error << std::endl;
-		return false;
-	}
-	return true;
-}
 
 namespace KEngines {
 
@@ -64,7 +48,7 @@ namespace KEngines {
 	using Kchar = char;
 	using Kuchar = unsigned char;
 	using Kbyte = char;
-	using Kubyte = unsigned char;
+	using Kubyte = unsigned char; 
 
 	//Fundamental functions
 	template <typename T>
@@ -95,7 +79,7 @@ namespace KEngines {
 	}
 	template <typename T>
 	T clamp(const T& val, const T& min, const T& max) {
-		if (max < min) return static_cast<T>(KNAN);
+		if (max < min) return KNAN<T>;
 		if (val > max) return max;
 		if (val < min) return min;
 		return val;

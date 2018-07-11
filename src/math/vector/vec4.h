@@ -32,7 +32,7 @@ namespace KEngines { namespace KVector {
 			assert(n < 4);
 			return this->values[n];
 		}
-		const T& data()const {
+		const T* data()const {
 			return this->values;
 		}
 
@@ -142,7 +142,7 @@ namespace KEngines { namespace KVector {
 		gvec4<T>& normalize() {
 			const T len = length();
 			if (!isZero(len)) this->operator/=(len);
-			else this->set(static_cast<T>(KNAN));
+			else this->set(KNAN<T>);
 			return *this;
 		}
 	};

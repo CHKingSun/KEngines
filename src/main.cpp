@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "KHeader.h"
 #include "math/vector/vec2.h"
 #include "math/vector/vec3.h"
@@ -7,6 +9,10 @@
 #include "math/matrix/quaternion.h"
 #include "math/function.h"
 #include "math/transform.h"
+
+#include "render/Shader.h"
+
+#include "Log.h"
 
 int main() {
 	using namespace KEngines;
@@ -45,6 +51,10 @@ int main() {
 			  << std::endl << std::endl;
 
 	std::cout << (-quaternion(90.f, vec3(1, 0, 0)) * vec3(2, 2, 0)) << std::endl;
+
+	Log::d("Hello World! %d, %lf\n", 1, 2.f);
+	Log::debug("Hello World! ", vec3(), std::setbase(8), 20);
+	Log::debug("Hello template!");
 
 	std::cin.get();
 	return 0;
