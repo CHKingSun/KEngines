@@ -1,5 +1,8 @@
 #include <iostream>
 
+//#define TEST
+#ifdef TEST
+
 #include "KHeader.h"
 #include "math/vector/vec2.h"
 #include "math/vector/vec3.h"
@@ -9,12 +12,10 @@
 #include "math/matrix/quaternion.h"
 #include "math/function.h"
 #include "math/transform.h"
-
 #include "render/Shader.h"
-
 #include "Log.h"
 
-int main() {
+void test() {
 	using namespace KEngines;
 	using namespace KEngines::KVector;
 	using namespace KEngines::KMatrix;
@@ -47,8 +48,8 @@ int main() {
 	std::cout << perspective(60.f, 1.f, 0.1f, 100.f) << std::endl << std::endl;
 
 	std::cout << unProject(vec3(1.f), translate(vec3(0, 1, 0)),
-				 perspective(60.f, 1.f, 0.1f, 100.f), ivec4(0, 0, 100, 100))
-			  << std::endl << std::endl;
+		perspective(60.f, 1.f, 0.1f, 100.f), ivec4(0, 0, 100, 100))
+		<< std::endl << std::endl;
 
 	std::cout << (-quaternion(90.f, vec3(1, 0, 0)) * vec3(2, 2, 0)) << std::endl;
 
@@ -57,5 +58,77 @@ int main() {
 	Log::debug("Hello template!");
 
 	std::cin.get();
+}
+
+#endif
+
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+
+#include "KHeader.h"
+#include "Log.h"
+
+#include "render/Shader.h"
+#include "buffer/VertexArray.h"
+
+
+int main() {
+	using namespace KEngines;
+	using namespace KEngines::KBuffer;
+	using namespace KEngines::KRenderer;
+
+	if (glfwInit() == GLFW_FALSE) {
+		Log::error("GLFW initialized failed!");
+		return -1;
+	}
+
+	GLFWwindow* window = glfwCreateWindow(1200, 900, "KEngines", nullptr, nullptr);
+	if (!window) {
+		Log::error("Create window failed!");
+		glfwTerminate();
+		return -2;
+	}
+
+	glfwMakeContextCurrent(window);
+	glfwSwapInterval(1);
+
+	if (glewInit() != GLEW_OK) {
+		Log::error("GLEW initialized failed!");
+		return -3;
+	}
+
+	Log::info("OpenGL Version: ", glGetString(GL_VERSION));
+
+	Kfloat vertices[] = {
+		-0.5f, -0.5f, 0.f,
+		 0.5f, -0.5f, 0.f,
+		 0.5f,  0.5f, 0.f,
+						 
+		 0.5f,  0.5f, 0.f,
+		-0.5f,  0.5f, 0.f,
+		-0.5f, -0.5f, 0.f,
+	};
+
+	auto vao = new VertexArray();
+	auto vbo = new VertexBuffer(VERTEX, sizeof(vertices), vertices);
+	vao->allocate(vbo, 0, 3); //a_position's location is 0.
+	vao->bind();
+	vao->enableVertexArray();
+
+	auto shader = new Shader(RES_PATH + "test.vert", RES_PATH + "test.frag");
+	shader->bind();
+
+	glClearColor(0.27f, 0.27f, 0.27f, 1.f);
+	while (!glfwWindowShouldClose(window)) {
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+
+		glfwSwapBuffers(window);
+		glfwPollEvents();
+	}
+
+	glfwTerminate();
+
 	return 0;
 }

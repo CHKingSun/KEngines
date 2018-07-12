@@ -16,7 +16,7 @@
 //#include <GL/glew.h>
 //#include <GLFW/glfw3.h>
 
-#define IMGUI_ENABLE
+//#define IMGUI_ENABLE
 #ifdef IMGUI_ENABLE
 //IMGUI header you should put all imgui file into project for some files need to compile
 #include <imgui.h>
@@ -30,7 +30,7 @@
 template <typename T>
 static const T KNAN = std::numeric_limits<T>::quiet_NaN();
 
-//const std::string RES_PATH = "./res/";
+const std::string RES_PATH = "./res/";
 
 namespace KEngines {
 
@@ -76,6 +76,10 @@ namespace KEngines {
 		T t = a;
 		a = b;
 		b = t;
+	}
+	template <typename T, typename F>
+	T mix(const T& val1, const T& val2, const F& a) {
+		return val1 * a + val2 * (static_cast<F>(1) - a);
 	}
 	template <typename T>
 	T clamp(const T& val, const T& min, const T& max) {

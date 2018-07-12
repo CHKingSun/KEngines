@@ -159,6 +159,8 @@
     <ClCompile Include="src\render\Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\buffer\VertexArray.h" />
+    <ClInclude Include="src\buffer\VertexBuffer.h" />
     <ClInclude Include="src\Log.h" />
     <ClInclude Include="src\KHeader.h" />
     <ClInclude Include="src\math\function.h" />
