@@ -69,26 +69,26 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)lib\glew\include;$(SolutionDir)lib\glfw\include;$(SolutionDir)lib\stb;$(SolutionDir)lib\imgui;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)lib\glew\lib;$(SolutionDir)lib\glfw\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)lib\glew\include;$(SolutionDir)lib\glfw\include;$(SolutionDir)lib\stb;$(SolutionDir)lib\imgui;$(SolutionDir)lib\freetype\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)lib\glew\lib;$(SolutionDir)lib\glfw\lib;$(SolutionDir)lib\freetype\lib;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)out\$(Platform)\$(Configuration)</OutDir>
     <IntDir>$(SolutionDir)out\intermediates\$(Platform)\$(Configuration)</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(SolutionDir)lib\glew\include;$(SolutionDir)lib\glfw\include;$(SolutionDir)lib\stb;$(SolutionDir)lib\imgui;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)lib\glew\lib;$(SolutionDir)lib\glfw\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)lib\glew\include;$(SolutionDir)lib\glfw\include;$(SolutionDir)lib\stb;$(SolutionDir)lib\imgui;$(SolutionDir)lib\freetype\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)lib\glew\lib;$(SolutionDir)lib\glfw\lib;$(SolutionDir)lib\freetype\lib;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)out\$(Platform)\$(Configuration)</OutDir>
     <IntDir>$(SolutionDir)out\intermediates\$(Platform)\$(Configuration)</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)lib\glew\include;$(SolutionDir)lib\glfw\include;$(SolutionDir)lib\stb;$(SolutionDir)lib\imgui;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)lib\glew\lib\x64;$(SolutionDir)lib\glfw\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)lib\glew\include;$(SolutionDir)lib\glfw\include;$(SolutionDir)lib\stb;$(SolutionDir)lib\imgui;$(SolutionDir)lib\freetype\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)lib\glew\lib\x64;$(SolutionDir)lib\glfw\lib\x64;$(SolutionDir)lib\freetype\lib\x64;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)out\$(Platform)\$(Configuration)</OutDir>
     <IntDir>$(SolutionDir)out\intermediates\$(Platform)\$(Configuration)</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)lib\glew\include;$(SolutionDir)lib\glfw\include;$(SolutionDir)lib\stb;$(SolutionDir)lib\imgui;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)lib\glew\lib\x64;$(SolutionDir)lib\glfw\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)lib\glew\include;$(SolutionDir)lib\glfw\include;$(SolutionDir)lib\stb;$(SolutionDir)lib\imgui;$(SolutionDir)lib\freetype\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)lib\glew\lib\x64;$(SolutionDir)lib\glfw\lib\x64;$(SolutionDir)lib\freetype\lib\x64;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)out\$(Platform)\$(Configuration)</OutDir>
     <IntDir>$(SolutionDir)out\intermediates\$(Platform)\$(Configuration)</IntDir>
   </PropertyGroup>
@@ -156,6 +156,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\object\Font.cpp" />
     <ClCompile Include="src\render\Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -171,7 +172,9 @@
     <ClInclude Include="src\math\vector\vec2.h" />
     <ClInclude Include="src\math\vector\vec3.h" />
     <ClInclude Include="src\math\vector\vec4.h" />
+    <ClInclude Include="src\object\Font.h" />
     <ClInclude Include="src\render\Shader.h" />
+    <ClInclude Include="src\util\StringUtil.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -85,6 +85,11 @@ namespace KEngines { namespace KRenderer {
 			glUniform1i(getLocation(name), value);
 		}
 
+		inline void bindUniform2i(const char* name, const ivec2& v)const {
+			if (!isValid()) return;
+			glUniform2iv(getLocation(name), 1, v.data());
+		}
+
 		inline void bindUniform1f(const char* name, Kfloat value)const {
 			if (!isValid()) return;
 			glUniform1f(getLocation(name), value);

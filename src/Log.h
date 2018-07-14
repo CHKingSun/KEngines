@@ -84,22 +84,79 @@ namespace KEngines {
 
 }
 
+#define KDEBUG
+#ifdef KDEBUG
+
 //Debug
 //OpenGL header
 #include <GL/glew.h>
 #define	glCall(x)	x; \
-					glCheckError(#x, __FILE__, __LINE__);
+					glCheckError(#x, __FILE__, __LINE__)
 
 inline void glClearError() { while (glGetError() != GL_NO_ERROR); } //discard all errors;
 inline bool glCheckError(const char* fun, const char* file, int line) {
 	GLenum error;
 	if ((error = glGetError()) != GL_NO_ERROR) {
 		KEngines::Log::error("OpenGL error at: ", fun, " in file: ", file, " at line: ",
-							line, " with error code: 0x0", std::setbase(16), error);
+			line, " with error code: 0x0", std::setbase(16), error);
 		return false;
 	}
 	return true;
 }
+
+
+static void GLAPIENTRY glDebugOutput(GLenum source,
+	GLenum type,
+	GLuint id,
+	GLenum severity,
+	GLsizei length,
+	const GLchar *message,
+	const void *userParam)
+{
+	if (id == 131169 || id == 131185 || id == 131218 || id == 131204) return;
+	// ignore these non-significant error codes
+
+	KEngines::Log::debug("---------------");
+	KEngines::Log::debug("Debug message (", id, "): ", message);
+
+	switch (source)
+	{
+	case GL_DEBUG_SOURCE_API:             KEngines::Log::debug("Source: API"); break;
+	case GL_DEBUG_SOURCE_WINDOW_SYSTEM:   KEngines::Log::debug("Source: Window System"); break;
+	case GL_DEBUG_SOURCE_SHADER_COMPILER: KEngines::Log::debug("Source: Shader Compiler"); break;
+	case GL_DEBUG_SOURCE_THIRD_PARTY:     KEngines::Log::debug("Source: Third Party"); break;
+	case GL_DEBUG_SOURCE_APPLICATION:     KEngines::Log::debug("Source: Application"); break;
+	case GL_DEBUG_SOURCE_OTHER:           KEngines::Log::debug("Source: Other"); break;
+	}
+
+	switch (type)
+	{
+	case GL_DEBUG_TYPE_ERROR:               KEngines::Log::debug("Type: Error"); break;
+	case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR: KEngines::Log::debug("Type: Deprecated Behaviour"); break;
+	case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:  KEngines::Log::debug("Type: Undefined Behaviour"); break;
+	case GL_DEBUG_TYPE_PORTABILITY:         KEngines::Log::debug("Type: Portability"); break;
+	case GL_DEBUG_TYPE_PERFORMANCE:         KEngines::Log::debug("Type: Performance"); break;
+	case GL_DEBUG_TYPE_MARKER:              KEngines::Log::debug("Type: Marker"); break;
+	case GL_DEBUG_TYPE_PUSH_GROUP:          KEngines::Log::debug("Type: Push Group"); break;
+	case GL_DEBUG_TYPE_POP_GROUP:           KEngines::Log::debug("Type: Pop Group"); break;
+	case GL_DEBUG_TYPE_OTHER:               KEngines::Log::debug("Type: Other"); break;
+	}
+
+	switch (severity)
+	{
+	case GL_DEBUG_SEVERITY_HIGH:         KEngines::Log::debug("Severity: high"); break;
+	case GL_DEBUG_SEVERITY_MEDIUM:       KEngines::Log::debug("Severity: medium"); break;
+	case GL_DEBUG_SEVERITY_LOW:          KEngines::Log::debug("Severity: low"); break;
+	case GL_DEBUG_SEVERITY_NOTIFICATION: KEngines::Log::debug("Severity: notification"); break;
+	}
+	KEngines::Log::debug();
+}
+
+#else
+
+#define glCall(x) x
+
+#endif // KDEBUG
 
 #endif // !KENGINES_DEBUG_H
 

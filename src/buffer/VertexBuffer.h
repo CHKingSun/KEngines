@@ -20,11 +20,11 @@ namespace KEngines { namespace KBuffer {
 		GLenum buffer_type;
 
 	public:
-		VertexBuffer(BufferType type, Ksize size, const void* data = nullptr):
-		buffer_type(type) {
+		VertexBuffer(BufferType type, Ksize size, const void* data = nullptr,
+					GLenum usage = GL_STATIC_DRAW): buffer_type(type) {
 			glGenBuffers(1, &buffer_id);
 			glBindBuffer(buffer_type, buffer_id);
-			glBufferData(buffer_type, size, data, GL_STATIC_DRAW);
+			glBufferData(buffer_type, size, data, usage);
 		}
 		~VertexBuffer() {
 			if (glIsBuffer(buffer_id)) glDeleteBuffers(1, &buffer_id);

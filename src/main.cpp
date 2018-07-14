@@ -65,24 +65,49 @@ void test() {
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include <unordered_map>
+
 #include "KHeader.h"
 #include "Log.h"
 
 #include "render/Shader.h"
 #include "buffer/VertexArray.h"
+#include "math/transform.h"
+#include "object/Font.h"
+#include "util/StringUtil.h"
 
+using namespace KEngines;
+using namespace KEngines::KVector;
+using namespace KEngines::KBuffer;
+using namespace KEngines::KRenderer;
+using namespace KEngines::KObject;
+using namespace KEngines::KUtil;
 
 int main() {
-	using namespace KEngines;
-	using namespace KEngines::KBuffer;
-	using namespace KEngines::KRenderer;
 
 	if (glfwInit() == GLFW_FALSE) {
 		Log::error("GLFW initialized failed!");
 		return -1;
 	}
 
-	GLFWwindow* window = glfwCreateWindow(1200, 900, "KEngines", nullptr, nullptr);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+#ifdef KDEBUG
+	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE); // comment this line in a release build!
+														// enable OpenGL debug context if context allows for debug context
+	GLint flags; glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
+	if (flags & GL_CONTEXT_FLAG_DEBUG_BIT)
+	{
+		glEnable(GL_DEBUG_OUTPUT);
+		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS); // makes sure errors are displayed synchronously
+		glDebugMessageCallback(glDebugOutput, nullptr);
+		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+	}
+#endif
+
+	Kuint s_width = 1200, s_height = 900;
+	GLFWwindow* window = glfwCreateWindow(s_width, s_height, "KEngines", nullptr, nullptr);
 	if (!window) {
 		Log::error("Create window failed!");
 		glfwTerminate();
@@ -99,30 +124,18 @@ int main() {
 
 	Log::info("OpenGL Version: ", glGetString(GL_VERSION));
 
-	Kfloat vertices[] = {
-		-0.5f, -0.5f, 0.f,
-		 0.5f, -0.5f, 0.f,
-		 0.5f,  0.5f, 0.f,
-						 
-		 0.5f,  0.5f, 0.f,
-		-0.5f,  0.5f, 0.f,
-		-0.5f, -0.5f, 0.f,
-	};
-
-	auto vao = new VertexArray();
-	auto vbo = new VertexBuffer(VERTEX, sizeof(vertices), vertices);
-	vao->allocate(vbo, 0, 3); //a_position's location is 0.
-	vao->bind();
-	vao->enableVertexArray();
-
-	auto shader = new Shader(RES_PATH + "test.vert", RES_PATH + "test.frag");
-	shader->bind();
+	Font consolas_font(RES_PATH + "fonts/Consolas.ttf", 128.f);
+	//consolas_font.loadText(stringToWString("你好，世界！"));
 
 	glClearColor(0.27f, 0.27f, 0.27f, 1.f);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	while (!glfwWindowShouldClose(window)) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		glDrawArrays(GL_TRIANGLES, 0, 6);
+		consolas_font.renderText(stringToWString("Hello, World!"), vec3(0.17f, 0.57f, 0.69f), 30, 40);
+		//consolas_font.renderText(stringToWString("你好，世界！"), vec3(0.17f, 0.57f, 0.69f), 30, 100);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();

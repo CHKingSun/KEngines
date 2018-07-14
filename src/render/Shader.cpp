@@ -32,7 +32,7 @@ namespace KEngines { namespace KRenderer {
 		fseek(file, 0, SEEK_SET);
 		fread(data, 1, length, file);
 		fclose(file);
-		content = std::string(data);
+		content = data;
 		//std::cout << content << std::endl;
 		delete[] data;
 		return true;
