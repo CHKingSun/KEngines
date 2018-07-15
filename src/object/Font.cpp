@@ -2,7 +2,7 @@
 
 namespace KEngines { namespace KObject {
 
-	const std::string Font::default_font_name("C:/Windows/Fonts/Arial.ttf");
+	const std::string Font::default_font_name("C:/Windows/Fonts/msyh.ttc");
 
 	Font::Font(const std::string& font_name /* = default_font_name */, Kfloat scale /* = 32.f */) :
 		font_name(font_name), scale(scale),

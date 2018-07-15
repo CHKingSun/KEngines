@@ -67,6 +67,9 @@ void test() {
 
 #include <unordered_map>
 
+#include <clocale>
+#include <locale>
+
 #include "KHeader.h"
 #include "Log.h"
 
@@ -83,7 +86,15 @@ using namespace KEngines::KRenderer;
 using namespace KEngines::KObject;
 using namespace KEngines::KUtil;
 
+void initLocale() {
+	Log::info("Local locale: ", std::locale().name().c_str());
+
+	std::setlocale(LC_CTYPE, "");
+}
+
 int main() {
+
+	initLocale();
 
 	if (glfwInit() == GLFW_FALSE) {
 		Log::error("GLFW initialized failed!");
@@ -106,8 +117,8 @@ int main() {
 	}
 #endif
 
-	Kuint s_width = 1200, s_height = 900;
-	GLFWwindow* window = glfwCreateWindow(s_width, s_height, "KEngines", nullptr, nullptr);
+	ivec2 s_size(1200, 900);
+	GLFWwindow* window = glfwCreateWindow(s_size.x, s_size.y, "KEngines", nullptr, nullptr);
 	if (!window) {
 		Log::error("Create window failed!");
 		glfwTerminate();
@@ -124,18 +135,37 @@ int main() {
 
 	Log::info("OpenGL Version: ", glGetString(GL_VERSION));
 
-	Font consolas_font(RES_PATH + "fonts/Consolas.ttf", 128.f);
-	//consolas_font.loadText(stringToWString("你好，世界！"));
+	glViewport(0, 0, s_size.x, s_size.y);
+	Font consolas_font(RES_PATH + "fonts/Consolas.ttf", 24.f);
+	Font kai_font(RES_PATH + "fonts/STXINGKAI.TTF", 24.f);
+	Font::setViewport(s_size);
+	kai_font.loadText(stringToWString("你好，世界！"));
+	kai_font.loadText(stringToWString("こんにちは，世界！"));
 
 	glClearColor(0.27f, 0.27f, 0.27f, 1.f);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	const std::wstring frame_display(stringToWString("Frame: "));
+	Kfloat last_time = glfwGetTime();
+	Kuint frame_count = 0;
+	Kuint frame_current = 0;
 	while (!glfwWindowShouldClose(window)) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		consolas_font.renderText(stringToWString("Hello, World!"), vec3(0.17f, 0.57f, 0.69f), 30, 40);
-		//consolas_font.renderText(stringToWString("你好，世界！"), vec3(0.17f, 0.57f, 0.69f), 30, 100);
+		Kfloat now_time = glfwGetTime();
+		++frame_count;
+		if (now_time - last_time >= 0.2f) {
+			last_time = now_time;
+			frame_current = frame_count * 5;
+			frame_count = 0;
+		}
+		consolas_font.renderText(frame_display + std::to_wstring(frame_current), vec3(0.17f, 0.57f, 0.69f), 6, 6);
+
+		kai_font.renderText(stringToWString("你好，世界！"), vec3(0.17f, 0.57f, 0.69f), 240, 120);
+		kai_font.renderText(stringToWString("こんにちは，世界！"), vec3(0.17f, 0.57f, 0.69f), 300, 150);
+		kai_font.renderText(stringToWString("Hello, World!"), vec3(0.17f, 0.57f, 0.69f), 360, 180);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();

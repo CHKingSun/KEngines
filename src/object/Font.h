@@ -39,6 +39,8 @@ namespace KEngines { namespace KObject {
 	};
 
 	//Maybe later it will be inherited form Object3D
+	//You should set the right font(which has the charater)
+	//if you want to display the right charater
 	class Font {
 	private:
 		static const std::string default_font_name;
@@ -56,7 +58,6 @@ namespace KEngines { namespace KObject {
 			static const auto shader = std::make_shared<const KRenderer::Shader>(
 				RES_PATH + "shaders/font.vert", RES_PATH + "shaders/font.frag");
 			shader->bind();
-			shader->bindUniform2i("s_size", ivec2(1200, 900));
 			return shader;
 		}
 
@@ -78,6 +79,10 @@ namespace KEngines { namespace KObject {
 		//Remember to enable blend before render.
 		void renderTextWithCheck(const std::wstring& text, const vec3& color,
 			Kfloat x, Kfloat y, Kfloat scale = 1.f)const;
+
+		inline static void setViewport(const ivec2& v) {
+			getShader()->bindUniform2i("s_size", v);
+		}
 	};
 } }
 
