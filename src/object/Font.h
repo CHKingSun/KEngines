@@ -44,6 +44,7 @@ namespace KEngines { namespace KObject {
 	class Font {
 	private:
 		static const std::string default_font_name;
+		static Kboolean is_font_use;
 
 		std::string font_name;
 		FILE* font_file;
@@ -54,13 +55,15 @@ namespace KEngines { namespace KObject {
 		KBuffer::VertexArray* vao;
 		KBuffer::VertexBuffer* vbo;
 
-		static const std::shared_ptr<const KRenderer::Shader> getShader() {
-			static const auto shader = std::make_shared<const KRenderer::Shader>(
-				RES_PATH + "shaders/font.vert", RES_PATH + "shaders/font.frag");
-			shader->bind();
+		static const KRenderer::Shader& getShader() {
+			static const KRenderer::Shader shader(RES_PATH + "shaders/font.vert", RES_PATH + "shaders/font.frag");
+			//How to delete once it constructed?
+			//Count mode?
+			shader.bind();
 			return shader;
 		}
 
+		void addCharacter(const stbtt_fontinfo& font_info, Kint c)const;
 		void loadBasicCharacters()const;
 
 	public:
@@ -81,7 +84,7 @@ namespace KEngines { namespace KObject {
 			Kfloat x, Kfloat y, Kfloat scale = 1.f)const;
 
 		inline static void setViewport(const ivec2& v) {
-			getShader()->bindUniform2i("s_size", v);
+			if(is_font_use) getShader().bindUniform2i("s_size", v);
 		}
 	};
 } }

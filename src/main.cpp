@@ -74,6 +74,7 @@ void test() {
 #include "Log.h"
 
 #include "render/Shader.h"
+#include "render/Window.h"
 #include "buffer/VertexArray.h"
 #include "math/transform.h"
 #include "object/Font.h"
@@ -96,53 +97,18 @@ int main() {
 
 	initLocale();
 
-	if (glfwInit() == GLFW_FALSE) {
-		Log::error("GLFW initialized failed!");
-		return -1;
-	}
+	auto window = new KRenderer::Window("KEngines");
 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-#ifdef KDEBUG
-	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE); // comment this line in a release build!
-														// enable OpenGL debug context if context allows for debug context
-	GLint flags; glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
-	if (flags & GL_CONTEXT_FLAG_DEBUG_BIT)
-	{
-		glEnable(GL_DEBUG_OUTPUT);
-		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS); // makes sure errors are displayed synchronously
-		glDebugMessageCallback(glDebugOutput, nullptr);
-		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
-	}
-#endif
+	auto test_font = new Font();
+	delete test_font;
 
-	ivec2 s_size(1200, 900);
-	GLFWwindow* window = glfwCreateWindow(s_size.x, s_size.y, "KEngines", nullptr, nullptr);
-	if (!window) {
-		Log::error("Create window failed!");
-		glfwTerminate();
-		return -2;
-	}
-
-	glfwMakeContextCurrent(window);
-	glfwSwapInterval(1);
-
-	if (glewInit() != GLEW_OK) {
-		Log::error("GLEW initialized failed!");
-		return -3;
-	}
-
-	Log::info("OpenGL Version: ", glGetString(GL_VERSION));
-
-	glViewport(0, 0, s_size.x, s_size.y);
 	Font consolas_font(RES_PATH + "fonts/Consolas.ttf", 24.f);
 	Font kai_font(RES_PATH + "fonts/STXINGKAI.TTF", 24.f);
-	Font::setViewport(s_size);
+	Font::setViewport(window->getWindowSize());
+
 	kai_font.loadText(stringToWString("你好，世界！"));
 	kai_font.loadText(stringToWString("こんにちは，世界！"));
 
-	glClearColor(0.27f, 0.27f, 0.27f, 1.f);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -151,8 +117,8 @@ int main() {
 	Kfloat last_time = glfwGetTime();
 	Kuint frame_count = 0;
 	Kuint frame_current = 0;
-	while (!glfwWindowShouldClose(window)) {
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	while (!window->closed()) {
+		window->clear();
 
 		Kfloat now_time = glfwGetTime();
 		++frame_count;
@@ -167,11 +133,10 @@ int main() {
 		kai_font.renderText(stringToWString("こんにちは，世界！"), vec3(0.17f, 0.57f, 0.69f), 300, 150);
 		kai_font.renderText(stringToWString("Hello, World!"), vec3(0.17f, 0.57f, 0.69f), 360, 180);
 
-		glfwSwapBuffers(window);
-		glfwPollEvents();
+		window->update();
 	}
 
-	glfwTerminate();
+	delete window;
 
 	return 0;
 }

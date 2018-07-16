@@ -1,5 +1,7 @@
 #include "Shader.h"
 
+#include <cstdio>
+
 namespace KEngines { namespace KRenderer {
 	Shader::Shader(): uniforms(new std::unordered_map<std::string, Kint>()) {
 		program = glCreateProgram();
@@ -20,18 +22,18 @@ namespace KEngines { namespace KRenderer {
 
 	Kboolean Shader::readFile(const std::string& filename, std::string& content) const {
 #if 1
-		FILE* file = fopen(filename.c_str(), "rt"); //read text
+		FILE* file = std::fopen(filename.c_str(), "rt"); //read text
 		if (file == nullptr) {
 			Log::error("File ", filename, " read failed!");
 			return false;
 		}
-		fseek(file, 0, SEEK_END);
-		unsigned long length = ftell(file) + 1;
+		std::fseek(file, 0, SEEK_END);
+		unsigned long length = std::ftell(file) + 1;
 		auto *data = new char[length];
 		memset(data, 0, length);
-		fseek(file, 0, SEEK_SET);
-		fread(data, 1, length, file);
-		fclose(file);
+		std::fseek(file, 0, SEEK_SET);
+		std::fread(data, 1, length, file);
+		std::fclose(file);
 		content = data;
 		//std::cout << content << std::endl;
 		delete[] data;

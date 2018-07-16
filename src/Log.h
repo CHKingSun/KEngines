@@ -35,34 +35,34 @@ namespace KEngines {
 		}
 
 		static void debug() {
-			std::cout << std::endl;
+			std::clog << std::endl;
 		}
 
 		template <typename T>
 		static void debug(const T& value) {
-			std::cout << value << std::endl;
-			//std::cout << value;
+			std::clog << value << std::endl;
+			//std::clog << value;
 			//debug();
 		}
 
 		template <typename T, typename... Ts>
 		static void debug(const T& value, const Ts&... args) {
-			std::cout << value;
+			std::clog << value;
 			debug(args...);
 		}
 
 		static void info() {
-			std::clog << std::endl;
+			std::cout << std::endl;
 		}
 
 		template <typename T>
 		static void info(const T& value) {
-			std::clog << value << std::endl;
+			std::cout << value << std::endl;
 		}
 
 		template <typename T, typename... Ts>
 		static void info(const T& value, const Ts&... args) {
-			std::clog << value;
+			std::cout << value;
 			info(args...);
 		}
 

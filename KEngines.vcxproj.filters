@@ -71,5 +71,8 @@
     <ClInclude Include="src\util\StringUtil.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="src\render\Window.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

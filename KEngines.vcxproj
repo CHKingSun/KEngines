@@ -174,6 +174,7 @@
     <ClInclude Include="src\math\vector\vec4.h" />
     <ClInclude Include="src\object\Font.h" />
     <ClInclude Include="src\render\Shader.h" />
+    <ClInclude Include="src\render\Window.h" />
     <ClInclude Include="src\util\StringUtil.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
