@@ -102,18 +102,18 @@ int main() {
 	auto test_font = new Font();
 	delete test_font;
 
-	Font consolas_font(RES_PATH + "fonts/Consolas.ttf", 24.f);
-	Font kai_font(RES_PATH + "fonts/STXINGKAI.TTF", 24.f);
+	auto consolas_font = new Font(RES_PATH + "fonts/Consolas.ttf", 24.f);
+	auto kai_font = new Font(RES_PATH + "fonts/STXINGKAI.TTF", 24.f);
 	Font::setViewport(window->getWindowSize());
 
-	kai_font.loadText(stringToWString("你好，世界！"));
-	kai_font.loadText(stringToWString("こんにちは，世界！"));
+	kai_font->loadText(L"你好，世界！");
+	kai_font->loadText(L"こんにちは，世界！");
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	const std::wstring frame_display(stringToWString("Frame: "));
+	const std::wstring frame_display(L"Frame: ");
 	Kfloat last_time = glfwGetTime();
 	Kuint frame_count = 0;
 	Kuint frame_current = 0;
@@ -127,15 +127,17 @@ int main() {
 			frame_current = frame_count * 5;
 			frame_count = 0;
 		}
-		consolas_font.renderText(frame_display + std::to_wstring(frame_current), vec3(0.17f, 0.57f, 0.69f), 6, 6);
+		consolas_font->renderText(frame_display + std::to_wstring(frame_current), vec3(0.17f, 0.57f, 0.69f), 6, 6);
 
-		kai_font.renderText(stringToWString("你好，世界！"), vec3(0.17f, 0.57f, 0.69f), 240, 120);
-		kai_font.renderText(stringToWString("こんにちは，世界！"), vec3(0.17f, 0.57f, 0.69f), 300, 150);
-		kai_font.renderText(stringToWString("Hello, World!"), vec3(0.17f, 0.57f, 0.69f), 360, 180);
+		kai_font->renderText(L"你好，世界！", vec3(0.17f, 0.57f, 0.69f), 240, 120);
+		kai_font->renderText(L"こんにちは，世界！", vec3(0.17f, 0.57f, 0.69f), 300, 150);
+		kai_font->renderText(L"Hello, World!", vec3(0.17f, 0.57f, 0.69f), 360, 180);
 
 		window->update();
 	}
 
+	delete consolas_font;
+	delete kai_font;
 	delete window;
 
 	return 0;

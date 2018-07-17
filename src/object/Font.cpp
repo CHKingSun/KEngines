@@ -3,7 +3,8 @@
 namespace KEngines { namespace KObject {
 
 	const std::string Font::default_font_name("C:/Windows/Fonts/msyh.ttc");
-	Kboolean Font::is_font_use = false;
+	KRenderer::Shader* Font::shader = nullptr;
+	Kuint Font::font_count = 0;
 
 	Font::Font(const std::string& font_name /* = default_font_name */, Kfloat scale /* = 32.f */) :
 		font_name(font_name), scale(scale),
@@ -23,11 +24,15 @@ namespace KEngines { namespace KObject {
 		std::fseek(font_file, 0, SEEK_END);
 		file_size = std::ftell(font_file);
 
-		is_font_use = true;
-
 		vao->allocate(vbo, 0, 4);
 
 		loadBasicCharacters();
+		
+		if (font_count == 0) {
+			assert(shader == nullptr, "Shader is not nullptr in Font!");
+			shader = new KRenderer::Shader(RES_PATH + "shaders/font.vert", RES_PATH + "shaders/font.frag");
+		}
+		++font_count;
 	}
 
 	Font::~Font() {
@@ -36,6 +41,12 @@ namespace KEngines { namespace KObject {
 		}
 		delete characters;
 		std::fclose(font_file);
+
+		--font_count;
+		if (font_count == 0) {
+			delete shader;
+			shader = nullptr;
+		}
 	}
 
 	void Font::addCharacter(const stbtt_fontinfo& font_info, Kint c)const {
@@ -117,10 +128,8 @@ namespace KEngines { namespace KObject {
 		Kfloat x, Kfloat y, Kfloat scale /* = 1.f */)const {
 		glActiveTexture(GL_TEXTURE0); //default actived texture
 		
-		//Use reference so that the shder would not be destructed!
-		const KRenderer::Shader& shader = getShader();
-		//The function has bind shader.
-		shader.bindUniform3f("text_color", color);
+		shader->bind();
+		shader->bindUniform3f("text_color", color);
 		vao->bind();
 		vao->enableVertexArray();
 		for (const auto& c : text) {
