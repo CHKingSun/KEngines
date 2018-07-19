@@ -29,7 +29,7 @@ namespace KEngines { namespace KObject {
 		loadBasicCharacters();
 		
 		if (font_count == 0) {
-			assert(shader == nullptr, "Shader is not nullptr in Font!");
+			assert(shader == nullptr);
 			shader = new KRenderer::Shader(RES_PATH + "shaders/font.vert", RES_PATH + "shaders/font.frag");
 		}
 		++font_count;
@@ -41,6 +41,9 @@ namespace KEngines { namespace KObject {
 		}
 		delete characters;
 		std::fclose(font_file);
+
+		delete vbo;
+		delete vao;
 
 		--font_count;
 		if (font_count == 0) {

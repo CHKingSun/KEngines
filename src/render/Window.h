@@ -31,9 +31,11 @@ namespace KEngines { namespace KRenderer {
 		Kboolean is_focus;
 
 		Kdouble run_time, pause_time;
+		Kdouble last_time;
+		Kuint frame_count, frame_current;
 
-		std::string title;
 		GLFWwindow* window;
+		std::string title;
 
 		Kboolean initGL() {
 			if (!glfwInit()) {
@@ -144,14 +146,24 @@ namespace KEngines { namespace KRenderer {
 		}
 
 		void update() {
-			if (is_active) {
-				run_time = glfwGetTime() - pause_time;
-			}
-			else {
-				pause_time = glfwGetTime() - run_time;
-			}
 			glfwSwapBuffers(window);
 			glfwPollEvents();
+
+			Kdouble now_time = glfwGetTime();
+			if (is_active) {
+				run_time = now_time - pause_time;
+			}
+			else {
+				pause_time = now_time - run_time;
+			}
+
+			++frame_count;
+			Kdouble delta_time = now_time - last_time;
+			if (delta_time >= 0.2f) {
+				last_time = now_time;
+				frame_current = (Kuint)((Kdouble)frame_count / delta_time);
+				frame_count = 0;
+			}
 		}
 
 		void setTitle(const std::string& title) {
@@ -166,6 +178,14 @@ namespace KEngines { namespace KRenderer {
 
 		inline const Kdouble getRunTime()const {
 			return run_time;
+		}
+
+		inline const Kdouble getCurrentTime()const {
+			return glfwGetTime();
+		}
+
+		inline const Kuint getCurrentFrame()const {
+			return frame_current;
 		}
 
 		inline const KVector::ivec2& getWindowSize()const {
