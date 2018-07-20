@@ -79,6 +79,7 @@ void test() {
 #include "math/transform.h"
 #include "object/Font.h"
 #include "util/StringUtil.h"
+#include "buffer/FrameBuffer.h"
 
 using namespace KEngines;
 using namespace KEngines::KVector;
@@ -99,31 +100,6 @@ int main() {
 
 	auto window = new KRenderer::Window("KEngines");
 
-	auto shader = new Shader(RES_PATH + "shaders/frame.vert", RES_PATH + "shaders/frame.frag");
-	shader->bind();
-
-	const Kfloat vertices[] = {
-		0.f,  0.f,  0.f, 0.5f,
-		1.f,  0.f, 0.5f, 0.5f,
-		0.f, -1.f,  0.f,  0.f,
-		0.f, -1.f,  0.f,  0.f,
-		1.f,  0.f, 0.5f, 0.5f,
-		1.f, -1.f, 0.5f,  0.f
-	};
-
-	//const Kfloat vertices[] = {
-	//	-1.f, -1.f, 0.f, 0.f,
-	//	 1.f, -1.f, 1.f, 0.f,
-	//	-1.f,  1.f, 0.f, 1.f,
-	//	-1.f,  1.f, 0.f, 1.f,
-	//	 1.f, -1.f, 1.f, 0.f,
-	//	 1.f,  1.f, 1.f, 1.f
-	//};
-
-	auto vao = new VertexArray();
-	auto vbo = new VertexBuffer(VERTEX, sizeof(vertices), vertices);
-	vao->allocate(vbo, 0, 4);
-
 	auto test_font = new Font();
 	delete test_font;
 
@@ -139,35 +115,12 @@ int main() {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	ivec2 w_size = window->getWindowSize();
-	Kuint frame_buffer;
-	glGenFramebuffers(1, &frame_buffer);
-	glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
-
-	Kuint tex_id;
-	glGenTextures(1, &tex_id);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, tex_id);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w_size.x, w_size.y, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex_id, 0);
-
-	//Kuint render_buffer;
-	//glGenRenderbuffers(1, &render_buffer);
-	//glBindRenderbuffer(GL_RENDERBUFFER, render_buffer);
-	//glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, w_size.x, w_size.y);
-	//glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0); //Bind to default frame buffer.
-
-	if (GL_FRAMEBUFFER_COMPLETE != glCheckFramebufferStatus(GL_FRAMEBUFFER)) {
-		Log::error("Frame buffer is not complete!");
-	}
+	auto frame_buffer = new FrameBuffer(w_size.x, w_size.y);
 
 	const std::wstring frame_display(L"Frame: ");
 	while (!window->closed()) {
-		glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer); //Bind frame buffer
 		window->clear(); //Clear color buffer and depth buffer.
+		frame_buffer->begin();
 
 		//Render.
 		consolas_font->renderText(frame_display + std::to_wstring(window->getCurrentFrame()),
@@ -177,24 +130,13 @@ int main() {
 		kai_font->renderText(L"¤³¤ó¤Ë¤Á¤Ï£¬ÊÀ½ç£¡", vec3(0.17f, 0.57f, 0.69f), 300, 150);
 		kai_font->renderText(L"Hello, World!", vec3(0.17f, 0.57f, 0.69f), 360, 180);
 
-		glBindFramebuffer(GL_FRAMEBUFFER, 0); //Bind to default frame buffer.
-		window->clear();
-
-		glBlitFramebuffer(0, 0, w_size.x, w_size.y, 0, 0, w_size.x, w_size.y,
-			GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT, GL_LINEAR);
-		
-		shader->bind();
-		vao->bind();
-		vao->enableVertexArray();
-		glBindTexture(GL_TEXTURE_2D, tex_id);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
+		frame_buffer->end();
+		frame_buffer->render();
 
 		window->update();
 	}
 
-	delete vbo;
-	delete vao;
-	delete shader;
+	delete frame_buffer;
 
 	delete consolas_font;
 	delete kai_font;

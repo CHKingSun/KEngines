@@ -18,9 +18,14 @@
 
 #include "../KHeader.h"
 #include "../Log.h"
-#include "../math/vector/vec4.h"
-#include "../buffer/VertexArray.h"
 #include "../render/Shader.h"
+
+namespace KEngines {
+	namespace KBuffer {
+		class VertexArray;
+		class VertexBuffer;
+	}
+}
 
 namespace KEngines { namespace KObject {
 	using namespace KEngines::KVector;

@@ -1,4 +1,5 @@
 #include "Font.h"
+#include "../buffer/VertexArray.h"
 
 namespace KEngines { namespace KObject {
 
@@ -30,7 +31,7 @@ namespace KEngines { namespace KObject {
 		
 		if (font_count == 0) {
 			assert(shader == nullptr);
-			shader = new KRenderer::Shader(RES_PATH + "shaders/font.vert", RES_PATH + "shaders/font.frag");
+			shader = new KRenderer::Shader(SHADER_PATH + "font.vert", SHADER_PATH + "font.frag");
 		}
 		++font_count;
 	}

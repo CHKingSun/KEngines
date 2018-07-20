@@ -24,6 +24,9 @@
     <ClCompile Include="src\object\Font.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\buffer\FrameBuffer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\KHeader.h">
@@ -72,6 +75,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="src\render\Window.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\buffer\FrameBuffer.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

@@ -31,6 +31,7 @@ template <typename T>
 static const T KNAN = std::numeric_limits<T>::quiet_NaN();
 
 const std::string RES_PATH = "./res/";
+const std::string SHADER_PATH = RES_PATH + "shaders/";
 
 namespace KEngines {
 
