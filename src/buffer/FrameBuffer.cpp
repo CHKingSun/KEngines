@@ -9,19 +9,26 @@ namespace KEngines { namespace KBuffer {
 
 	FrameBuffer::FrameBuffer(Kuint width, Kuint height) : vao(nullptr), vbo(nullptr) {
 		const Kfloat vertices[] = {
-			0.f,  0.f,  0.f, 0.5f,
-			1.f,  0.f, 0.5f, 0.5f,
-			0.f, -1.f,  0.f,  0.f,
-			0.f, -1.f,  0.f,  0.f,
-			1.f,  0.f, 0.5f, 0.5f,
-			1.f, -1.f, 0.5f,  0.f,
-
 			-1.f, -1.f, 0.f, 0.f,
 			 1.f, -1.f, 1.f, 0.f,
 			-1.f,  1.f, 0.f, 1.f,
 			-1.f,  1.f, 0.f, 1.f,
 			 1.f, -1.f, 1.f, 0.f,
-			 1.f,  1.f, 1.f, 1.f
+			 1.f,  1.f, 1.f, 1.f,
+
+			 //0.f,  0.f,  0.f, 0.5f,
+			 //1.f,  0.f, 0.5f, 0.5f,
+			 //0.f, -1.f,  0.f,  0.f,
+			 //0.f, -1.f,  0.f,  0.f,
+			 //1.f,  0.f, 0.5f, 0.5f,
+			 //1.f, -1.f, 0.5f,  0.f
+
+			 0.f,  0.f, 0.f, 1.f,
+			 1.f,  0.f, 1.f, 1.f,
+			 0.f, -1.f, 0.f, 0.f,
+			 0.f, -1.f, 0.f, 0.f,
+			 1.f,  0.f, 1.f, 1.f,
+			 1.f, -1.f, 1.f, 0.f
 		};
 
 		if (frame_count == 0) {
@@ -81,6 +88,11 @@ namespace KEngines { namespace KBuffer {
 	void FrameBuffer::end()const {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0); //Bind frame buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	}
+
+	void FrameBuffer::setOpacity(Kfloat opacity /* = 1.f */)const {
+		shader->bind();
+		shader->bindUniform1f("u_opacity", opacity);
 	}
 
 	void FrameBuffer::render()const {

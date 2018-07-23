@@ -36,6 +36,7 @@ namespace KEngines { namespace KBuffer {
 		void begin()const;
 		void end()const;
 
+		void setOpacity(Kfloat opacity = 1.f)const;
 		void render()const;
 	};
 } }

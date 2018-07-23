@@ -78,10 +78,12 @@ void test() {
 #include "buffer/VertexArray.h"
 #include "math/transform.h"
 #include "object/Font.h"
+#include "object/Plane.h"
 #include "util/StringUtil.h"
 #include "buffer/FrameBuffer.h"
 
 using namespace KEngines;
+using namespace KEngines::KFunction;
 using namespace KEngines::KVector;
 using namespace KEngines::KBuffer;
 using namespace KEngines::KRenderer;
@@ -98,8 +100,14 @@ int main() {
 
 	initLocale();
 
-	auto window = new KRenderer::Window("KEngines");
+	auto window = new Window("KEngines");
 
+	auto shader = new Shader(SHADER_PATH + "test.vert", SHADER_PATH + "test.frag");
+	auto plane = new Plane(10.f, 10.f, 10, 10);
+	plane->rotate(quaternion(30.f, vec3(-1.f, 0.f, 0.f)));
+
+	plane->bindUniform(shader);
+	shader->bindUniformMat4f("u_proj", ortho(-12.f, 12.f, -12.f, 12.f, -3.f, 3.f));
 	auto test_font = new Font();
 	delete test_font;
 
@@ -116,6 +124,7 @@ int main() {
 
 	ivec2 w_size = window->getWindowSize();
 	auto frame_buffer = new FrameBuffer(w_size.x, w_size.y);
+	frame_buffer->setOpacity(0.36f);
 
 	const std::wstring frame_display(L"Frame: ");
 	while (!window->closed()) {
@@ -130,6 +139,11 @@ int main() {
 		kai_font->renderText(L"¤³¤ó¤Ë¤Á¤Ï£¬ÊÀ½ç£¡", vec3(0.17f, 0.57f, 0.69f), 300, 150);
 		kai_font->renderText(L"Hello, World!", vec3(0.17f, 0.57f, 0.69f), 360, 180);
 
+		shader->bind();
+		plane->rotate(quaternion(1, vec3(-1.f, 0.f, 0.f)));
+		plane->bindUniform(shader);
+		plane->render();
+
 		frame_buffer->end();
 		frame_buffer->render();
 
@@ -140,6 +154,9 @@ int main() {
 
 	delete consolas_font;
 	delete kai_font;
+
+	delete plane;
+	delete shader;
 
 	delete window;
 
