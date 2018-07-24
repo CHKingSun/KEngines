@@ -158,6 +158,8 @@
     <ClCompile Include="src\buffer\FrameBuffer.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\object\Font.cpp" />
+    <ClCompile Include="src\object\Group.cpp" />
+    <ClCompile Include="src\object\Mesh.cpp" />
     <ClCompile Include="src\object\Object3D.cpp" />
     <ClCompile Include="src\object\Plane.cpp" />
     <ClCompile Include="src\render\Shader.cpp" />
@@ -177,6 +179,8 @@
     <ClInclude Include="src\math\vector\vec3.h" />
     <ClInclude Include="src\math\vector\vec4.h" />
     <ClInclude Include="src\object\Font.h" />
+    <ClInclude Include="src\object\Group.h" />
+    <ClInclude Include="src\object\Mesh.h" />
     <ClInclude Include="src\object\Object3D.h" />
     <ClInclude Include="src\object\Plane.h" />
     <ClInclude Include="src\render\Shader.h" />

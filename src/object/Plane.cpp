@@ -1,5 +1,5 @@
 #include "Plane.h"
-#include "../render/Shader.h"
+//#include "../render/Shader.h"
 #include "../buffer/VertexArray.h"
 
 namespace KEngines { namespace KObject {

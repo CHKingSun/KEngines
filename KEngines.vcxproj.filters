@@ -33,6 +33,12 @@
     <ClCompile Include="src\object\Plane.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\object\Mesh.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\object\Group.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\KHeader.h">
@@ -90,6 +96,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="src\object\Plane.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\object\Mesh.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\object\Group.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

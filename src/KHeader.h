@@ -11,6 +11,7 @@
 #include <string>
 #include <cmath>
 #include <limits>
+//#include <utility>
 
 //OpenGL header
 //#include <GL/glew.h>
@@ -74,9 +75,9 @@ namespace KEngines {
 	}
 	template <typename T>
 	void swap(T& a, T& b) {
-		T t = a;
-		a = b;
-		b = t;
+		T t(std::move(a));
+		a = std::move(b);
+		b = std::move(t);
 	}
 	template <typename T, typename F>
 	T mix(const T& val1, const T& val2, const F& a) {
