@@ -51,15 +51,7 @@ namespace KEngines { namespace KFunction {
 
 	template <typename T>
 	gmat4<T> scale(const gvec3<T>& v) {
-		const auto zero = static_cast<T>(0);
-		const auto one = static_cast<T>(1);
-
-		return gmat4<T>(
-			v.x, zero, zero, zero,
-			zero, v.y, zero, zero,
-			zero, zero, v.z, zero,
-			zero, zero, zero, one
-		);
+		return gmat4<T>(gvec4<T>(v, static_cast<T>(1)));
 	}
 
 	template <typename T>

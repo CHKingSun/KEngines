@@ -79,6 +79,7 @@ void test() {
 #include "math/transform.h"
 #include "object/Font.h"
 #include "object/Plane.h"
+#include "object/Group.h"
 #include "util/StringUtil.h"
 #include "buffer/FrameBuffer.h"
 
@@ -102,11 +103,23 @@ int main() {
 
 	auto window = new Window("KEngines");
 
-	auto shader = new Shader(SHADER_PATH + "test.vert", SHADER_PATH + "test.frag");
+	auto group = new Group(3);
 	auto plane = new Plane(10.f, 10.f, 10, 10);
 	plane->rotate(quaternion(30.f, vec3(-1.f, 0.f, 0.f)));
+	group->addObject(plane);
 
-	plane->bindUniform(shader);
+	plane = new Plane(5.f, 5.f, 10, 10);
+	plane->translate(vec3(2.f, 0.f, 0.f));
+	group->addObject(plane);
+
+	plane = new Plane(6.f, 6.f, 10, 10);
+	plane->scale(vec3(1.f, 2.f, 3.f));
+	plane->rotate(quaternion(60, vec3(0.f, 1.f, 0.f)));
+	group->addObject(plane);
+	plane = nullptr;
+
+	auto shader = new Shader(SHADER_PATH + "test.vert", SHADER_PATH + "test.frag");
+	shader->bind();
 	shader->bindUniformMat4f("u_proj", ortho(-12.f, 12.f, -12.f, 12.f, -3.f, 3.f));
 	auto test_font = new Font();
 	delete test_font;
@@ -139,10 +152,8 @@ int main() {
 		kai_font->renderText(L"¤³¤ó¤Ë¤Á¤Ï£¬ÊÀ½ç£¡", vec3(0.17f, 0.57f, 0.69f), 300, 150);
 		kai_font->renderText(L"Hello, World!", vec3(0.17f, 0.57f, 0.69f), 360, 180);
 
-		shader->bind();
-		plane->rotate(quaternion(1, vec3(-1.f, 0.f, 0.f)));
-		plane->bindUniform(shader);
-		plane->render();
+		group->rotate(quaternion(1.f, vec3(0.f, 0.f, 1.f)));
+		group->render(shader);
 
 		frame_buffer->end();
 		frame_buffer->render();
@@ -155,7 +166,7 @@ int main() {
 	delete consolas_font;
 	delete kai_font;
 
-	delete plane;
+	delete group;
 	delete shader;
 
 	delete window;

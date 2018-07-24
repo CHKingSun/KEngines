@@ -28,7 +28,7 @@ namespace KEngines { namespace KObject {
 
 		~Plane();
 
-		void render()const override;
+		void render(const KRenderer::Shader* shader = nullptr)const override;
 	};
 } }
 

@@ -23,15 +23,19 @@ namespace KEngines { namespace KObject {
 	using namespace KVector;
 	using namespace KMatrix;
 
+	//TODO: maybe we need a parent pointer.
+	//TODO: getModelMatrix();
+	//TODO: getNormalMatrix();
+	//TODO: bindUniform function just bind matrix;
+	//TODO: bindUniform in render function?
 	class Object3D {
 	protected:
 		const static Kint A_POSITION; // = 0; a_position
 		const static Kint A_TEX_COORD; // = 1; a_tex_coord
 		const static Kint A_NORMAL; // = 2; a_normal
 
-		const static char U_POSITION[]; //u_position
-		const static char U_ROTATION[]; //u_rotation
-		const static char U_SCALE[]; //u_scale
+		const static char U_MODEL_MATRIX[]; //u_model_matrix
+		const static char U_NORMAL_MATRIX[]; //u_normal_matrix
 
 		KBuffer::VertexArray* vao;
 		KBuffer::VertexBuffer* ibo;
@@ -40,19 +44,29 @@ namespace KEngines { namespace KObject {
 		KBuffer::VertexBuffer* tbo;
 		KBuffer::VertexBuffer* nbo;
 
+		const Object3D* parent;
+
 		vec3 position;
 		vec3 scale_size;
 		quaternion rotation;
+
+		mat3 normal_matrix;
+		mat4 model_matrix;
 
 		const std::string type;
 
 	protected:
 		Object3D(const std::string& type);
 
+		void updateMatrix();
+
 	public:
 		virtual ~Object3D();
 
 		const std::string& getType()const { return type; }
+
+		//Note: remember to set parent to nullptr when deleting parent;
+		void setParent(const Object3D* object) { parent = object; }
 
 		virtual void bind()const;
 
@@ -61,17 +75,32 @@ namespace KEngines { namespace KObject {
 		virtual void bindUniform(const KRenderer::Shader* shader)const;
 
 		//Remember to bind shader before you render it;
-		virtual void render()const = 0;
+		virtual void render(const KRenderer::Shader* shader = nullptr)const = 0;
 
-		void setPosition(const vec3& v) { position = v; }
+		void setPosition(const vec3& v) {
+			position = v;
+			updateMatrix();
+		}
 
-		void setRotation(const quaternion& q) { rotation = q; }
+		void setRotation(const quaternion& q) {
+			rotation = q;
+			updateMatrix();
+		}
 
-		void setScale(const vec3& v) { scale_size = v; }
+		void setScale(const vec3& v) {
+			scale_size = v;
+			updateMatrix();
+		}
 
-		void translate(const vec3& v) { position += v; }
+		void translate(const vec3& v) {
+			position += v;
+			updateMatrix();
+		}
 
-		void rotate(const quaternion& q) { rotation *= q; }
+		void rotate(const quaternion& q) {
+			rotation *= q;
+			updateMatrix();
+		}
 
 		void scale(const vec3& v) {
 			if (v == vec3(0)) {
@@ -79,9 +108,20 @@ namespace KEngines { namespace KObject {
 			}
 
 			scale_size *= v;
+			updateMatrix();
 		}
 
 		const vec3& getPostion()const { return position; }
+
+		mat3 getNormalMatrix()const {
+			if(parent == nullptr) return normal_matrix;
+			return normal_matrix * parent->getNormalMatrix();
+		}
+
+		mat4 getModelMatrix()const {
+			if(parent == nullptr) return model_matrix;
+			return parent->getModelMatrix() * model_matrix;
+		}
 	};
 } }
 

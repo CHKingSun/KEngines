@@ -44,7 +44,7 @@ namespace KEngines { namespace KObject {
 	public:
 		~Mesh();
 
-		void render()const override;
+		void render(const KRenderer::Shader* shader = nullptr)const override;
 	};
 } }
 

@@ -7,13 +7,12 @@ namespace KEngines { namespace KObject {
 	const Kint Object3D::A_TEX_COORD = 1; //a_tex_coord
 	const Kint Object3D::A_NORMAL = 2; //a_normal
 
-	const char Object3D::U_POSITION[]{ "u_position" };
-	const char Object3D::U_ROTATION[]{ "u_rotation" };
-	const char Object3D::U_SCALE[]{ "u_scale" };
+	const char Object3D::U_MODEL_MATRIX[]{ "u_model_matrix" };
+	const char Object3D::U_NORMAL_MATRIX[]{ "u_normal_matrix" };
 
-	Object3D::Object3D(const std::string& type): type(type),
+	Object3D::Object3D(const std::string& type): type(type), parent(nullptr),
 		vao(nullptr), ibo(nullptr), vbo(nullptr), tbo(nullptr), nbo(nullptr),
-		position(vec3(0.f)), rotation(quaternion()), scale_size(vec3(1.0f)) {}
+		position(), rotation(), scale_size(1.f), normal_matrix(), model_matrix() {}
 
 	Object3D::~Object3D() {
 		Log::info("Delete type: ", type);
@@ -22,6 +21,21 @@ namespace KEngines { namespace KObject {
 		delete vbo;
 		delete tbo;
 		delete nbo;
+	}
+
+	void Object3D::updateMatrix() {
+		mat3 tmp = rotation.toMat3();
+		normal_matrix = mat3(vec3(
+			1.f / scale_size.x, 1.f / scale_size.y, 1.f / scale_size.z
+		)) *= tmp;
+
+		tmp *= mat3(scale_size);
+		model_matrix = mat4(
+			vec4(tmp[0], position.x),
+			vec4(tmp[1], position.y),
+			vec4(tmp[2], position.z),
+			vec4(0.f, 0.f, 0.f, 1.f)
+		);
 	}
 
 	void Object3D::bind()const {
@@ -41,10 +55,14 @@ namespace KEngines { namespace KObject {
 	}
 
 	void Object3D::bindUniform(const KRenderer::Shader* shader)const {
+		if (shader == nullptr) {
+			Log::error("The shader to bind unifrom is null!");
+			return;
+		}
+
 		shader->bind();
 
-		shader->bindUniform3f(U_POSITION, position);
-		shader->bindUniformMat3f(U_ROTATION, rotation.toMat3());
-		shader->bindUniform3f(U_SCALE, scale_size);
+		shader->bindUniformMat3f(U_NORMAL_MATRIX, getNormalMatrix());
+		shader->bindUniformMat4f(U_MODEL_MATRIX, getModelMatrix());
 	}
 } }

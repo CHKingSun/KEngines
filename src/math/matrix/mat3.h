@@ -31,6 +31,13 @@ namespace KEngines { namespace KMatrix {
 			this->values[1] = Row(zero, c, zero);
 			this->values[2] = Row(zero, zero, c);
 		}
+		gmat3(const Row& diag) {
+			const auto zero = static_cast<T>(0);
+
+			this->values[0] = Row(diag.x, zero, zero);
+			this->values[1] = Row(zero, diag.y, zero);
+			this->values[2] = Row(zero, zero, diag.z);
+		}
 		gmat3(const gmat3<T>& m) {
 			this->values[0] = m.values[0];
 			this->values[1] = m.values[1];

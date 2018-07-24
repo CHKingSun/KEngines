@@ -29,8 +29,8 @@ namespace KEngines { namespace KObject {
 		Kfloat py = -height / 2.0f;
 		Kfloat perx = width / xslices;
 		Kfloat pery = height / yslices;
-		for (int i = 0; i < xslices; ++i) {
-			for (int j = 0; j < yslices; ++j) {
+		for (unsigned int i = 0; i < xslices; ++i) {
+			for (unsigned int j = 0; j < yslices; ++j) {
 				Kfloat x = px + perx * i;
 				Kfloat y = py + pery * j;
 
@@ -73,7 +73,7 @@ namespace KEngines { namespace KObject {
 		delete indices; indices = nullptr;
 	}
 
-	void Plane::render()const {
+	void Plane::render(const KRenderer::Shader* shader /* = nullptr */)const {
 		bind();
 
 		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);

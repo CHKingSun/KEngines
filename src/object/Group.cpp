@@ -21,6 +21,7 @@ namespace KEngines { namespace KObject {
 		}
 
 		objects.emplace_back(object);
+		object->setParent(this);
 		++n_objects;
 
 		return true;
@@ -44,12 +45,13 @@ namespace KEngines { namespace KObject {
 		return objects[index];
 	}
 
-	void Group::bindUniform(const KRenderer::Shader* shader)const {
+	void Group::render(const KRenderer::Shader* shader /* = nullptr */)const {
+		if (shader == nullptr) {
+			Log::error("Uniform can not be bind if shader is null in group.");
+		}
 
-	}
-
-	void Group::render()const {
 		for (const auto& object : objects) {
+			object->bindUniform(shader);
 			object->render();
 		}
 	}

@@ -28,8 +28,8 @@ namespace KEngines { namespace KObject {
 
 		Ksize size()const { return n_objects; }
 
-		virtual void bindUniform(const KRenderer::Shader* shader)const override;
-		virtual void render()const override;
+		virtual void bindUniform(const KRenderer::Shader* shader)const override {};
+		virtual void render(const KRenderer::Shader* shader = nullptr)const override;
 	};
 } }
 

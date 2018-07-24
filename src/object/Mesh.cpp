@@ -27,7 +27,7 @@ namespace KEngines { namespace KObject {
 		delete indices; indices = nullptr;
 	}
 
-	void Mesh::render()const {
+	void Mesh::render(const KRenderer::Shader* shader /* = nullptr */)const {
 		bind();
 
 		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
