@@ -2,7 +2,8 @@
 #include "../render/Shader.h"
 
 namespace KEngines { namespace KObject {
-	Group::Group(Ksize reserve_size /* = 0 */): Object3D("Group"), 
+	Group::Group(Ksize reserve_size /* = 0 */,
+		const std::string& group_name /* = "Group" */): Object3D(group_name),
 		objects(), n_objects(0) {
 		if (reserve_size != 0) objects.reserve(reserve_size);
 	}

@@ -23,10 +23,6 @@ namespace KEngines { namespace KObject {
 	using namespace KVector;
 	using namespace KMatrix;
 
-	//TODO: maybe we need a parent pointer.
-	//TODO: getModelMatrix();
-	//TODO: getNormalMatrix();
-	//TODO: bindUniform function just bind matrix;
 	//TODO: bindUniform in render function?
 	class Object3D {
 	protected:

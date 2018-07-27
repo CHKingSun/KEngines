@@ -26,18 +26,12 @@ namespace KEngines { namespace KObject {
 		friend class Model;
 
 	private:
-		std::vector<Vertex>* vertices;
-		std::vector<Ksize>* indices;
+		const std::vector<Vertex>* vertices;
+		const std::vector<Ksize>* indices;
 		Ksize count;
 
 	private:
-		Mesh();
-
-		void setVertices(std::vector<Vertex>* vs) { vertices = vs; }
-		void setIndices(std::vector<Ksize>* is) {
-			indices = is;
-			count = indices->size();
-		}
+		Mesh(const std::vector<Vertex>* vs, const std::vector<Ksize>* is);
 
 		void initBuffer();
 

@@ -6,6 +6,7 @@
 #define KENGINES_TRANSFORM_H
 
 #include "matrix/mat4.h"
+#include "function.h"
 
 namespace KEngines { namespace KFunction {
 	using namespace KEngines::KVector;

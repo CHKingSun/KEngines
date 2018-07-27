@@ -15,7 +15,7 @@ namespace KEngines { namespace KObject {
 		indices->reserve(count);
 
 		generate(width, height, xslices, yslices);
-		initABuffer();
+		initBuffer();
 	}
 
 	Plane::~Plane() {
@@ -55,7 +55,7 @@ namespace KEngines { namespace KObject {
 		}
 	}
 
-	void Plane::initABuffer() {
+	void Plane::initBuffer() {
 		vao = new KBuffer::VertexArray();
 
 		vbo = new KBuffer::VertexBuffer(KBuffer::VERTEX, sizeof(vec2) * vertices->size(), vertices->data());

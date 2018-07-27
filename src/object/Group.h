@@ -13,12 +13,12 @@ namespace KEngines { namespace KObject {
 	//TODO: sort function(need Object3D add center and bound parameter)
 	//TODO: how to deal with group uniform in shader?
 	class Group : public Object3D {
-	private:
+	protected:
 		std::vector<Object3D*> objects;
 		Ksize n_objects;
 
 	public:
-		Group(Ksize reserve_size = 0);
+		Group(Ksize reserve_size = 0, const std::string& group_name = "Group");
 		virtual ~Group();
 
 		//TODO: smater pointer?

@@ -82,6 +82,7 @@ void test() {
 #include "object/Group.h"
 #include "util/StringUtil.h"
 #include "buffer/FrameBuffer.h"
+#include "object/Model.h"
 
 using namespace KEngines;
 using namespace KEngines::KFunction;
@@ -118,9 +119,16 @@ int main() {
 	group->addObject(plane);
 	plane = nullptr;
 
+	auto model = new Model(MODEL_PATH + "cellrain.obj");
+	model->scale(vec3(0.003f));
+
 	auto shader = new Shader(SHADER_PATH + "test.vert", SHADER_PATH + "test.frag");
 	shader->bind();
-	shader->bindUniformMat4f("u_proj", ortho(-12.f, 12.f, -12.f, 12.f, -3.f, 3.f));
+	shader->bindUniformMat4f("u_proj",
+		perspective(60.f, 1.f, 0.1f, 1000.f)
+		//ortho(-12.f, 12.f, -12.f, 12.f, -12.f, 12.f)
+		* lookAt(vec3(0.f, 0.f, 15.f), vec3(), vec3(0.f, 1.f, 0.f))
+	);
 	auto test_font = new Font();
 	delete test_font;
 
@@ -144,6 +152,11 @@ int main() {
 		window->clear(); //Clear color buffer and depth buffer.
 		frame_buffer->begin();
 
+		group->rotate(quaternion(1.f, vec3(0.f, 0.f, 1.f)));
+		group->render(shader);
+
+		model->render(shader);
+
 		//Render.
 		consolas_font->renderText(frame_display + std::to_wstring(window->getCurrentFrame()),
 								  vec3(0.17f, 0.57f, 0.69f), 6, 6);
@@ -151,9 +164,6 @@ int main() {
 		kai_font->renderText(L"你好，世界！", vec3(0.17f, 0.57f, 0.69f), 240, 120);
 		kai_font->renderText(L"こんにちは，世界！", vec3(0.17f, 0.57f, 0.69f), 300, 150);
 		kai_font->renderText(L"Hello, World!", vec3(0.17f, 0.57f, 0.69f), 360, 180);
-
-		group->rotate(quaternion(1.f, vec3(0.f, 0.f, 1.f)));
-		group->render(shader);
 
 		frame_buffer->end();
 		frame_buffer->render();
@@ -167,6 +177,7 @@ int main() {
 	delete kai_font;
 
 	delete group;
+	delete model;
 	delete shader;
 
 	delete window;

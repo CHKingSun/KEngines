@@ -2,8 +2,10 @@
 #include "../buffer/VertexArray.h"
 
 namespace KEngines { namespace KObject {
-	Mesh::Mesh(): Object3D("Mesh"),
-		vertices(nullptr), indices(nullptr) {}
+	Mesh::Mesh(const std::vector<Vertex>* vs, const std::vector<Ksize>* is):
+		Object3D("Mesh"), vertices(vs), indices(is), count(is->size()) {
+		initBuffer();
+	}
 
 	Mesh::~Mesh() {
 		delete vertices;
@@ -11,8 +13,10 @@ namespace KEngines { namespace KObject {
 	}
 
 	void Mesh::initBuffer() {
+		if (vao) delete vao;
 		vao = new KBuffer::VertexArray();
 
+		if (vbo) delete vbo;
 		vbo = new KBuffer::VertexBuffer(KBuffer::VERTEX,
 							sizeof(Vertex) * vertices->size(), vertices->data());
 
@@ -20,8 +24,9 @@ namespace KEngines { namespace KObject {
 		vao->allocate(vbo, A_NORMAL, 3, GL_FLOAT, false, sizeof(Vertex), offsetof(Vertex, normal));
 		vao->allocate(vbo, A_TEX_COORD, 2, GL_FLOAT, false, sizeof(Vertex), offsetof(Vertex, tex_coord));
 
+		if (ibo) delete ibo;
 		ibo = new KBuffer::VertexBuffer(KBuffer::INDEX,
-							sizeof(Ksize) * indices->size(), vertices->data());
+							sizeof(Ksize) * indices->size(), indices->data());
 
 		delete vertices; vertices = nullptr;
 		delete indices; indices = nullptr;

@@ -20,7 +20,7 @@ namespace KEngines { namespace KObject {
 
 		void generate(Kfloat width, Kfloat height, Ksize xslices, Ksize yslices);
 
-		void initABuffer();
+		void initBuffer();
 
 	public:
 		Plane(Kfloat width = 1.0f, Kfloat height = 1.0f,
