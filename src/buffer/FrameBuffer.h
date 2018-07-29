@@ -38,6 +38,13 @@ namespace KEngines { namespace KBuffer {
 
 		void setOpacity(Kfloat opacity = 1.f)const;
 		void render()const;
+
+		inline static void setViewport(const KVector::ivec2& v) {
+			if (frame_count != 0) {
+				shader->bind();
+				shader->bindUniform2i("s_size", v);
+			}
+		}
 	};
 } }
 

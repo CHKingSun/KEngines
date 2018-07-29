@@ -153,58 +153,61 @@ namespace KEngines { namespace KVector {
 			return toDegree<F>(acos(dot<F>(v) / (len1 * len2)));
 		}
 
-		static const gvec3<T> cross(const gvec3<T>& v1, const gvec3<T>& v2) {
+		static T dot(const gvec3<T>& v1, const gvec3<T>& v2) {
+			return v1.dot(v2);
+		}
+		static gvec3<T> cross(const gvec3<T>& v1, const gvec3<T>& v2) {
 			return gvec3<T>(v1).cross(v2);
 		}
 	};
 
 	template <typename T>
-	const gvec3<T> operator-(const gvec3<T>& v) {
+	gvec3<T> operator-(const gvec3<T>& v) {
 		return gvec3<T>() -= v;
 	}
 	template <typename T>
-	const gvec3<T> operator+(const gvec3<T>& v1, const gvec3<T>& v2) {
+	gvec3<T> operator+(const gvec3<T>& v1, const gvec3<T>& v2) {
 		return gvec3<T>(v1) += v2;
 	}
 	template <typename T>
-	const gvec3<T> operator-(const gvec3<T>& v1, const gvec3<T>& v2) {
+	gvec3<T> operator-(const gvec3<T>& v1, const gvec3<T>& v2) {
 		return gvec3<T>(v1) -= v2;
 	}
 	template <typename T>
-	const gvec3<T> operator*(const gvec3<T>& v1, const gvec3<T>& v2) {
+	gvec3<T> operator*(const gvec3<T>& v1, const gvec3<T>& v2) {
 		return gvec3<T>(v1) *= v2;
 	}
 	template <typename T>
-	const gvec3<T> operator/(const gvec3<T>& v1, const gvec3<T>& v2) {
+	gvec3<T> operator/(const gvec3<T>& v1, const gvec3<T>& v2) {
 		return gvec3<T>(v1) /= v2;
 	}
 
 	template <typename T, typename C>
-	const gvec3<T> operator+(const gvec3<T>&v, const C& c) {
+	gvec3<T> operator+(const gvec3<T>&v, const C& c) {
 		return gvec3<T>(v) += c;
 	}
 	template <typename T, typename C>
-	const gvec3<T> operator+(const C& c, const gvec3<T>&v) {
+	gvec3<T> operator+(const C& c, const gvec3<T>&v) {
 		return gvec3<T>(v) += c;
 	}
 	template <typename T, typename C>
-	const gvec3<T> operator-(const gvec3<T>&v, const C& c) {
+	gvec3<T> operator-(const gvec3<T>&v, const C& c) {
 		return gvec3<T>(v) -= c;
 	}
 	template <typename T, typename C>
-	const gvec3<T> operator-(const C& c, const gvec3<T>&v) {
+	gvec3<T> operator-(const C& c, const gvec3<T>&v) {
 		return gvec3<T>(v) -= c;
 	}
 	template <typename T, typename C>
-	const gvec3<T> operator*(const gvec3<T>&v, const C& c) {
+	gvec3<T> operator*(const gvec3<T>&v, const C& c) {
 		return gvec3<T>(v) *= c;
 	}
 	template <typename T, typename C>
-	const gvec3<T> operator*(const C& c, const gvec3<T>&v) {
+	gvec3<T> operator*(const C& c, const gvec3<T>&v) {
 		return gvec3<T>(v) *= c;
 	}
 	template <typename T, typename C>
-	const gvec3<T> operator/(const gvec3<T>&v, const C& c) {
+	gvec3<T> operator/(const gvec3<T>&v, const C& c) {
 		return gvec3<T>(v) /= c;
 	}
 

@@ -12,6 +12,7 @@
 #include "../Log.h"
 #include "../math/vector/vec4.h"
 #include "../object/Font.h"
+#include "../buffer/FrameBuffer.h"
 
 #ifdef IMGUI_ENABLE
 #include <imgui.h>
@@ -121,8 +122,9 @@ namespace KEngines { namespace KRenderer {
 			s_size.x = w;
 			s_size.y = h;
 			//Log::info("Window resized with ", w, ", ", h);
-			KObject::Font::setViewport(s_size);
 			glViewport(0, 0, s_size.x, s_size.y);
+			KObject::Font::setViewport(s_size);
+			KBuffer::FrameBuffer::setViewport(s_size);
 		}
 
 		bool closed()const {

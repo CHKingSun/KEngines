@@ -57,6 +57,13 @@ void test() {
 	Log::debug("Hello World! ", vec3(), std::setbase(8), 20);
 	Log::debug("Hello template!");
 
+	quaternion q(60.f, vec3(0.f, 1.f, 0.f));
+	Log::debug(q);
+	vec3 v1(1.f, 0.f, 1.f);
+	vec3 v2 = q * v1;
+	Log::debug(v2);
+	Log::debug(q.fromVectors(v1, v2));
+
 	std::cin.get();
 }
 
@@ -83,14 +90,17 @@ void test() {
 #include "util/StringUtil.h"
 #include "buffer/FrameBuffer.h"
 #include "object/Model.h"
+#include "camera/Camera.h"
 
 using namespace KEngines;
 using namespace KEngines::KFunction;
 using namespace KEngines::KVector;
+using namespace KEngines::KMatrix;
 using namespace KEngines::KBuffer;
 using namespace KEngines::KRenderer;
 using namespace KEngines::KObject;
 using namespace KEngines::KUtil;
+using namespace KEngines::KCamera;
 
 void initLocale() {
 	Log::info("Local locale: ", std::locale().name().c_str());
@@ -119,16 +129,18 @@ int main() {
 	group->addObject(plane);
 	plane = nullptr;
 
-	auto model = new Model(MODEL_PATH + "cellrain.obj");
-	model->scale(vec3(0.003f));
+	auto model = new Model(MODEL_PATH + "SK_Mannequin.FBX");
+	model->scale(vec3(0.03f));
+	model->rotate(quaternion(-90.f, vec3(1.f, 0.f, 0.f)));
+
+	ivec2 w_size = window->getWindowSize();
+	auto camera = new Camera(60.f, (Kfloat)w_size.x / (Kfloat)w_size.y, 0.1f, 1000.f, vec3(0.f, 0.f, 15.f));
+	//camera->setOrthoProjection(-10.f, 15.f, -6.f, 12.f, -12.f, 20.f);
+	camera->setView(vec3(0.f, 0.f, 15.f), vec3(0.f), vec3(1.f, 10.f, 0.f));
 
 	auto shader = new Shader(SHADER_PATH + "test.vert", SHADER_PATH + "test.frag");
-	shader->bind();
-	shader->bindUniformMat4f("u_proj",
-		perspective(60.f, 1.f, 0.1f, 1000.f)
-		//ortho(-12.f, 12.f, -12.f, 12.f, -12.f, 12.f)
-		* lookAt(vec3(0.f, 0.f, 15.f), vec3(), vec3(0.f, 1.f, 0.f))
-	);
+	camera->bindUnifrom(shader);
+
 	auto test_font = new Font();
 	delete test_font;
 
@@ -143,14 +155,16 @@ int main() {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	ivec2 w_size = window->getWindowSize();
-	auto frame_buffer = new FrameBuffer(w_size.x, w_size.y);
-	frame_buffer->setOpacity(0.36f);
+	//auto frame_buffer = new FrameBuffer(w_size.x, w_size.y);
+	//frame_buffer->setOpacity(0.36f);
 
 	const std::wstring frame_display(L"Frame: ");
 	while (!window->closed()) {
 		window->clear(); //Clear color buffer and depth buffer.
-		frame_buffer->begin();
+		//frame_buffer->begin();
+
+		camera->rotateCamera(quaternion(1.f, vec3(0.f, 1.f, 0.f)));
+		camera->bindUnifrom(shader);
 
 		group->rotate(quaternion(1.f, vec3(0.f, 0.f, 1.f)));
 		group->render(shader);
@@ -165,19 +179,20 @@ int main() {
 		kai_font->renderText(L"¤³¤ó¤Ë¤Á¤Ï£¬ÊÀ½ç£¡", vec3(0.17f, 0.57f, 0.69f), 300, 150);
 		kai_font->renderText(L"Hello, World!", vec3(0.17f, 0.57f, 0.69f), 360, 180);
 
-		frame_buffer->end();
-		frame_buffer->render();
+		//frame_buffer->end();
+		//frame_buffer->render();
 
 		window->update();
 	}
 
-	delete frame_buffer;
+	//delete frame_buffer;
 
 	delete consolas_font;
 	delete kai_font;
 
 	delete group;
 	delete model;
+	delete camera;
 	delete shader;
 
 	delete window;

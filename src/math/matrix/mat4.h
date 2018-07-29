@@ -71,6 +71,15 @@ namespace KEngines { namespace KMatrix {
 			this->values[2] = Row(m[2], zero);
 			this->values[3] = Row(zero, zero, zero, one);
 		}
+		gmat4(const gmat3<T>& m, const KVector::gvec3<T>& v) {
+			const auto zero = static_cast<T>(0);
+			const auto one = static_cast<T>(1);
+
+			this->values[0] = Row(m[0], v.x);
+			this->values[1] = Row(m[1], v.y);
+			this->values[2] = Row(m[2], v.z);
+			this->values[3] = Row(zero, zero, zero, one);
+		}
 
 		const T* data()const {
 			return &this->values[0][0];

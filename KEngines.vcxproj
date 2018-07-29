@@ -158,6 +158,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\buffer\FrameBuffer.cpp" />
+    <ClCompile Include="src\camera\Camera.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\object\Font.cpp" />
     <ClCompile Include="src\object\Group.cpp" />
@@ -171,6 +172,7 @@
     <ClInclude Include="src\buffer\FrameBuffer.h" />
     <ClInclude Include="src\buffer\VertexArray.h" />
     <ClInclude Include="src\buffer\VertexBuffer.h" />
+    <ClInclude Include="src\camera\Camera.h" />
     <ClInclude Include="src\Log.h" />
     <ClInclude Include="src\KHeader.h" />
     <ClInclude Include="src\math\function.h" />
@@ -187,6 +189,7 @@
     <ClInclude Include="src\object\Model.h" />
     <ClInclude Include="src\object\Object3D.h" />
     <ClInclude Include="src\object\Plane.h" />
+    <ClInclude Include="src\render\Renderer.h" />
     <ClInclude Include="src\render\Shader.h" />
     <ClInclude Include="src\render\Window.h" />
     <ClInclude Include="src\util\StringUtil.h" />

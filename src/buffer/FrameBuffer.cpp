@@ -34,10 +34,10 @@ namespace KEngines { namespace KBuffer {
 		if (frame_count == 0) {
 			assert(shader == nullptr);
 			shader = new KRenderer::Shader(SHADER_PATH + "frame.vert", SHADER_PATH + "frame.frag");
+			setOpacity();
 		}
 		++frame_count;
 
-		shader->bind();
 		vao = new VertexArray();
 		vbo = new VertexBuffer(VERTEX, sizeof(vertices), vertices);
 		vao->allocate(vbo, 0, 4);

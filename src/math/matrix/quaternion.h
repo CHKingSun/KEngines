@@ -46,8 +46,11 @@ namespace KEngines { namespace KMatrix {
 		}
 
 		void set(const T& w, const T& x, const T& y, const T& z) {
-			if (abs(w * w + x * x + y * y + z * z - 1) >= EPSILON_E6)
+			if (abs(w * w + x * x + y * y + z * z - 1) >= EPSILON_E6) {
+				Log::error("The parameters do not match the unit quaternion! Set to default!");
+				setDefault();
 				return;
+			}
 			this->w = w;
 			this->x = x;
 			this->y = y;
@@ -104,6 +107,8 @@ namespace KEngines { namespace KMatrix {
 			this->x = -x;
 			this->y = -y;
 			this->z = -z;
+
+			return *this;
 		}
 
 		const gquaternion<T> getConjugate()const {
@@ -117,24 +122,55 @@ namespace KEngines { namespace KMatrix {
 		}
 
 		gquaternion<T>& fromMatrix(const gmat3<T>& m) {
-			const auto four = static_cast<T>(4);
+			T w_divisor = m[0][0] + m[1][1] + m[2][2];
+			T x_divisor = m[0][0] - m[1][1] - m[2][2];
+			T y_divisor = m[1][1] - m[0][0] - m[2][2];
+			T z_divisor = m[2][2] - m[0][0] - m[1][1];
 
-			this->w = static_cast<T>(std::sqrt(m[0][0] + m[1][1] + m[2][2] + 1) / 2.0);
-			this->x = (m[2][1] - m[1][2]) / (four * w);
-			this->y = (m[0][2] - m[2][0]) / (four * w);
-			this->z = (m[1][0] - m[0][1]) / (four * w);
-			if (!this->isValid()) this->setDefault();
+			Kuint index = 0;
+			T divisor = w_divisor;
+			if (divisor < x_divisor) {
+				divisor = x_divisor;
+				index = 1;
+			}
+			if (divisor < y_divisor) {
+				divisor = y_divisor;
+				index = 2;
+			}
+			if (divisor < z_divisor) {
+				divisor = z_divisor;
+				index = 3;
+			}
+
+			auto factor = static_cast<T>(std::sqrt(divisor + 1.0) * 0.5);
+			divisor = static_cast<T>(0.25) / factor;
+
+			switch (index) {
+			case 0:
+				set(factor, (m[2][1] - m[1][2]) * divisor,
+					(m[0][2] - m[2][0]) * divisor, (m[1][0] - m[0][1]) * divisor);
+				break;
+			case 1:
+				set((m[2][1] - m[1][2]) * divisor, factor,
+					(m[1][0] + m[0][1]) * divisor, (m[0][2] + m[2][0]) * divisor);
+				break;
+			case 2:
+				set((m[0][2] - m[2][0]) * divisor, (m[1][0] + m[0][1]) * divisor,
+					factor, (m[2][1] + m[1][2]) * divisor);
+				break;
+			case 3:
+				set((m[1][0] - m[0][1]) * divisor, (m[0][2] + m[2][0]) * divisor,
+					(m[2][1] + m[1][2]) * divisor, factor);
+				break;
+			}
 
 			return *this;
 		}
 		gquaternion<T>& fromMatrix(const gmat4<T>& m) {
-			const auto four = static_cast<T>(4);
-
-			this->w = static_cast<T>(std::sqrt(m[0][0] + m[1][1] + m[2][2] + 1) / 2.0);
-			this->x = (m[2][1] - m[1][2]) / (four * w);
-			this->y = (m[0][2] - m[2][0]) / (four * w);
-			this->z = (m[1][0] - m[0][1]) / (four * w);
-			if (!this->isValid()) this->setDefault();
+			return fromMatrix(m.toMat3());
+		}
+		gquaternion<T>& fromVectors(const gvec3<T>& from_vector, const gvec3<T>& to_vector) {
+			set(from_vector.getAngle(to_vector), gvec3<T>::cross(from_vector, to_vector));
 
 			return *this;
 		}
@@ -195,7 +231,7 @@ namespace KEngines { namespace KMatrix {
 
 	template <typename T>
 	const gvec3<T> operator*(const gquaternion<T>& q, const gvec3<T>& v) {
-		gquaternion<T> p((q * gquaternion<T>(0, v.x, v.y, v.z)) * q.getConjugate());
+		gquaternion<T> p = (q * gquaternion<T>(0, v.x, v.y, v.z)) * q.getConjugate();
 		//do not use gquaternion<T>(angle, v) because the vector will be normalized.
 		return gvec3<T>(p.x, p.y, p.z);
 	}
