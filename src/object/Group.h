@@ -11,7 +11,7 @@
 namespace KEngines { namespace KObject {
 
 	//TODO: sort function(need Object3D add center and bound parameter)
-	//TODO: how to deal with group uniform in shader?
+	//TODO: change vector to map<name, object*>, use name to bind object
 	class Group : public Object3D {
 	protected:
 		std::vector<Object3D*> objects;

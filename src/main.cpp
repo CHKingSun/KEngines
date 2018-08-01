@@ -91,6 +91,7 @@ void test() {
 #include "buffer/FrameBuffer.h"
 #include "object/Model.h"
 #include "camera/Camera.h"
+#include "render/ViewRenderer.h"
 
 using namespace KEngines;
 using namespace KEngines::KFunction;
@@ -112,7 +113,7 @@ int main() {
 
 	initLocale();
 
-	auto window = new Window("KEngines");
+	auto renderer = new ViewRenderer("KEngines");
 
 	auto group = new Group(3);
 	auto plane = new Plane(10.f, 10.f, 10, 10);
@@ -133,69 +134,12 @@ int main() {
 	model->scale(vec3(0.03f));
 	model->rotate(quaternion(-90.f, vec3(1.f, 0.f, 0.f)));
 
-	ivec2 w_size = window->getWindowSize();
-	auto camera = new Camera(60.f, (Kfloat)w_size.x / (Kfloat)w_size.y, 0.1f, 1000.f, vec3(0.f, 0.f, 15.f));
-	//camera->setOrthoProjection(-10.f, 15.f, -6.f, 12.f, -12.f, 20.f);
-	camera->setView(vec3(0.f, 0.f, 15.f), vec3(0.f), vec3(1.f, 10.f, 0.f));
+	renderer->addObject(group);
+	renderer->addObject(model);
 
-	auto shader = new Shader(SHADER_PATH + "test.vert", SHADER_PATH + "test.frag");
-	camera->bindUnifrom(shader);
+	renderer->exec();
 
-	auto test_font = new Font();
-	delete test_font;
-
-	auto consolas_font = new Font(RES_PATH + "fonts/Consolas.ttf", 24.f);
-	auto kai_font = new Font(RES_PATH + "fonts/STXINGKAI.TTF", 24.f);
-	Font::setViewport(window->getWindowSize());
-
-	kai_font->loadText(L"你好，世界！");
-	kai_font->loadText(L"こんにちは，世界！");
-
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	//auto frame_buffer = new FrameBuffer(w_size.x, w_size.y);
-	//frame_buffer->setOpacity(0.36f);
-
-	const std::wstring frame_display(L"Frame: ");
-	while (!window->closed()) {
-		window->clear(); //Clear color buffer and depth buffer.
-		//frame_buffer->begin();
-
-		camera->rotateCamera(quaternion(1.f, vec3(0.f, 1.f, 0.f)));
-		camera->bindUnifrom(shader);
-
-		group->rotate(quaternion(1.f, vec3(0.f, 0.f, 1.f)));
-		group->render(shader);
-
-		model->render(shader);
-
-		//Render.
-		consolas_font->renderText(frame_display + std::to_wstring(window->getCurrentFrame()),
-								  vec3(0.17f, 0.57f, 0.69f), 6, 6);
-
-		kai_font->renderText(L"你好，世界！", vec3(0.17f, 0.57f, 0.69f), 240, 120);
-		kai_font->renderText(L"こんにちは，世界！", vec3(0.17f, 0.57f, 0.69f), 300, 150);
-		kai_font->renderText(L"Hello, World!", vec3(0.17f, 0.57f, 0.69f), 360, 180);
-
-		//frame_buffer->end();
-		//frame_buffer->render();
-
-		window->update();
-	}
-
-	//delete frame_buffer;
-
-	delete consolas_font;
-	delete kai_font;
-
-	delete group;
-	delete model;
-	delete camera;
-	delete shader;
-
-	delete window;
+	delete renderer;
 
 	return 0;
 }

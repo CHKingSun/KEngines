@@ -53,7 +53,7 @@ namespace KEngines { namespace KObject {
 
 		for (const auto& object : objects) {
 			object->bindUniform(shader);
-			object->render();
+			object->render(shader);
 		}
 	}
 } }

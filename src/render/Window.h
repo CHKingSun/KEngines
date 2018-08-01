@@ -20,8 +20,6 @@
 #endif
 
 namespace KEngines { namespace KRenderer {
-	void window_size_callback(GLFWwindow* window, int width, int height);
-
 	class Window {
 		friend class Renderer;
 
@@ -56,7 +54,7 @@ namespace KEngines { namespace KRenderer {
 				glEnable(GL_DEBUG_OUTPUT);
 				glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS); // makes sure errors are displayed synchronously
 				glDebugMessageCallback(glDebugOutput, nullptr);
-				glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+				//glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);/
 			}
 #endif
 
@@ -77,8 +75,6 @@ namespace KEngines { namespace KRenderer {
 
 			glClearColor(0.17f, 0.17f, 0.17f, 1.0f);
 			glfwSwapInterval(1);
-			glfwSetWindowUserPointer(window, this);
-			glfwSetWindowSizeCallback(window, window_size_callback);
 
 #ifdef IMGUI_ENABLE
 			// Setup ImGui binding
@@ -194,12 +190,6 @@ namespace KEngines { namespace KRenderer {
 			return s_size;
 		}
 	};
-
-	static void window_size_callback(GLFWwindow* window, int width, int height) {
-		auto win = static_cast<Window*>(glfwGetWindowUserPointer(window));
-		if (win != nullptr) win->resize(width, height);
-		win = nullptr;
-	}
 } }
 
 #endif // !KENGINES_WINDOW_H

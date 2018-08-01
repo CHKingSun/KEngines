@@ -159,6 +159,8 @@ namespace KEngines { namespace KVector {
 		static gvec3<T> cross(const gvec3<T>& v1, const gvec3<T>& v2) {
 			return gvec3<T>(v1).cross(v2);
 		}
+
+		static const gvec3<T> up_vector;
 	};
 
 	template <typename T>

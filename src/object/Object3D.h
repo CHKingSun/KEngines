@@ -25,6 +25,8 @@ namespace KEngines { namespace KObject {
 
 	//TODO: bindUniform in render function?
 	class Object3D {
+		friend class Group;
+
 	protected:
 		const static Kint A_POSITION; // = 0; a_position
 		const static Kint A_TEX_COORD; // = 1; a_tex_coord
@@ -56,13 +58,13 @@ namespace KEngines { namespace KObject {
 
 		void updateMatrix();
 
+		//Note: remember to set parent to nullptr when deleting parent;
+		void setParent(const Object3D* object) { parent = object; }
+
 	public:
 		virtual ~Object3D();
 
 		const std::string& getType()const { return type; }
-
-		//Note: remember to set parent to nullptr when deleting parent;
-		void setParent(const Object3D* object) { parent = object; }
 
 		virtual void bind()const;
 
@@ -108,6 +110,8 @@ namespace KEngines { namespace KObject {
 		}
 
 		const vec3& getPostion()const { return position; }
+
+		const vec3& getScale()const { return scale_size; }
 
 		mat3 getNormalMatrix()const {
 			if(parent == nullptr) return normal_matrix;

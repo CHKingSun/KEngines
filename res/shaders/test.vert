@@ -14,5 +14,5 @@ out vec3 v_color;
 void main() {
     gl_Position = u_proj_matrix * (u_model_matrix * vec4(a_position, 1.f));
 
-    v_color = u_normal_matrix * a_normal;
+    v_color = normalize(u_normal_matrix * a_normal + vec3(1.f));
 }
