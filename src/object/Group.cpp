@@ -29,7 +29,10 @@ namespace KEngines { namespace KObject {
 	}
 
 	Kboolean Group::deleteObject(Ksize index) {
-		if (index >= n_objects) return false;
+		if (index >= n_objects) {
+			Log::error("The object you want to delete does not exist!");
+			return false;
+		}
 
 		auto it = objects.begin();
 		std::advance(it, index);
@@ -41,7 +44,10 @@ namespace KEngines { namespace KObject {
 	}
 
 	Object3D* Group::getObject(Ksize index)const {
-		if (index >= n_objects) return nullptr;
+		if (index >= n_objects) {
+			Log::error("Objet does not exist with index: ", index);
+			return nullptr;
+		}
 
 		return objects[index];
 	}

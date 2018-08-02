@@ -310,7 +310,7 @@ namespace KEngines { namespace KMatrix {
 			return gmat3<T>(
 				values[0].x, values[0].y, values[0].z,
 				values[1].x, values[1].y, values[1].z,
-				values[2].x, values[2].y, values[2].z;
+				values[2].x, values[2].y, values[2].z
 			);
 		}
 	};

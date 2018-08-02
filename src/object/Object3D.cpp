@@ -7,8 +7,8 @@ namespace KEngines { namespace KObject {
 	const Kint Object3D::A_TEX_COORD = 1; //a_tex_coord
 	const Kint Object3D::A_NORMAL = 2; //a_normal
 
-	const char Object3D::U_MODEL_MATRIX[]{ "u_model_matrix" };
-	const char Object3D::U_NORMAL_MATRIX[]{ "u_normal_matrix" };
+	const std::string Object3D::U_MODEL_MATRIX{ "u_model_matrix" };
+	const std::string Object3D::U_NORMAL_MATRIX{ "u_normal_matrix" };
 
 	Object3D::Object3D(const std::string& type): type(type), parent(nullptr),
 		vao(nullptr), ibo(nullptr), vbo(nullptr), tbo(nullptr), nbo(nullptr),
@@ -62,7 +62,7 @@ namespace KEngines { namespace KObject {
 
 		shader->bind();
 
-		shader->bindUniformMat3f(U_NORMAL_MATRIX, getNormalMatrix());
-		shader->bindUniformMat4f(U_MODEL_MATRIX, getModelMatrix());
+		shader->bindUniformMat3f(U_NORMAL_MATRIX.c_str(), getNormalMatrix());
+		shader->bindUniformMat4f(U_MODEL_MATRIX.c_str(), getModelMatrix());
 	}
 } }

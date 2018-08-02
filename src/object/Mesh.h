@@ -21,9 +21,9 @@ namespace KEngines { namespace KObject {
 		vec2 tex_coord;
 	};
 
-	//A mesh is a part of model.
+	//A mesh is a part of model node.
 	class Mesh : public Object3D {
-		friend class Model;
+		friend class ModelNode;
 
 	private:
 		const std::vector<Vertex>* vertices;

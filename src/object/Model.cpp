@@ -1,5 +1,6 @@
 #include "Model.h"
 #include "Mesh.h"
+#include "ModelNode.h"
 #include "../render/Shader.h"
 
 #include <assimp/cimport.h>
@@ -9,10 +10,6 @@
 namespace KEngines { namespace KObject {
 	Model::Model(const std::string& path) : Group(0, "Model") {
 		openFile(path);
-	}
-
-	Model::~Model() {
-
 	}
 
 	Kboolean Model::openFile(const std::string& path) {
@@ -29,68 +26,30 @@ namespace KEngines { namespace KObject {
 		filename = path.substr(path.find_last_of('/') + 1, path.size());
 		type = filename.substr(filename.find_last_of('.') + 1, filename.size());
 
-		//Note: ignore the aiNode at present.
-		objects.reserve(scene->mNumMeshes);
-		for (unsigned int i = 0; i < scene->mNumMeshes; ++i) {
-			dealMesh(scene->mMeshes[i], scene);
-		}
+		dealNode(scene->mRootNode, scene, aiMatrix4x4());
 
 		aiReleaseImport(scene);
 		return true;
 	}
 
-	void Model::dealMesh(const aiMesh* mesh, const aiScene* scene) {
-		auto vertices = new std::vector<Vertex>();
-		vertices->reserve(mesh->mNumVertices);
-		
-		for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {
-			aiVector3D vertex = mesh->mVertices[i];
-			aiVector3D normal = mesh->mNormals[i];
-			aiVector3D tex_coord(0);
-			if (mesh->HasTextureCoords(0)) {
-				tex_coord = mesh->mTextureCoords[0][i];
-			}
+	void Model::dealNode(const aiNode* node, const aiScene* scene, const aiMatrix4x4& transform) {
+		if (node == nullptr) return;
 
-			vertices->emplace_back(
-				vec3(vertex.x, vertex.y, vertex.z),
-				vec3(normal.x, normal.y, normal.z),
-				vec2(tex_coord.x, tex_coord.y)
-			);
+		aiMatrix4x4 new_transform = node->mTransformation * transform;
+
+		this->addObject(new ModelNode(node, scene, aiMatrixToMatrix(new_transform)));
+
+		for (int i = 0; i < node->mNumChildren; ++i) {
+			dealNode(node->mChildren[i], scene, new_transform);
 		}
-
-		auto indices = new std::vector<Ksize>();
-		indices->reserve(mesh->mNumFaces * 3);
-		for (unsigned int i = 0; i < mesh->mNumFaces; ++i) {
-			aiFace face = mesh->mFaces[i];
-
-			indices->emplace_back(face.mIndices[0]);
-			indices->emplace_back(face.mIndices[1]);
-			indices->emplace_back(face.mIndices[2]);
-		}
-
-		this->addObject(new Mesh(vertices, indices));
 	}
 
-	void Model::bindUniform(const KRenderer::Shader* shader)const {
-		if (shader == nullptr) {
-			Log::error("The shader to bind unifrom is null!");
-			return;
-		}
-
-		shader->bind();
-
-		shader->bindUniformMat3f(U_NORMAL_MATRIX, getNormalMatrix());
-		shader->bindUniformMat4f(U_MODEL_MATRIX, getModelMatrix());
-	}
-
-	void Model::render(const KRenderer::Shader* shader /* = nullptr */)const {
-		if (shader == nullptr) {
-			Log::error("Uniform can not be bind if shader is null in group.");
-		}
-
-		bindUniform(shader);
-		for (const auto& object : objects) {
-			object->render();
-		}
+	mat4 Model::aiMatrixToMatrix(const aiMatrix4x4& m) {
+		return mat4(
+			m[0][0], m[1][0], m[2][0], m[3][0],
+			m[0][1], m[1][1], m[2][1], m[3][1],
+			m[0][2], m[1][2], m[2][2], m[3][2],
+			m[0][3], m[1][3], m[2][3], m[3][3]
+		);
 	}
 } }

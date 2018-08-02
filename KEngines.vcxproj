@@ -160,10 +160,13 @@
     <ClCompile Include="src\buffer\FrameBuffer.cpp" />
     <ClCompile Include="src\camera\Camera.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\material\Material.cpp" />
+    <ClCompile Include="src\material\Texture.cpp" />
     <ClCompile Include="src\object\Font.cpp" />
     <ClCompile Include="src\object\Group.cpp" />
     <ClCompile Include="src\object\Mesh.cpp" />
     <ClCompile Include="src\object\Model.cpp" />
+    <ClCompile Include="src\object\ModelNode.cpp" />
     <ClCompile Include="src\object\Object3D.cpp" />
     <ClCompile Include="src\object\Plane.cpp" />
     <ClCompile Include="src\render\Shader.cpp" />
@@ -176,6 +179,8 @@
     <ClInclude Include="src\camera\Camera.h" />
     <ClInclude Include="src\Log.h" />
     <ClInclude Include="src\KHeader.h" />
+    <ClInclude Include="src\material\Material.h" />
+    <ClInclude Include="src\material\Texture.h" />
     <ClInclude Include="src\math\function.h" />
     <ClInclude Include="src\math\matrix\mat3.h" />
     <ClInclude Include="src\math\matrix\mat4.h" />
@@ -188,6 +193,7 @@
     <ClInclude Include="src\object\Group.h" />
     <ClInclude Include="src\object\Mesh.h" />
     <ClInclude Include="src\object\Model.h" />
+    <ClInclude Include="src\object\ModelNode.h" />
     <ClInclude Include="src\object\Object3D.h" />
     <ClInclude Include="src\object\Plane.h" />
     <ClInclude Include="src\render\Renderer.h" />

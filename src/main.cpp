@@ -131,8 +131,11 @@ int main() {
 	plane = nullptr;
 
 	auto model = new Model(MODEL_PATH + "SK_Mannequin.FBX");
-	model->scale(vec3(0.03f));
-	model->rotate(quaternion(-90.f, vec3(1.f, 0.f, 0.f)));
+	//auto model = new Model(MODEL_PATH + "nano/nanosuit2.obj");
+	//auto model = new Model(MODEL_PATH + "cellrain.obj");
+	//auto model = new Model(MODEL_PATH + "pokeball.obj");
+	model->scale(vec3(0.06f));
+	//model->rotate(quaternion(-90.f, vec3(1.f, 0.f, 0.f)));
 
 	renderer->addObject(group);
 	renderer->addObject(model);

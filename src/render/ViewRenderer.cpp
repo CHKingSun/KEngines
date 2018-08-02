@@ -90,7 +90,7 @@ namespace KEngines { namespace KRenderer {
 			}
 			if (ypos != mouse_pos.y) {
 				static const vec3 forwrad_vector(1.0f, 0.0f, 0.0f);
-				camera->rotateCamera(quaternion(atan((mouse_pos.y - ypos) / 2.0) * -1.0f, forwrad_vector));
+				camera->rotateCamera(quaternion(atan((mouse_pos.y - ypos) / 2.0) * 1.0f, forwrad_vector));
 				camera->bindUnifrom(shader);
 			}
 		}

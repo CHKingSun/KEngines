@@ -2,7 +2,7 @@
 #include "../render/Shader.h"
 
 namespace KEngines { namespace KCamera {
-	const char Camera::U_PROJ[]{ "u_proj_matrix" };
+	const std::string Camera::U_PROJ{ "u_proj_matrix" };
 
 	Camera::Camera(const vec3& pos /* = vec3() */) :
 		position(pos), rotation(), view_rotation(), auto_update(true) {
@@ -29,8 +29,12 @@ namespace KEngines { namespace KCamera {
 	}
 
 	void Camera::bindUnifrom(const KRenderer::Shader* shader)const {
+		if (shader == nullptr) {
+			Log::error("The shader to bind unifrom is null!");
+			return;
+		}
 		shader->bind();
-		shader->bindUniformMat4f(U_PROJ, proj_view_matrix);
+		shader->bindUniformMat4f(U_PROJ.c_str(), proj_view_matrix);
 	}
 
 	void Camera::setView(const vec3& eye, const vec3& center, const vec3& up) {

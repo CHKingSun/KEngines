@@ -32,8 +32,8 @@ namespace KEngines { namespace KObject {
 		const static Kint A_TEX_COORD; // = 1; a_tex_coord
 		const static Kint A_NORMAL; // = 2; a_normal
 
-		const static char U_MODEL_MATRIX[]; //u_model_matrix
-		const static char U_NORMAL_MATRIX[]; //u_normal_matrix
+		const static std::string U_MODEL_MATRIX; //u_model_matrix
+		const static std::string U_NORMAL_MATRIX; //u_normal_matrix
 
 		KBuffer::VertexArray* vao;
 		KBuffer::VertexBuffer* ibo;
@@ -56,7 +56,7 @@ namespace KEngines { namespace KObject {
 	protected:
 		Object3D(const std::string& type);
 
-		void updateMatrix();
+		virtual void updateMatrix();
 
 		//Note: remember to set parent to nullptr when deleting parent;
 		void setParent(const Object3D* object) { parent = object; }

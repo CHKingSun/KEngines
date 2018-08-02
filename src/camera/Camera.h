@@ -20,7 +20,7 @@ namespace KEngines { namespace KCamera {
 
 	class Camera {
 	protected:
-		const static char U_PROJ[];
+		const static std::string U_PROJ;
 
 		vec3 position;
 		quaternion rotation;

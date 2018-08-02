@@ -4,6 +4,7 @@ layout(location = 0) in vec3 a_position;
 layout(location = 1) in vec2 a_tex_coord;
 layout(location = 2) in vec3 a_normal;
 
+//row_major?
 uniform mat4 u_model_matrix;
 uniform mat3 u_normal_matrix;
 

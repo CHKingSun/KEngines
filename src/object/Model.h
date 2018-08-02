@@ -5,6 +5,8 @@
 #ifndef KENGINES_MODEL_H
 #define KENGINES_MODEL_H
 
+#include <assimp/matrix4x4.h>
+
 #include "Group.h"
 
 class aiScene;
@@ -20,15 +22,12 @@ namespace KEngines { namespace KObject {
 		std::string type;
 
 		Kboolean openFile(const std::string& path);
-		//void dealNode(const aiNode* node, const aiScene* scene);
-		void dealMesh(const aiMesh* mesh, const aiScene* scene);
+		mat4 aiMatrixToMatrix(const aiMatrix4x4& m);
+		void dealNode(const aiNode* node, const aiScene* scene, const aiMatrix4x4& transform);
 
 	public:
 		Model(const std::string& path);
-		~Model();
-
-		void bindUniform(const KRenderer::Shader* shader)const override;
-		void render(const KRenderer::Shader* shader = nullptr)const override;
+		~Model() = default;
 	};
 } }
 
