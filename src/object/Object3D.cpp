@@ -1,6 +1,7 @@
 #include "Object3D.h"
 #include "../render/Shader.h"
 #include "../buffer/VertexArray.h"
+#include "../material/Material.h"
 
 namespace KEngines { namespace KObject {
 	const Kint Object3D::A_POSITION = 0; //a_position
@@ -12,7 +13,8 @@ namespace KEngines { namespace KObject {
 
 	Object3D::Object3D(const std::string& type): type(type), parent(nullptr),
 		vao(nullptr), ibo(nullptr), vbo(nullptr), tbo(nullptr), nbo(nullptr),
-		position(), rotation(), scale_size(1.f), normal_matrix(), model_matrix() {}
+		position(), rotation(), scale_size(1.f), normal_matrix(), model_matrix(),
+		material(nullptr) {}
 
 	Object3D::~Object3D() {
 		Log::info("Delete type: ", type);
@@ -21,6 +23,8 @@ namespace KEngines { namespace KObject {
 		delete vbo;
 		delete tbo;
 		delete nbo;
+
+		delete material;
 	}
 
 	void Object3D::updateMatrix() {
@@ -64,5 +68,16 @@ namespace KEngines { namespace KObject {
 
 		shader->bindUniformMat3f(U_NORMAL_MATRIX.c_str(), getNormalMatrix());
 		shader->bindUniformMat4f(U_MODEL_MATRIX.c_str(), getModelMatrix());
+
+		if (material != nullptr) material->bindUniform(shader);
+	}
+
+	void Object3D::setMaterial(KMaterial::Material* mat) {
+		if (mat == nullptr) {
+			Log::info("Note: you set material to nullptr.");
+		}
+
+		delete material;
+		material = mat;
 	}
 } }

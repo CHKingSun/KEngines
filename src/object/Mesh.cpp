@@ -1,9 +1,12 @@
 #include "Mesh.h"
 #include "../buffer/VertexArray.h"
+#include "../material/Material.h"
 
 namespace KEngines { namespace KObject {
-	Mesh::Mesh(const std::vector<Vertex>* vs, const std::vector<Ksize>* is):
+	Mesh::Mesh(const std::vector<Vertex>* vs, const std::vector<Ksize>* is, KMaterial::Material* mat):
 		Object3D("Mesh"), vertices(vs), indices(is), count(is->size()) {
+		setMaterial(mat);
+
 		initBuffer();
 	}
 
@@ -30,6 +33,15 @@ namespace KEngines { namespace KObject {
 
 		delete vertices; vertices = nullptr;
 		delete indices; indices = nullptr;
+	}
+
+	void Mesh::bindUniform(const KRenderer::Shader* shader)const {
+		if (shader == nullptr) {
+			Log::error("The shader to bind unifrom is null!");
+			return;
+		}
+
+		if (material != nullptr) material->bindUniform(shader);
 	}
 
 	void Mesh::render(const KRenderer::Shader* shader /* = nullptr */)const {

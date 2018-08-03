@@ -87,6 +87,10 @@ StyleCopReport.xml
 *.svclog
 *.scc
 
+# Add Model obj files
+!/res/models/*.obj
+!/res/models/*/*obj
+
 # Chutzpah Test files
 _Chutzpah*
 

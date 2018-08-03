@@ -8,7 +8,8 @@ namespace KEngines { namespace KRenderer {
 		Renderer(title, swidth, sheight), shader(nullptr), camera(nullptr), objects(nullptr) {
 		glViewport(0, 0, swidth, sheight);
 
-		shader = new Shader(SHADER_PATH + "test.vert", SHADER_PATH + "test.frag");
+		//shader = new Shader(SHADER_PATH + "test.vert", SHADER_PATH + "test.frag");
+		shader = new Shader(SHADER_PATH + "material.vert", SHADER_PATH + "material.frag");
 
 		camera = new KCamera::Camera(60.f, Kfloat(swidth) / Kfloat(sheight), 0.1f, 1000.f, vec3(0.f, 0.f, 20.f));
 
@@ -83,14 +84,14 @@ namespace KEngines { namespace KRenderer {
 
 	void ViewRenderer::cursorEvent(Kdouble xpos, Kdouble ypos) {
 		if (mouse[GLFW_MOUSE_BUTTON_LEFT]) {
-			if (xpos != mouse_pos.x) {
+			if (abs(xpos - mouse_pos.x) > 6.f) {
 				static const vec3 up_vector(0.0f, 1.0f, 0.0f);
 				camera->rotateCamera(quaternion(atan((mouse_pos.x - xpos) / 2.0) * 3.0f, up_vector));
 				camera->bindUnifrom(shader);
 			}
-			if (ypos != mouse_pos.y) {
+			if (abs(ypos - mouse_pos.y) > 6.f) {
 				static const vec3 forwrad_vector(1.0f, 0.0f, 0.0f);
-				camera->rotateCamera(quaternion(atan((mouse_pos.y - ypos) / 2.0) * 1.0f, forwrad_vector));
+				camera->rotateCamera(quaternion(atan((mouse_pos.y - ypos) / 2.0) * 3.0f, forwrad_vector));
 				camera->bindUnifrom(shader);
 			}
 		}

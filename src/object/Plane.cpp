@@ -1,6 +1,6 @@
 #include "Plane.h"
-//#include "../render/Shader.h"
 #include "../buffer/VertexArray.h"
+#include "../material/Material.h"
 
 namespace KEngines { namespace KObject {
 	Plane::Plane(Kfloat width /* = 1.0f */, Kfloat height /* = 1.0f */,
@@ -13,6 +13,8 @@ namespace KEngines { namespace KObject {
 		tex_coords->reserve(count * 2 / 3);
 		indices = new std::vector<Kuint>();
 		indices->reserve(count);
+
+		material = new KMaterial::Material();
 
 		generate(width, height, xslices, yslices);
 		initBuffer();

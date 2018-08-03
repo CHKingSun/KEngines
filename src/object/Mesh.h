@@ -31,13 +31,14 @@ namespace KEngines { namespace KObject {
 		Ksize count;
 
 	private:
-		Mesh(const std::vector<Vertex>* vs, const std::vector<Ksize>* is);
+		Mesh(const std::vector<Vertex>* vs, const std::vector<Ksize>* is, KMaterial::Material* mat);
 
 		void initBuffer();
 
 	public:
 		~Mesh();
 
+		void bindUniform(const KRenderer::Shader* shader)const override;
 		void render(const KRenderer::Shader* shader = nullptr)const override;
 	};
 } }

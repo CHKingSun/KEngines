@@ -37,7 +37,7 @@ namespace KEngines { namespace KObject {
 
 		aiMatrix4x4 new_transform = node->mTransformation * transform;
 
-		this->addObject(new ModelNode(node, scene, aiMatrixToMatrix(new_transform)));
+		this->addObject(new ModelNode(node, scene, aiMatrixToMatrix(new_transform), dir));
 
 		for (int i = 0; i < node->mNumChildren; ++i) {
 			dealNode(node->mChildren[i], scene, new_transform);

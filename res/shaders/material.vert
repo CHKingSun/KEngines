@@ -10,11 +10,10 @@ uniform mat3 u_normal_matrix;
 
 uniform mat4 u_proj_matrix;
 
-out vec3 v_color;
+out vec2 v_tex_coord;
 
 void main() {
     gl_Position = u_proj_matrix * (u_model_matrix * vec4(a_position, 1.f));
 
-    v_color = (normalize(u_normal_matrix * a_normal) + vec3(1.f)) * 0.5f; 
-    // v_color = abs(normalize(u_normal_matrix * a_normal));
+   v_tex_coord = a_tex_coord;
 }

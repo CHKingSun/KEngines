@@ -17,6 +17,8 @@ namespace KEngines {
 	}
 
 	namespace KRenderer { class Shader; }
+
+	namespace KMaterial { class Material; }
 }
 
 namespace KEngines { namespace KObject {
@@ -41,6 +43,8 @@ namespace KEngines { namespace KObject {
 		KBuffer::VertexBuffer* vbo;
 		KBuffer::VertexBuffer* tbo;
 		KBuffer::VertexBuffer* nbo;
+
+		KMaterial::Material* material;
 
 		const Object3D* parent;
 
@@ -71,6 +75,8 @@ namespace KEngines { namespace KObject {
 		virtual void unBind()const;
 
 		virtual void bindUniform(const KRenderer::Shader* shader)const;
+
+		virtual void setMaterial(KMaterial::Material* mat);
 
 		//Remember to bind shader before you render it;
 		virtual void render(const KRenderer::Shader* shader = nullptr)const = 0;
