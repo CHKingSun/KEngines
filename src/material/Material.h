@@ -47,7 +47,7 @@ namespace KEngines { namespace KMaterial {
 
 		void bindUniform(const KRenderer::Shader* shader)const;
 
-		void activeTextures(Kboolean enable = true)const;
+		void unActiveTextures(const KRenderer::Shader* shader)const;
 
 		Kboolean addTexture(Texture* tex);
 

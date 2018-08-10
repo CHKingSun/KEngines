@@ -66,15 +66,20 @@ namespace KEngines { namespace KMaterial {
 			}
 
 			glBindTexture(GL_TEXTURE_2D, id);
-			glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, GL_RGBA8, GL_UNSIGNED_BYTE, data);
-			//glGenerateMipmap(GL_TEXTURE_2D);
-			//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 6);
+			glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+			//glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, GL_BGRA, GL_UNSIGNED_BYTE, data);
+			glGenerateMipmap(GL_TEXTURE_2D);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 6);
 			//OpenGL 4.5 glGenerateTextureMipmap(texture);
 
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+			//Note: do not use _MIPMAP_ macros if you do not want to generate mipmap.
+			//The default GL_TEXTURE_MIN_FILTER parameter is GL_NEAREST_MIPMAP_LINEAR,
+			//so remember to change it.
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			//The default GL_TEXTURE_MAG_FILTER paraameter is GL_LINEAR.
 
 			stbi_image_free(data);
 		}
@@ -107,9 +112,10 @@ namespace KEngines { namespace KMaterial {
 		//shader->bindUniform1i((TEX_HEAD + index + TEX_ENABLE).c_str(), 1);
 	}
 
-	void Texture::active(Kboolean enable /* = true */) {
-		glActiveTexture(GL_TEXTURE0 + active_id);
-		if (enable) glBindTexture(GL_TEXTURE_2D, tex_id);
-		else glBindTexture(GL_TEXTURE_2D, 0);
+	void Texture::unActive(const KRenderer::Shader* shader) {
+		//glActiveTexture(GL_TEXTURE0 + active_id);
+		//glBindTexture(GL_TEXTURE_2D, 0);
+
+		shader->bindUniform1i((TEX_HEAD + std::to_string(this->active_id) + TEX_TYPE).c_str(), NONE);
 	}
 } }

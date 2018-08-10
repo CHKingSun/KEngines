@@ -50,5 +50,6 @@ namespace KEngines { namespace KObject {
 		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
 
 		unBind();
+		if (material != nullptr) material->unActiveTextures(shader);
 	}
 } }

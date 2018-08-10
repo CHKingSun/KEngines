@@ -8,7 +8,7 @@
 
 namespace KEngines { namespace KObject {
 	ModelNode::ModelNode(const aiNode* node, const aiScene* scene, const mat4& transform,
-		const std::string& dir) : dir(dir) {
+		const std::string& dir) : Group(0, "ModelNode"), dir(dir) {
 		model_matrix = transform;
 		normal_matrix = model_matrix.transpose().inverse().toMat3();
 		model_matrix = transform;
@@ -133,7 +133,7 @@ namespace KEngines { namespace KObject {
 		bindUniform(shader);
 		for (const auto& object : objects) {
 			object->bindUniform(shader);
-			object->render();
+			object->render(shader);
 		}
 	}
 } }

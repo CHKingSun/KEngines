@@ -12,7 +12,7 @@ namespace KEngines { namespace KRenderer { class Shader; } }
 
 namespace KEngines { namespace KMaterial {
 	enum TextureType {
-		AMBIENT = 1, DIFFUSE, SPECULAR
+		NONE = 0, AMBIENT, DIFFUSE, SPECULAR
 	};
 
 	struct TextureCount {
@@ -45,7 +45,7 @@ namespace KEngines { namespace KMaterial {
 
 		void bindUniform(const KRenderer::Shader* shader, Kuint active_id)const;
 
-		void active(Kboolean enable = true);
+		void unActive(const KRenderer::Shader* shader);
 	};
 } }
 

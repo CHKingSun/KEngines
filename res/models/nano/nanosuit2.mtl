@@ -1,0 +1,78 @@
+# Material Count: 6
+newmtl Arm
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd ./tex/arm_dif.png
+map_Bump ./tex/arm_showroom_ddn.png
+map_Ks ./tex/arm_showroom_spec.png
+
+
+newmtl Body
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd ./tex/body_dif.png
+map_Bump ./tex/body_showroom_ddn.png
+map_Ks ./tex/body_showroom_spec.png
+
+
+newmtl Glass
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd ./tex/glass_dif.png
+map_Bump ./tex/glass_ddn.png
+
+
+newmtl Hand
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd ./tex/hand_dif.png
+map_Bump ./tex/hand_showroom_ddn.png
+map_Ks ./tex/hand_showroom_spec.png
+
+
+newmtl Helmet
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd ./tex/helmet_dif.png
+map_Bump ./tex/helmet_showroom_ddn.png
+map_Ks ./tex/helmet_showroom_spec.png
+
+
+newmtl Leg
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd ./tex/leg_dif.png
+map_Bump ./tex/leg_showroom_ddn.png
+map_Ks ./tex/leg_showroom_spec.png
+
+

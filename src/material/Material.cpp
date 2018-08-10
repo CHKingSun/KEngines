@@ -48,9 +48,14 @@ namespace KEngines { namespace KMaterial {
 		}
 	}
 
-	void Material::activeTextures(Kboolean enable /* = true */)const {
+	void Material::unActiveTextures(const KRenderer::Shader* shader)const {
+		if (shader == nullptr) {
+			Log::error("Shader is nullptr, unable to unbind texture!");
+			return;
+		}
+
 		for (const auto& tex : textures) {
-			tex->active(enable);
+			tex->unActive(shader);
 		}
 	}
 

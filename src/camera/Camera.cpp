@@ -3,6 +3,7 @@
 
 namespace KEngines { namespace KCamera {
 	const std::string Camera::U_PROJ{ "u_proj_matrix" };
+	const std::string Camera::U_VIEW_POS{ "u_view_pos" };
 
 	Camera::Camera(const vec3& pos /* = vec3() */) :
 		position(pos), rotation(), view_rotation(), auto_update(true) {
@@ -35,6 +36,8 @@ namespace KEngines { namespace KCamera {
 		}
 		shader->bind();
 		shader->bindUniformMat4f(U_PROJ.c_str(), proj_view_matrix);
+		shader->bindUniform3f(U_VIEW_POS.c_str(), position);
+		//shader->bindUniform3f(U_VIEW_POS.c_str(), rotation * position);
 	}
 
 	void Camera::setView(const vec3& eye, const vec3& center, const vec3& up) {
