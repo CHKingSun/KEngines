@@ -10,6 +10,10 @@
 namespace KEngines {
 	namespace KRenderer { class Shader; }
 	namespace KCamera { class Camera; }
+	namespace KLight {
+		class BasicLight;
+		class DirectionLight;
+	}
 	namespace KObject {
 		class Object3D;
 		class Group;
@@ -21,6 +25,7 @@ namespace KEngines { namespace KRenderer {
 	private:
 		Shader* shader;
 		KCamera::Camera* camera;
+		KLight::DirectionLight* light;
 
 		KObject::Group* objects;
 

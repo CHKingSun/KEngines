@@ -8,18 +8,24 @@ namespace KEngines { namespace KMaterial {
 	const std::string Material::U_SHININESS{ "u_shininess" };
 	const std::string Material::U_OPACITY{ "u_opacity" };
 
-	const vec3 Material::GREY{ 0.8f };
-	const vec3 Material::WHITE{ 1.f };
-	const vec3 Material::BLACK{ 0.f };
-
 	Material::Material(const vec3& ma /* = GREY */, const vec3& md /* = GREY */,
 		const vec3& ms /* = GREY */, Kfloat msh /* = 1.f */, Kfloat mo /* = 1.f */) :
-		ambient(ma), diffuse(md), specular(ms), shininess(msh), opacity(mo) {}
+		ambient(ma), diffuse(md), specular(ms), shininess(msh), opacity(mo) {
+		Kuint unit = 1;
+		for (const auto& it : textures) {
+			it->setTextureUnit(unit++);
+		}
+	}
 
 	Material::Material(const std::vector<Texture *>& tex, const vec3& ma /* = GREY */,
 		const vec3& md /* = GREY */, const vec3& ms /* = GREY */,
 		Kfloat msh /* = 1.f */, Kfloat mo /* = 1.f */) : textures(tex),
-		ambient(ma), diffuse(md), specular(ms), shininess(msh), opacity(mo) {}
+		ambient(ma), diffuse(md), specular(ms), shininess(msh), opacity(mo) {
+		Kuint unit = 1;
+		for (const auto& it : textures) {
+			it->setTextureUnit(unit++);
+		}
+	}
 
 	Material::~Material() {
 		for (auto& tex : textures) {
@@ -42,9 +48,8 @@ namespace KEngines { namespace KMaterial {
 		shader->bindUniform1f(U_SHININESS.c_str(), shininess);
 		shader->bindUniform1f(U_OPACITY.c_str(), opacity);
 
-		int index = 0;
 		for (const auto& tex : textures) {
-			tex->bindUniform(shader, index++);
+			tex->bindUniform(shader);
 		}
 	}
 
@@ -66,6 +71,7 @@ namespace KEngines { namespace KMaterial {
 		}
 
 		textures.emplace_back(tex);
+		tex->setTextureUnit(textures.size());
 		return true;
 	}
 
@@ -79,6 +85,11 @@ namespace KEngines { namespace KMaterial {
 		std::advance(it, index);
 		delete (*it); (*it) = nullptr;
 		textures.erase(it);
+
+		Kuint unit = 1;
+		for (const auto& it : textures) {
+			it->setTextureUnit(unit++);
+		}
 
 		return true;
 	}

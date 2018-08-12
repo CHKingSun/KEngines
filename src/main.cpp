@@ -92,6 +92,8 @@ void test() {
 #include "object/Model.h"
 #include "camera/Camera.h"
 #include "render/ViewRenderer.h"
+#include "material/Material.h"
+#include "material/Texture.h"
 
 using namespace KEngines;
 using namespace KEngines::KFunction;
@@ -102,6 +104,7 @@ using namespace KEngines::KRenderer;
 using namespace KEngines::KObject;
 using namespace KEngines::KUtil;
 using namespace KEngines::KCamera;
+using namespace KEngines::KMaterial;
 
 void initLocale() {
 	Log::info("Local locale: ", std::locale().name().c_str());
@@ -115,31 +118,20 @@ int main() {
 
 	auto renderer = new ViewRenderer("KEngines");
 
-	auto group = new Group(3);
-	auto plane = new Plane(10.f, 10.f, 10, 10);
+	auto material = new Material(GREY, BLACK, GREY, 20.f);
+	material->addTexture(new Texture(IMAGE_PATH + "stone.png", SPECULAR, 3));
+	auto plane = new Plane(48.f, 48.f, 20, 20);
 	plane->rotate(quaternion(90.f, vec3(-1.f, 0.f, 0.f)));
-	group->addObject(plane);
-
-	plane = new Plane(5.f, 5.f, 10, 10);
-	plane->translate(vec3(2.f, 0.f, 0.f));
-	group->addObject(plane);
-
-	plane = new Plane(6.f, 6.f, 10, 10);
-	plane->scale(vec3(1.f, 2.f, 3.f));
-	plane->rotate(quaternion(90.f, vec3(0.f, 1.f, 0.f)));
-	group->addObject(plane);
-	plane = nullptr;
+	plane->setMaterial(material);
 
 	//auto model = new Model(MODEL_PATH + "SK_Mannequin.FBX");
-	//model->translate(vec3(0.f, -6.f, 0.f));
 	//model->rotate(quaternion(-90.f, vec3(1.f, 0.f, 0.f)));
 	auto model = new Model(MODEL_PATH + "nano/nanosuit2.obj");
-	model->translate(vec3(0.f, -6.f, 0.f));
 	//auto model = new Model(MODEL_PATH + "cellrain.obj");
 	//auto model = new Model(MODEL_PATH + "pokeball.obj");
 	model->scale(vec3(0.8f));
 
-	renderer->addObject(group);
+	renderer->addObject(plane);
 	renderer->addObject(model);
 
 	renderer->exec();

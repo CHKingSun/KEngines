@@ -15,7 +15,7 @@ out vec4 frag_color;
 vec3 light_ambient = vec3(0.8f, 0.8f, 0.8f);
 vec3 light_diffuse = vec3(0.8f, 0.8f, 0.8f);
 vec3 light_specular = vec3(0.8f, 0.8f, 0.8f);
-vec3 light_direction = vec3(-3.f, 3.f, 1.f);
+vec3 light_direction = vec3(-3.f, -3.f, -1.f);
 
 uniform vec3 u_ambient;
 uniform vec3 u_diffuse;
@@ -52,7 +52,7 @@ void main() {
     if(flag[2]) specular *= vec4(u_specular, u_opacity);
     else specular = vec4(u_specular, u_opacity);
 
-    vec3 L = normalize(light_direction);
+    vec3 L = normalize(-light_direction);
     float cosT = max(dot(L, v_N), 0.f);
     float cosA = 0.f;
     if(cosT != 0.f) cosA = max(dot(v_N, normalize(L + v_E)), 0.f);

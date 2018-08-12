@@ -34,6 +34,7 @@ static const T KNAN = std::numeric_limits<T>::quiet_NaN();
 const std::string RES_PATH = "./res/";
 const std::string SHADER_PATH = RES_PATH + "shaders/";
 const std::string MODEL_PATH = RES_PATH + "models/";
+const std::string IMAGE_PATH = RES_PATH + "images/";
 
 namespace KEngines {
 

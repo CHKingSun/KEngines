@@ -5,20 +5,14 @@
 #include <stb_image.h>
 
 namespace KEngines { namespace KMaterial {
-	const std::string Texture::TEX_HEAD{ "u_textures[" }; // = "u_textures[";
-	const std::string Texture::TEX_TEXTURE{ "].tex" }; // = "].tex";
-	const std::string Texture::TEX_TYPE{ "].type" }; // = "].type";
-	//const std::string Texture::TEX_ENABLE{ "].enable" }; // = "].enable";
 
-	Kint Texture::max_tex_num = 0;
 	std::unordered_map<std::string, TextureCount> Texture::tex_msg{};
 
-	Texture::Texture(const std::string& path, TextureType type /* = AMBIENT */) :
-		path(path), type(type), active_id(0), tex_id(0) {
-		if (max_tex_num == 0) {
-			glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &max_tex_num);
-			Log::info("Max texture image uints: ", max_tex_num);
-		}
+	Texture::Texture(const std::string& path, TextureType type /* = AMBIENT */,
+		Kuint tex_unit /* = 0 */) : path(path), type(type), tex_id(0), tex_unit(tex_unit),
+		u_tex("u_textures[i].tex"), u_type("u_textures[i].type") {
+		setTextureUnit(tex_unit);
+
 		auto fit = tex_msg.find(path);
 		if (fit != tex_msg.end()) {
 			fit->second.count += 1;
@@ -47,26 +41,31 @@ namespace KEngines { namespace KMaterial {
 		int width, height, component;
 		GLubyte *data = stbi_load(path.data(), &width, &height, &component, 0);
 		if (data != nullptr) {
-			GLenum format;
+			GLenum format, type;
 			switch (component) {
 			case 1:
-				format = GL_R3_G3_B2;
+				format = GL_RGB;
+				type = GL_UNSIGNED_BYTE_3_3_2;
 				break;
 			case 2:
-				format = GL_RGBA4;
+				format = GL_RGBA;
+				type = GL_UNSIGNED_SHORT_4_4_4_4;
 				break;
 			case 3:
-				format = GL_RGB8;
+				format = GL_RGB;
+				type = GL_UNSIGNED_BYTE;
 				break;
 			case 4:
-				format = GL_RGBA8;
+				format = GL_RGBA;
+				type = GL_UNSIGNED_BYTE;
 				break;
 			default:
-				format = GL_RGB8;
+				format = GL_RGB;
+				type = GL_UNSIGNED_BYTE;
 			}
 
 			glBindTexture(GL_TEXTURE_2D, id);
-			glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, width, height, 0, format, type, data);
 			//glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, GL_BGRA, GL_UNSIGNED_BYTE, data);
 			glGenerateMipmap(GL_TEXTURE_2D);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 6);
@@ -91,31 +90,42 @@ namespace KEngines { namespace KMaterial {
 		return id;
 	}
 
-	void Texture::bindUniform(const KRenderer::Shader* shader, Kuint active_id)const {
+	void Texture::setTextureUnit(Kuint unit) {
+		Kint max_tex_num = 0;
+		glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &max_tex_num);
+		if (max_tex_num <= unit) {
+			Log::error("Texture unit cannot be more than ", max_tex_num);
+			return;
+		}
+
+		if (tex_unit < 10) {
+			u_tex.replace(11, 1, std::to_string(unit));
+			u_type.replace(11, 1, std::to_string(unit));
+		}
+		else {
+			u_tex.replace(11, 2, std::to_string(unit));
+			u_type.replace(11, 2, std::to_string(unit));
+		}
+
+		tex_unit = unit;
+	}
+
+	void Texture::bindUniform(const KRenderer::Shader* shader)const {
 		if (shader == nullptr) {
 			Log::error("The shader to bind unifrom is null!");
 			return;
 		}
 
-		if (active_id >= max_tex_num) {
-			Log::error("Texture image uints is out of range!");
-		}
-		else if (this->active_id != active_id) {
-			this->active_id = active_id;
-		}
-
-		glActiveTexture(GL_TEXTURE0 + this->active_id);
+		glActiveTexture(GL_TEXTURE0 + tex_unit);
 		glBindTexture(GL_TEXTURE_2D, tex_id);
-		const std::string index = std::to_string(this->active_id);
-		shader->bindUniform1i((TEX_HEAD + index + TEX_TEXTURE).c_str(), this->active_id);
-		shader->bindUniform1i((TEX_HEAD + index + TEX_TYPE).c_str(), type);
-		//shader->bindUniform1i((TEX_HEAD + index + TEX_ENABLE).c_str(), 1);
+		shader->bindUniform1i(u_tex.c_str(), tex_unit);
+		shader->bindUniform1i(u_type.c_str(), type);
 	}
 
-	void Texture::unActive(const KRenderer::Shader* shader) {
-		//glActiveTexture(GL_TEXTURE0 + active_id);
+	void Texture::unActive(const KRenderer::Shader* shader)const {
+		//glActiveTexture(GL_TEXTURE0 + tex_unit);
 		//glBindTexture(GL_TEXTURE_2D, 0);
 
-		shader->bindUniform1i((TEX_HEAD + std::to_string(this->active_id) + TEX_TYPE).c_str(), NONE);
+		shader->bindUniform1i(u_type.c_str(), NONE);
 	}
 } }

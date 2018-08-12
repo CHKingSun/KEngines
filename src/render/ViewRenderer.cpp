@@ -1,17 +1,22 @@
 #include "ViewRenderer.h"
 #include "Shader.h"
 #include "../camera/Camera.h"
+#include "../light/DirectionLight.h"
 #include "../object/Group.h"
 
 namespace KEngines { namespace KRenderer {
 	ViewRenderer::ViewRenderer(const std::string& title, Ksize swidth /* = 1000 */, Ksize sheight /* = 700 */) :
-		Renderer(title, swidth, sheight), shader(nullptr), camera(nullptr), objects(nullptr) {
+		Renderer(title, swidth, sheight), shader(nullptr), camera(nullptr), light(nullptr), objects(nullptr) {
 		glViewport(0, 0, swidth, sheight);
 
 		//shader = new Shader(SHADER_PATH + "test.vert", SHADER_PATH + "test.frag");
-		shader = new Shader(SHADER_PATH + "material.vert", SHADER_PATH + "material.frag");
+		//shader = new Shader(SHADER_PATH + "material.vert", SHADER_PATH + "material.frag");
+		shader = new Shader(SHADER_PATH + "light.vert", SHADER_PATH + "light.frag");
 
-		camera = new KCamera::Camera(60.f, Kfloat(swidth) / Kfloat(sheight), 0.1f, 1000.f, vec3(0.f, 0.f, 20.f));
+		camera = new KCamera::Camera(60.f, Kfloat(swidth) / Kfloat(sheight), 0.1f, 1000.f, vec3(0.f, 18.f, 20.f));
+		camera->rotateView(quaternion(30.f, vec3(-1.f, 0.f, 0.f)));
+
+		light = new KLight::DirectionLight(vec3(0.f, -1.f, -1.f));
 
 		objects = new KObject::Group();
 	}
@@ -19,6 +24,7 @@ namespace KEngines { namespace KRenderer {
 	ViewRenderer::~ViewRenderer() {
 		delete objects;
 		delete camera;
+		delete light;
 		delete shader;
 	}
 
@@ -43,10 +49,14 @@ namespace KEngines { namespace KRenderer {
 		kai_font->loadText(L"¤³¤ó¤Ë¤Á¤Ï£¬ÊÀ½ç£¡");
 
 		camera->bindUnifrom(shader);
+		light->bindUniform(shader);
 
 		const std::wstring frame_display(L"Frame: ");
 		while (!window->closed()) {
 			window->clear();
+
+			light->rotate(quaternion(1.f, vec3(0.f, 1.f, 0.f)));
+			light->bindDirection(shader);
 
 			objects->render(shader);
 
@@ -89,11 +99,11 @@ namespace KEngines { namespace KRenderer {
 				camera->rotateCamera(quaternion(atan((mouse_pos.x - xpos) / 2.0) * 3.0f, up_vector));
 				camera->bindUnifrom(shader);
 			}
-			if (abs(ypos - mouse_pos.y) > 6.f) {
-				static const vec3 forwrad_vector(1.0f, 0.0f, 0.0f);
-				camera->rotateCamera(quaternion(atan((mouse_pos.y - ypos) / 2.0) * 3.0f, forwrad_vector));
-				camera->bindUnifrom(shader);
-			}
+			//if (abs(ypos - mouse_pos.y) > 6.f) {
+			//	static const vec3 forwrad_vector(1.0f, 0.0f, 0.0f);
+			//	camera->rotateCamera(quaternion(atan((mouse_pos.y - ypos) / 2.0) * 3.0f, forwrad_vector));
+			//	camera->bindUnifrom(shader);
+			//}
 		}
 
 		Renderer::cursorEvent(xpos, ypos);

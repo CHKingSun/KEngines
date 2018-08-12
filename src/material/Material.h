@@ -9,7 +9,7 @@
 #include <vector>
 
 #include "../KHeader.h"
-#include "../math/vector/vec3.h"
+#include "../math/vector/Color.h"
 #include "Texture.h"
 
 namespace KEngines { namespace KRenderer { class Shader; } }
@@ -26,16 +26,13 @@ namespace KEngines { namespace KMaterial {
 		static const std::string U_OPACITY;
 
 	public:
-		static const vec3 GREY;
-		static const vec3 WHITE;
-		static const vec3 BLACK;
-	
 		vec3 ambient;
 		vec3 diffuse;
 		vec3 specular;
 		Kfloat shininess;
 		Kfloat opacity;
 
+	protected:
 		std::vector<Texture*> textures;
 
 	public:

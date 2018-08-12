@@ -25,27 +25,29 @@ namespace KEngines { namespace KMaterial {
 	class Texture {
 	private:
 		Kuint tex_id;
-		mutable Kuint active_id;
+		Kuint tex_unit;
 		TextureType type;
 		std::string path;
 
-		static Kint max_tex_num;
+		std::string u_tex;
+		std::string u_type;
+
 		static std::unordered_map<std::string, TextureCount> tex_msg;
 
-		const static std::string TEX_HEAD; // = "u_textures[";
-		const static std::string TEX_TEXTURE; // = "].tex";
-		const static std::string TEX_TYPE; // = "].type";
-		//const static std::string TEX_ENABLE; // = "].enable";
-
 	public:
-		Texture(const std::string& path, TextureType type = AMBIENT);
+		//Note: tex_unit is the sampler unit(GL_TEXTUREi), usually it is 0.
+		//If you want to multiply texture in one render, then you should set tex_unit in different value.
+		Texture(const std::string& path, TextureType type = AMBIENT, Kuint tex_unit = 0);
 		~Texture();
 
 		static Kuint getTextureId(const std::string& path);
 
-		void bindUniform(const KRenderer::Shader* shader, Kuint active_id)const;
+		//Maybe we should check whether the unit is valid.
+		void setTextureUnit(Kuint unit);
 
-		void unActive(const KRenderer::Shader* shader);
+		void bindUniform(const KRenderer::Shader* shader)const;
+
+		void unActive(const KRenderer::Shader* shader)const;
 	};
 } }
 
