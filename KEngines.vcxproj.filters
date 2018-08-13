@@ -63,6 +63,12 @@
     <ClCompile Include="src\light\DirectionLight.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\light\PointLight.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\light\SpotLight.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\KHeader.h">
@@ -156,6 +162,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="src\light\DirectionLight.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\light\PointLight.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\light\SpotLight.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

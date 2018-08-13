@@ -20,6 +20,28 @@ struct DirectionLight {
     float intensity;
     bool enable;
 };
+
+struct PointLight {
+    vec3 position;
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+    float intensity;
+    float kq, kl, kc;
+    bool enable;
+};
+
+struct SpotLight {
+    vec3 position;
+    vec3 direction;
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+    float intensity;
+    float kq, kl, kc;
+    float inner_cutoff, outer_cutoff;
+    bool enable;
+};
 const int MAX_LIGHTS_NUM = 6;
 
 void dealBasicLight(const in BasicLight light, inout vec3 ambient) {
@@ -38,17 +60,53 @@ void dealDirectionLight(const in DirectionLight light, const in float u_shinines
     specular += light.specular * light.intensity * pow(cosA, u_shininess);
 }
 
+void dealPointLight(const in PointLight light, const in float u_shininess, const in vec3 N, const in vec3 E,
+                    const in vec3 world_pos, inout vec3 ambient, inout vec3 diffuse, inout vec3 specular) {
+    float dis = length(light.position - world_pos);
+    float attenuation = 1.f / (light.kc + light.kl * dis + light.kq * dis * dis); 
+
+    vec3 L = normalize(light.position - world_pos);
+    float cosT = max(dot(L, N), 0.f);
+    float cosA = 0.f;
+    if(cosT != 0.f) cosA = max(dot(N, normalize(L + E)), 0.f);
+
+    attenuation *= light.intensity;
+    ambient += light.ambient * attenuation;
+    diffuse += light.diffuse * attenuation * cosT;
+    specular += light.specular * attenuation * pow(cosA, u_shininess);
+}
+
+void dealSpotLight(const in SpotLight light, const in float u_shininess, const in vec3 N, const in vec3 E,
+                    const in vec3 world_pos, inout vec3 ambient, inout vec3 diffuse, inout vec3 specular) {
+    float dis = length(light.position - world_pos);
+    float attenuation = 1.f / (light.kc + light.kl * dis + light.kq * dis * dis); 
+
+    vec3 L = normalize(light.position - world_pos);
+    float intensity = smoothstep(light.outer_cutoff, light.inner_cutoff, dot(normalize(light.direction), -L));
+    if(intensity == 0.f) return;
+    float cosT = max(dot(L, N), 0.f);
+    float cosA = 0.f;
+    if(cosT != 0.f) cosA = max(dot(N, normalize(L + E)), 0.f);
+
+    attenuation *= light.intensity * intensity;
+    ambient += light.ambient * attenuation;
+    diffuse += light.diffuse * attenuation * cosT;
+    specular += light.specular * attenuation * pow(cosA, u_shininess);
+}
+
 in V_OUT {
     vec2 v_tex_coord;
     vec3 v_N;
     vec3 v_E;
-    vec3 v_view_pos;
+    vec3 v_world_pos;
 } fs_in;
 
 out vec4 frag_color;
 
 uniform BasicLight u_bLights[MAX_LIGHTS_NUM];
 uniform DirectionLight u_dLights[MAX_LIGHTS_NUM];
+uniform PointLight u_pLights[MAX_LIGHTS_NUM];
+uniform SpotLight u_sLights[MAX_LIGHTS_NUM];
 
 uniform vec3 u_ambient;
 uniform vec3 u_diffuse;
@@ -95,6 +153,14 @@ void main() {
         if(u_dLights[i].enable) {
             dealDirectionLight(u_dLights[i], u_shininess, fs_in.v_N, fs_in.v_E,
                                l_ambient, l_diffuse, l_specular);
+        }
+        if(u_pLights[i].enable) {
+            dealPointLight(u_pLights[i], u_shininess, fs_in.v_E, fs_in.v_E, fs_in.v_world_pos,
+                           l_ambient, l_diffuse, l_specular);
+        }
+        if(u_sLights[i].enable) {
+            dealSpotLight(u_sLights[i], u_shininess, fs_in.v_E, fs_in.v_E, fs_in.v_world_pos,
+                           l_ambient, l_diffuse, l_specular);
         }
     }
 

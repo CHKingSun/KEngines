@@ -23,9 +23,12 @@ namespace KEngines { namespace KLight {
 		vec3 specular;
 
 	public:
-		DirectionLight(const vec3& direction = vec3(0.f, 0.f, -1.f), Kuint bind_id = 0) :
-			BasicLight(GREY, 1.f, DIRECTION, bind_id, "u_dLights[i].enable", "u_dLights[i].intensity",
-				"u_dLights[i].ambient"), direction(direction), diffuse(GREY), specular(GREY),
+		DirectionLight(const vec3& direction = vec3(0.f, 0.f, -1.f), const vec3& ambient = GREY,
+			const vec3& diffuse = GREY, const vec3& specular = GREY,
+			Kfloat intensity = 1.f, Kuint bind_id = 0) :
+			BasicLight(ambient, intensity, DIRECTION, bind_id, "u_dLights[i].enable",
+				"u_dLights[i].intensity", "u_dLights[i].ambient"),
+			direction(direction), diffuse(diffuse), specular(specular),
 			u_direction("u_dLights[i].direction"), u_diffuse("u_dLights[i].diffuse"),
 			u_specular("u_dLights[i].specular") {
 			setBindId(bind_id);

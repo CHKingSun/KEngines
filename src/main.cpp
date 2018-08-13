@@ -118,7 +118,7 @@ int main() {
 
 	auto renderer = new ViewRenderer("KEngines");
 
-	auto material = new Material(GREY, BLACK, GREY, 20.f);
+	auto material = new Material(DARKGREY, BLACK, GREY, 20.f);
 	material->addTexture(new Texture(IMAGE_PATH + "stone.png", SPECULAR, 3));
 	auto plane = new Plane(48.f, 48.f, 20, 20);
 	plane->rotate(quaternion(90.f, vec3(-1.f, 0.f, 0.f)));

@@ -15,7 +15,7 @@ out V_OUT {
     vec2 v_tex_coord;
     vec3 v_N;
     vec3 v_E;
-    vec3 v_view_pos;
+    vec3 v_world_pos;
 } fs_out;
 
 void main() {
@@ -25,5 +25,5 @@ void main() {
     fs_out.v_tex_coord = a_tex_coord;
     fs_out.v_N = normalize(u_normal_matrix * a_normal);
     fs_out.v_E = normalize(u_view_pos - world_pos.xyz);
-    fs_out.v_view_pos = world_pos.xyz;
+    fs_out.v_world_pos = world_pos.xyz;
 }

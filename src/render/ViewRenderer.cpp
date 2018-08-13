@@ -2,11 +2,14 @@
 #include "Shader.h"
 #include "../camera/Camera.h"
 #include "../light/DirectionLight.h"
+#include "../light/SpotLight.h"
+#include "../light/PointLight.h"
 #include "../object/Group.h"
 
 namespace KEngines { namespace KRenderer {
 	ViewRenderer::ViewRenderer(const std::string& title, Ksize swidth /* = 1000 */, Ksize sheight /* = 700 */) :
-		Renderer(title, swidth, sheight), shader(nullptr), camera(nullptr), light(nullptr), objects(nullptr) {
+		Renderer(title, swidth, sheight), shader(nullptr), camera(nullptr),
+		light(nullptr), e_light(nullptr), objects(nullptr) {
 		glViewport(0, 0, swidth, sheight);
 
 		//shader = new Shader(SHADER_PATH + "test.vert", SHADER_PATH + "test.frag");
@@ -16,7 +19,10 @@ namespace KEngines { namespace KRenderer {
 		camera = new KCamera::Camera(60.f, Kfloat(swidth) / Kfloat(sheight), 0.1f, 1000.f, vec3(0.f, 18.f, 20.f));
 		camera->rotateView(quaternion(30.f, vec3(-1.f, 0.f, 0.f)));
 
-		light = new KLight::DirectionLight(vec3(0.f, -1.f, -1.f));
+		light = new KLight::SpotLight(vec3(0.f, 12.f, 6.f), vec3(0.f, -1.f, -1.f));
+		//light = new KLight::PointLight(vec3(0.f, 12.f, 6.f));
+
+		e_light = new KLight::DirectionLight(vec3(-3.f, -3.f, -1.f));
 
 		objects = new KObject::Group();
 	}
@@ -25,6 +31,7 @@ namespace KEngines { namespace KRenderer {
 		delete objects;
 		delete camera;
 		delete light;
+		delete e_light;
 		delete shader;
 	}
 
@@ -50,13 +57,14 @@ namespace KEngines { namespace KRenderer {
 
 		camera->bindUnifrom(shader);
 		light->bindUniform(shader);
+		e_light->bindUniform(shader);
 
 		const std::wstring frame_display(L"Frame: ");
 		while (!window->closed()) {
 			window->clear();
 
-			light->rotate(quaternion(1.f, vec3(0.f, 1.f, 0.f)));
-			light->bindDirection(shader);
+			e_light->rotate(quaternion(1.f, vec3(0.f, 1.f, 0.f)));
+			e_light->bindDirection(shader);
 
 			objects->render(shader);
 

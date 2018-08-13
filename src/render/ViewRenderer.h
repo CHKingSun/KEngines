@@ -13,6 +13,8 @@ namespace KEngines {
 	namespace KLight {
 		class BasicLight;
 		class DirectionLight;
+		class PointLight;
+		class SpotLight;
 	}
 	namespace KObject {
 		class Object3D;
@@ -25,7 +27,8 @@ namespace KEngines { namespace KRenderer {
 	private:
 		Shader* shader;
 		KCamera::Camera* camera;
-		KLight::DirectionLight* light;
+		KLight::BasicLight* light;
+		KLight::DirectionLight* e_light;
 
 		KObject::Group* objects;
 

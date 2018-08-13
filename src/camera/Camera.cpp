@@ -36,8 +36,8 @@ namespace KEngines { namespace KCamera {
 		}
 		shader->bind();
 		shader->bindUniformMat4f(U_PROJ.c_str(), proj_view_matrix);
-		shader->bindUniform3f(U_VIEW_POS.c_str(), position);
-		//shader->bindUniform3f(U_VIEW_POS.c_str(), rotation * position);
+		//shader->bindUniform3f(U_VIEW_POS.c_str(), position);
+		shader->bindUniform3f(U_VIEW_POS.c_str(), (-rotation) * position);
 	}
 
 	void Camera::setView(const vec3& eye, const vec3& center, const vec3& up) {

@@ -161,6 +161,8 @@
     <ClCompile Include="src\camera\Camera.cpp" />
     <ClCompile Include="src\light\BasicLight.cpp" />
     <ClCompile Include="src\light\DirectionLight.cpp" />
+    <ClCompile Include="src\light\PointLight.cpp" />
+    <ClCompile Include="src\light\SpotLight.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\material\Material.cpp" />
     <ClCompile Include="src\material\Texture.cpp" />
@@ -181,6 +183,8 @@
     <ClInclude Include="src\camera\Camera.h" />
     <ClInclude Include="src\light\BasicLight.h" />
     <ClInclude Include="src\light\DirectionLight.h" />
+    <ClInclude Include="src\light\PointLight.h" />
+    <ClInclude Include="src\light\SpotLight.h" />
     <ClInclude Include="src\Log.h" />
     <ClInclude Include="src\KHeader.h" />
     <ClInclude Include="src\material\Material.h" />
