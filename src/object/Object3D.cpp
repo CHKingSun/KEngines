@@ -45,7 +45,7 @@ namespace KEngines { namespace KObject {
 	void Object3D::bind()const {
 		if (vao != nullptr) {
 			vao->bind();
-			vao->enableVertexArray();
+			//vao->enableVertexArray();
 		}
 		if (ibo != nullptr) ibo->bind();
 	}
@@ -53,7 +53,7 @@ namespace KEngines { namespace KObject {
 	void Object3D::unBind()const {
 		if (vao != nullptr) {
 			vao->unBind();
-			vao->disableVertexArray();
+			//vao->disableVertexArray();
 		}
 		if (ibo != nullptr) ibo->unBind();
 	}

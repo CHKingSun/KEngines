@@ -44,9 +44,11 @@ namespace KEngines { namespace KBuffer {
 
 		void bind()const {
 			glBindVertexArray(array_id);
+			enableVertexArray();
 		}
 
 		void unBind()const {
+			disableVertexArray();
 			glBindVertexArray(0);
 		}
 

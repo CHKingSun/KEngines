@@ -46,7 +46,7 @@ namespace KEngines { namespace KObject {
 				tex_coords->emplace_back(1.0f, 1.0f);
 				tex_coords->emplace_back(0.0f, 1.0f);
 
-				Kuint t = (i * yslices + j) * 4;
+				Kuint t = vertices->size() - 4;
 				indices->emplace_back(t);
 				indices->emplace_back(t + 1);
 				indices->emplace_back(t + 2);

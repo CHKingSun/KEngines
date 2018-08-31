@@ -2,34 +2,7 @@
 #include "../render/Shader.h"
 
 namespace KEngines { namespace KCamera {
-	const std::string Camera::U_PROJ{ "u_proj_matrix" };
-	const std::string Camera::U_VIEW_POS{ "u_view_pos" };
-
-	Camera::Camera(const vec3& pos /* = vec3() */) :
-		position(pos), rotation(), view_rotation(), auto_update(true) {
-		setOrthoProjection(-1.f, 1.f, -1.f, 1.f, -1.f, 1.f);
-	}
-
-	Camera::Camera(const vec3& eye, const vec3& center, const vec3& up) :
-		rotation(), auto_update(true) {
-		setOrthoProjection(-1.f, 1.f, -1.f, 1.f, -1.f, 1.f);
-		setView(eye, center, up);
-	}
-
-	Camera::Camera(Kfloat fovy, Kfloat aspect, Kfloat zNear,
-		Kfloat zFar, const vec3 &pos /* = vec3() */) :
-		position(pos), rotation(), view_rotation(), auto_update(true) {
-		setPerspectiveProjection(fovy, aspect, zNear, zFar);
-	}
-
-	void Camera::updateMatrix() {
-		if (!auto_update) return;
-		proj_view_matrix = projection;
-		mat3 tmp = (-view_rotation).toMat3();
-		proj_view_matrix *= (mat4(tmp, tmp * -position) *= (-rotation).toMat4());
-	}
-
-	void Camera::bindUnifrom(const KRenderer::Shader* shader)const {
+	void Camera::bindUniform(const KRenderer::Shader* shader)const {
 		if (shader == nullptr) {
 			Log::error("The shader to bind unifrom is null!");
 			return;
@@ -40,16 +13,26 @@ namespace KEngines { namespace KCamera {
 		shader->bindUniform3f(U_VIEW_POS.c_str(), (-rotation) * position);
 	}
 
-	void Camera::setView(const vec3& eye, const vec3& center, const vec3& up) {
-		//u-v-n is left-hand coordinate
-		const vec3 n((center - eye).normalize());
-		const vec3 u(vec3::cross(n, up).normalize());
-		const vec3 v(vec3::cross(u, n).normalize());
+	void Camera::updateMatrix() {
+		if (!auto_update) return;
+		proj_view_matrix = projection;
+		mat3 tmp = (-view_rotation).toMat3();
+		proj_view_matrix *= (mat4(tmp, tmp * -position) *= (-rotation).toMat4());
+	}
 
-		position = eye;
-		view_rotation.fromMatrix(mat3(u, v, -n));
-		view_rotation.inverse();
+	vec3 Camera::getDirection(DirectionType type)const {
+		//Default forward direction is vec3(0.f, 0.f, -1.f).
+		quaternion rot = rotation * view_rotation;
 
-		update();
+		switch (type) {
+		case RIGHT: return rot * vec3(1.f, 0.f, 0.f);
+		case LEFT: return rot * vec3(-1.f, 0.f, 0.f);
+		case BACK: return rot * vec3(0.f, 0.f, 1.f);
+		case FORWARD: return rot * vec3(0.f, 0.f, -1.f);
+		default:
+			Log::error("Direction type you input is not support yet.");
+		}
+
+		return rot * vec3(0.f, 0.f, -1.f);
 	}
 } }

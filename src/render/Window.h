@@ -44,13 +44,13 @@ namespace KEngines { namespace KRenderer {
 
 			glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 			glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-			glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+			glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
 #ifdef KDEBUG
-			glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE); // comment this line in a release build!
-																// enable OpenGL debug context if context allows for debug context
+			glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+			// comment this line in a release build!										
+			// enable OpenGL debug context if context allows for debug context
 			GLint flags; glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
-			if (flags & GL_CONTEXT_FLAG_DEBUG_BIT)
-			{
+			if (flags & GL_CONTEXT_FLAG_DEBUG_BIT) {
 				glEnable(GL_DEBUG_OUTPUT);
 				glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS); // makes sure errors are displayed synchronously
 				glDebugMessageCallback(glDebugOutput, nullptr);

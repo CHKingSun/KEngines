@@ -86,7 +86,7 @@ namespace KEngines { namespace KObject {
 
 	void ModelNode::dealTexture(const aiMaterial *mat, aiTextureType type,
 		std::vector<KMaterial::Texture *>& tex)const {
-		KMaterial::TextureType tex_type;
+		KMaterial::TextureType tex_type = KMaterial::DIFFUSE;
 		switch (type) {
 		case aiTextureType_AMBIENT:
 			tex_type = KMaterial::AMBIENT;

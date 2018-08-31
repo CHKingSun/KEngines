@@ -159,13 +159,16 @@
   <ItemGroup>
     <ClCompile Include="src\buffer\FrameBuffer.cpp" />
     <ClCompile Include="src\camera\Camera.cpp" />
+    <ClCompile Include="src\camera\CameraInterface.cpp" />
     <ClCompile Include="src\light\BasicLight.cpp" />
     <ClCompile Include="src\light\DirectionLight.cpp" />
     <ClCompile Include="src\light\PointLight.cpp" />
     <ClCompile Include="src\light\SpotLight.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\material\CubeTexture.cpp" />
     <ClCompile Include="src\material\Material.cpp" />
     <ClCompile Include="src\material\Texture.cpp" />
+    <ClCompile Include="src\object\Box.cpp" />
     <ClCompile Include="src\object\Font.cpp" />
     <ClCompile Include="src\object\Group.cpp" />
     <ClCompile Include="src\object\Mesh.cpp" />
@@ -181,12 +184,15 @@
     <ClInclude Include="src\buffer\VertexArray.h" />
     <ClInclude Include="src\buffer\VertexBuffer.h" />
     <ClInclude Include="src\camera\Camera.h" />
+    <ClInclude Include="src\camera\CameraInterface.h" />
+    <ClInclude Include="src\camera\FirstCamera.h" />
     <ClInclude Include="src\light\BasicLight.h" />
     <ClInclude Include="src\light\DirectionLight.h" />
     <ClInclude Include="src\light\PointLight.h" />
     <ClInclude Include="src\light\SpotLight.h" />
     <ClInclude Include="src\Log.h" />
     <ClInclude Include="src\KHeader.h" />
+    <ClInclude Include="src\material\CubeTexture.h" />
     <ClInclude Include="src\material\Material.h" />
     <ClInclude Include="src\material\Texture.h" />
     <ClInclude Include="src\math\function.h" />
@@ -198,6 +204,7 @@
     <ClInclude Include="src\math\vector\vec2.h" />
     <ClInclude Include="src\math\vector\vec3.h" />
     <ClInclude Include="src\math\vector\vec4.h" />
+    <ClInclude Include="src\object\Box.h" />
     <ClInclude Include="src\object\Font.h" />
     <ClInclude Include="src\object\Group.h" />
     <ClInclude Include="src\object\Mesh.h" />

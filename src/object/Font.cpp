@@ -135,7 +135,7 @@ namespace KEngines { namespace KObject {
 		shader->bind();
 		shader->bindUniform3f("text_color", color);
 		vao->bind();
-		vao->enableVertexArray();
+		//vao->enableVertexArray();
 		for (const auto& c : text) {
 			Character ch = (*characters)[c];
 			Kfloat xpos = x + ch.offset.x * scale;
@@ -160,7 +160,7 @@ namespace KEngines { namespace KObject {
 			x += ch.x_advance * scale;
 		}
 		vao->unBind();
-		vao->disableVertexArray();
+		//vao->disableVertexArray();
 	}
 
 	void Font::renderTextWithCheck(const std::wstring& text, const vec3& color,

@@ -27,7 +27,7 @@ namespace KEngines { namespace KMaterial {
 		Kuint tex_id;
 		Kuint tex_unit;
 		TextureType type;
-		std::string path;
+		const std::string path;
 
 		std::string u_tex;
 		std::string u_type;

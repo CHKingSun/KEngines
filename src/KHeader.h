@@ -29,7 +29,7 @@
 #define PI 3.14159265358979323846
 
 template <typename T>
-static const T KNAN = std::numeric_limits<T>::quiet_NaN();
+const T KNAN = std::numeric_limits<T>::quiet_NaN();
 
 const std::string RES_PATH = "./res/";
 const std::string SHADER_PATH = RES_PATH + "shaders/";
