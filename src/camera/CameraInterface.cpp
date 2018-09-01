@@ -1,5 +1,4 @@
 #include "CameraInterface.h"
-#include "../render/Shader.h"
 
 namespace KEngines { namespace KCamera {
 	const std::string CameraInterface::U_PROJ{ "u_proj_matrix" };

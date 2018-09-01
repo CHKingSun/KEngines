@@ -46,7 +46,7 @@ namespace KEngines { namespace KMatrix {
 		}
 
 		void set(const T& w, const T& x, const T& y, const T& z) {
-			if (abs(w * w + x * x + y * y + z * z - 1) >= EPSILON_E6) {
+			if (!isZero(w * w + x * x + y * y + z * z - 1)) {
 				Log::error("The parameters do not match the unit quaternion! Set to default!");
 				setDefault();
 				return;

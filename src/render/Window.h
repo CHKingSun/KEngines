@@ -24,8 +24,6 @@ namespace KEngines { namespace KRenderer {
 		friend class Renderer;
 
 	private:
-		KVector::ivec2 s_size; //Screen size
-
 		Kboolean is_active;
 		Kboolean is_focus;
 
@@ -36,7 +34,7 @@ namespace KEngines { namespace KRenderer {
 		GLFWwindow* window;
 		std::string title;
 
-		Kboolean initGL() {
+		Kboolean initGL(Kint width, Kint height) {
 			if (!glfwInit()) {
 				window = nullptr;
 				return false;
@@ -44,21 +42,14 @@ namespace KEngines { namespace KRenderer {
 
 			glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 			glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-			glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
+			glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 #ifdef KDEBUG
 			glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 			// comment this line in a release build!										
 			// enable OpenGL debug context if context allows for debug context
-			GLint flags; glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
-			if (flags & GL_CONTEXT_FLAG_DEBUG_BIT) {
-				glEnable(GL_DEBUG_OUTPUT);
-				glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS); // makes sure errors are displayed synchronously
-				glDebugMessageCallback(glDebugOutput, nullptr);
-				//glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);/
-			}
 #endif
 
-			window = glfwCreateWindow(s_size.x, s_size.y, title.c_str(), nullptr, nullptr);
+			window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
 			if (!window) {
 				glfwTerminate();
 				return false;
@@ -72,6 +63,16 @@ namespace KEngines { namespace KRenderer {
 				glfwTerminate();
 				return false;
 			}
+
+#ifdef KDEBUG
+			GLint flags; glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
+			if (flags & GL_CONTEXT_FLAG_DEBUG_BIT) {
+				glEnable(GL_DEBUG_OUTPUT);
+				glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS); // makes sure errors are displayed synchronously
+				glDebugMessageCallback(glDebugOutput, nullptr);
+				glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+			}
+#endif
 
 			glClearColor(0.17f, 0.17f, 0.17f, 1.0f);
 			glfwSwapInterval(1);
@@ -98,9 +99,8 @@ namespace KEngines { namespace KRenderer {
 		}
 
 	public:
-		Window(const std::string &title, Kint width = 1200, Kint height = 900) :
-			title(title), s_size(width, height) {
-			if (!initGL()) {
+		Window(const std::string &title, Kint width = 1200, Kint height = 900) : title(title) {
+			if (!initGL(width, height)) {
 				Log::error("Create window failed!");
 				return;
 			}
@@ -115,29 +115,21 @@ namespace KEngines { namespace KRenderer {
 		}
 
 		void resize(Kint w, Kint h) {
-			s_size.x = w;
-			s_size.y = h;
 			//Log::info("Window resized with ", w, ", ", h);
-			glViewport(0, 0, s_size.x, s_size.y);
-			KObject::Font::setViewport(s_size);
-			KBuffer::FrameBuffer::setViewport(s_size);
+			glViewport(0, 0, w, h);
+			KObject::Font::setViewport(ivec2(w, h));
+			KBuffer::FrameBuffer::setViewport(ivec2(w, h));
 		}
 
-		bool closed()const {
-			return glfwWindowShouldClose(window) == GLFW_TRUE;
-		}
+		Kboolean closed()const { return glfwWindowShouldClose(window) == GLFW_TRUE; }
 
-		bool actived()const {
-			return is_active;
-		}
+		Kboolean actived()const { return is_active; }
 
-		void closeWindow()const {
-			glfwSetWindowShouldClose(window, GLFW_TRUE);
-		}
+		Kboolean focused()const { return is_focus; }
 
-		void clear() {
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		}
+		void closeWindow()const { glfwSetWindowShouldClose(window, GLFW_TRUE); }
+
+		void clear() { glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); }
 
 		void setClearColor(const KVector::vec4& color = KVector::vec4(0.17f, 0.17f, 0.17f, 1.0f)) {
 			glClearColor(color.r, color.g, color.b, color.a);
@@ -174,21 +166,11 @@ namespace KEngines { namespace KRenderer {
 			pause_time = 0;
 		}
 
-		inline const Kdouble getRunTime()const {
-			return run_time;
-		}
+		inline const Kdouble getRunTime()const { return run_time; }
 
-		inline const Kdouble getCurrentTime()const {
-			return glfwGetTime();
-		}
+		inline const Kdouble getCurrentTime()const { return glfwGetTime(); }
 
-		inline const Kuint getCurrentFrame()const {
-			return frame_current;
-		}
-
-		inline const KVector::ivec2& getWindowSize()const {
-			return s_size;
-		}
+		inline const Kuint getCurrentFrame()const { return frame_current; }
 	};
 } }
 

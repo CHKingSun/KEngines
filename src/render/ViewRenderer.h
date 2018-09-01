@@ -20,6 +20,7 @@ namespace KEngines {
 		class Object3D;
 		class Group;
 	}
+	namespace KMaterial { class CubeTexture; }
 }
 
 namespace KEngines { namespace KRenderer {
@@ -29,6 +30,7 @@ namespace KEngines { namespace KRenderer {
 		KCamera::Camera* camera;
 		KLight::BasicLight* light;
 		KLight::DirectionLight* e_light;
+		KMaterial::CubeTexture* cube_map;
 
 		KObject::Group* objects;
 

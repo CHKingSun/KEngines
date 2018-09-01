@@ -21,7 +21,9 @@ namespace KEngines { namespace KRenderer {
 		Window* window;
 		Kboolean keys[512]; //-1, 32-162, 256-248
 		Kboolean mouse[3]; //left, right, wheel
+		Kboolean mouse_hide;
 
+		ivec2 w_size;
 		vec2 mouse_pos;
 
 		void initAction() {
@@ -37,19 +39,9 @@ namespace KEngines { namespace KRenderer {
 			mouse_pos.x = mx, mouse_pos.y = my;
 		}
 
-		void setActived(Kboolean actived)const {
-			window->is_active = actived;
-			if (window->is_active) {
-				glfwSetInputMode(window->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-			}
-			else {
-				glfwSetInputMode(window->window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-			}
-		}
-
 	protected:
 		Renderer(const std::string& title, Ksize swidth = 1000, Ksize sheight = 700) :
-			window(nullptr) {
+			window(nullptr), w_size(swidth, sheight), mouse_hide(false) {
 			window = new Window(title, swidth, sheight);
 			if (window->actived()) {
 				glfwSetWindowUserPointer(window->window, this);
@@ -65,12 +57,7 @@ namespace KEngines { namespace KRenderer {
 		}
 
 		virtual void mouseEvent(Kint button, Kint action) {
-			mouse[button] = action == GLFW_PRESS;
-			if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-				//std::cout << "Pointer at: " << mx << ", " << my << std::endl;
-				//std::cout << "Run times: " << run_time << std::endl;
-				//std::cout << "Pause times: " << pause_time << std::endl;
-			}
+			mouse[button] = (action == GLFW_PRESS);
 		}
 
 		virtual void mouseWheelEvent(Kdouble yoffset) {
@@ -99,10 +86,13 @@ namespace KEngines { namespace KRenderer {
 		virtual void exec() = 0;
 
 		virtual void resize(Kint w, Kint h) {
+			w_size.x = w;
+			w_size.y = h;
 			window->resize(w, h);
 		}
 
-		void hideMouse(Kboolean hide = true)const {
+		void hideMouse(Kboolean hide = true) {
+			mouse_hide = hide;
 			if (hide) {
 				glfwSetInputMode(window->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 				//hide the mouse pointer, and also the mouse pointer will not be limited to window size.
@@ -112,9 +102,7 @@ namespace KEngines { namespace KRenderer {
 			}
 		}
 
-		const vec2& getMouse()const {
-			return mouse_pos;
-		}
+		const vec2& getMouse()const { return mouse_pos; }
 	};
 
 

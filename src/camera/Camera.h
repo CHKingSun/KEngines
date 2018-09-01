@@ -34,18 +34,12 @@ namespace KEngines { namespace KCamera {
 			update();
 		}
 
-		void rotateView(const quaternion& rot) {
-			view_rotation = view_rotation * rot;
-			update();
-		}
 		void rotateCamera(const quaternion& rot) {
-			rotation = rotation * rot;
+			rotation *= rot;
 			update();
 		}
 
-		vec3 getPosition()const override {
-			return rotation * position;
-		}
+		vec3 getPosition()const override { return rotation * position; }
 		vec3 getDirection(DirectionType type)const override;
 		mat3 getDirectionMatrix()const override {
 			return (-rotation * view_rotation).toMat3();

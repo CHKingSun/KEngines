@@ -6,7 +6,7 @@
 #define KENGINES_BASIC_LIGHT_H
 
 #include "../KHeader.h"
-#include "../math/vector/Color.h"
+#include "../math/vector/vec_default.h"
 
 namespace KEngines { namespace KRenderer { class Shader; } }
 

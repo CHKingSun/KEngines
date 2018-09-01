@@ -1,5 +1,6 @@
 #include "ViewRenderer.h"
 #include "Shader.h"
+#include "../math/vector/vec_default.h"
 #include "../camera/Camera.h"
 #include "../light/DirectionLight.h"
 #include "../light/SpotLight.h"
@@ -19,10 +20,10 @@ namespace KEngines { namespace KRenderer {
 		//shader = new Shader(SHADER_PATH + "reflect.vert", SHADER_PATH + "reflect.frag");
 
 		camera = new KCamera::Camera(60.f, Kfloat(swidth) / Kfloat(sheight), 0.1f, 1000.f, vec3(0.f, 9.f, 20.f));
-		camera->rotateView(quaternion(30.f, vec3(-1.f, 0.f, 0.f)));
+		camera->rotateView(quaternion(18.f, vec3(-1.f, 0.f, 0.f)));
 
 		light = new KLight::SpotLight(vec3(0.f, 12.f, 6.f), vec3(0.f, -1.f, -1.f));
-		light = new KLight::PointLight(vec3(0.f, 12.f, 6.f));
+		//light = new KLight::PointLight(vec3(0.f, 12.f, 6.f));
 
 		e_light = new KLight::DirectionLight(vec3(-3.f, -3.f, -1.f));
 
@@ -64,7 +65,7 @@ namespace KEngines { namespace KRenderer {
 
 		auto consolas_font = new KObject::Font(RES_PATH + "fonts/Consolas.ttf", 24.f);
 		auto kai_font = new KObject::Font(RES_PATH + "fonts/STXINGKAI.TTF", 24.f);
-		KObject::Font::setViewport(window->getWindowSize());
+		KObject::Font::setViewport(w_size);
 
 		kai_font->loadText(L"你好，世界！");
 		kai_font->loadText(L"こんにちは，世界！");
@@ -104,12 +105,13 @@ namespace KEngines { namespace KRenderer {
 		if (w != 0 && h != 0) {
 			camera->setPerspectiveProjection(60.f, Kfloat(w) / Kfloat(h), 0.1, 1000.f);
 			camera->bindUniform(shader);
+			cube_map->bindMatrix(camera);
 		}
 	}
 
 	void ViewRenderer::mouseWheelEvent(Kdouble yoffset) {
 		if (yoffset > 0 && objects->getScale().x < 10.f) {
-			objects->scale(vec3(1.2f));
+			objects->scale(vec3(1.25f));
 		}
 		else if (yoffset < 0 && objects->getScale().x > 0.1f) {
 			objects->scale(vec3(0.8f));
@@ -119,14 +121,12 @@ namespace KEngines { namespace KRenderer {
 	void ViewRenderer::cursorEvent(Kdouble xpos, Kdouble ypos) {
 		if (mouse[GLFW_MOUSE_BUTTON_LEFT]) {
 			if (abs(xpos - mouse_pos.x) > 6.f) {
-				static const vec3 up_vector(0.0f, 1.0f, 0.0f);
-				camera->rotateCamera(quaternion(atan((mouse_pos.x - xpos) / 2.0) * 3.0f, up_vector));
+				camera->rotateCamera(quaternion(atan((mouse_pos.x - xpos) / 2.0) * 3.0f, UpVector));
 				camera->bindUniform(shader);
 				cube_map->bindMatrix(camera);
 			}
 			//if (abs(ypos - mouse_pos.y) > 6.f) {
-			//	static const vec3 forwrad_vector(1.0f, 0.0f, 0.0f);
-			//	camera->rotateCamera(quaternion(atan((mouse_pos.y - ypos) / 2.0) * 3.0f, forwrad_vector));
+			//	camera->rotateCamera(quaternion(atan((mouse_pos.y - ypos) / 2.0) * 3.0f, ForwardVector));
 			//	camera->bindUniform(shader);
 			//	cube_map->bindMatrix(camera);
 			//}

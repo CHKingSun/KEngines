@@ -93,6 +93,7 @@ void test() {
 #include "object/Model.h"
 #include "camera/Camera.h"
 #include "render/ViewRenderer.h"
+#include "render/FirstViewRenderer.h"
 #include "material/Material.h"
 #include "material/Texture.h"
 
@@ -117,20 +118,20 @@ int main() {
 
 	//initLocale();
 
-	auto renderer = new ViewRenderer("KEngines");
+	auto renderer = new FirstViewRenderer("KEngines");
 
 	auto material = new Material(DARKGREY, GREY, GREY, 20.f);
 	material->addTexture(new Texture(IMAGE_PATH + "stone.png", DIFFUSE, 3));
-	auto plane = new Box(18.f, 18.f, 18.f);
+	auto plane = new Plane(18.f, 18.f, 12, 12);
 	plane->rotate(quaternion(90.f, vec3(-1.f, 0.f, 0.f)));
 	plane->setMaterial(material);
 
-	auto model = new Model(MODEL_PATH + "SK_Mannequin.FBX");
-	model->rotate(quaternion(-90.f, vec3(1.f, 0.f, 0.f)));
-	//auto model = new Model(MODEL_PATH + "nano/nanosuit2.obj");
+	//auto model = new Model(MODEL_PATH + "SK_Mannequin.FBX");
+	//model->rotate(quaternion(-90.f, vec3(1.f, 0.f, 0.f)));
+	auto model = new Model(MODEL_PATH + "nano/nanosuit2.obj");
 	//auto model = new Model(MODEL_PATH + "cellrain.obj");
 	//auto model = new Model(MODEL_PATH + "pokeball.obj");
-	model->scale(vec3(0.08f));
+	model->scale(vec3(0.8f));
 
 	renderer->addObject(plane);
 	renderer->addObject(model);

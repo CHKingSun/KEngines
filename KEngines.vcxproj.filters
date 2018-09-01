@@ -78,6 +78,12 @@
     <ClCompile Include="src\camera\CameraInterface.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\camera\FirstCamera.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\FirstViewRenderer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\KHeader.h">
@@ -167,9 +173,6 @@
     <ClInclude Include="src\light\BasicLight.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\math\vector\Color.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="src\light\DirectionLight.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -189,6 +192,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="src\camera\CameraInterface.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\vector\vec_default.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\render\FirstViewRenderer.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

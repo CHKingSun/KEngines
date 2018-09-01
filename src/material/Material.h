@@ -9,7 +9,7 @@
 #include <vector>
 
 #include "../KHeader.h"
-#include "../math/vector/Color.h"
+#include "../math/vector/vec_default.h"
 #include "Texture.h"
 
 namespace KEngines { namespace KRenderer { class Shader; } }

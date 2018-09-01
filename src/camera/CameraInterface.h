@@ -13,7 +13,7 @@
 namespace KEngines { namespace KRenderer { class Shader; } }
 
 enum DirectionType {
-	RIGHT = 1, LEFT, BACK, FORWARD
+	RIGHT = 1, LEFT, BACK, FORWARD, UP, DOWN
 };
 
 namespace KEngines { namespace KCamera {
@@ -85,6 +85,10 @@ namespace KEngines { namespace KCamera {
 
 		const mat4& getProjectionMatrix()const { return projection; }
 
+		virtual void rotateView(const quaternion& rot) {
+			view_rotation *= rot;
+			update();
+		}
 		virtual vec3 getPosition()const = 0;
 		virtual vec3 getDirection(DirectionType type = FORWARD)const = 0;
 		virtual mat3 getDirectionMatrix()const = 0;
