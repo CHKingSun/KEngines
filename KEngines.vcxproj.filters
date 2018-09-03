@@ -84,6 +84,15 @@
     <ClCompile Include="src\render\FirstViewRenderer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\object\Sphere.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\object\Maze.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\MazeRenderer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\KHeader.h">
@@ -198,6 +207,15 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="src\render\FirstViewRenderer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\object\Sphere.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\object\Maze.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\render\MazeRenderer.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

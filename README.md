@@ -1,2 +1,2 @@
 # KEngines
-A 3D Game Engine Writing by C++ and OpenGL(based on KEngine).
+A 3D Game Engine Writing by C++ and OpenGL.

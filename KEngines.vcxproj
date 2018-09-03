@@ -172,12 +172,15 @@
     <ClCompile Include="src\object\Box.cpp" />
     <ClCompile Include="src\object\Font.cpp" />
     <ClCompile Include="src\object\Group.cpp" />
+    <ClCompile Include="src\object\Maze.cpp" />
     <ClCompile Include="src\object\Mesh.cpp" />
     <ClCompile Include="src\object\Model.cpp" />
     <ClCompile Include="src\object\ModelNode.cpp" />
     <ClCompile Include="src\object\Object3D.cpp" />
     <ClCompile Include="src\object\Plane.cpp" />
+    <ClCompile Include="src\object\Sphere.cpp" />
     <ClCompile Include="src\render\FirstViewRenderer.cpp" />
+    <ClCompile Include="src\render\MazeRenderer.cpp" />
     <ClCompile Include="src\render\Shader.cpp" />
     <ClCompile Include="src\render\ViewRenderer.cpp" />
   </ItemGroup>
@@ -209,12 +212,15 @@
     <ClInclude Include="src\object\Box.h" />
     <ClInclude Include="src\object\Font.h" />
     <ClInclude Include="src\object\Group.h" />
+    <ClInclude Include="src\object\Maze.h" />
     <ClInclude Include="src\object\Mesh.h" />
     <ClInclude Include="src\object\Model.h" />
     <ClInclude Include="src\object\ModelNode.h" />
     <ClInclude Include="src\object\Object3D.h" />
     <ClInclude Include="src\object\Plane.h" />
+    <ClInclude Include="src\object\Sphere.h" />
     <ClInclude Include="src\render\FirstViewRenderer.h" />
+    <ClInclude Include="src\render\MazeRenderer.h" />
     <ClInclude Include="src\render\Renderer.h" />
     <ClInclude Include="src\render\Shader.h" />
     <ClInclude Include="src\render\ViewRenderer.h" />

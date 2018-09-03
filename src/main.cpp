@@ -88,12 +88,14 @@ void test() {
 #include "object/Plane.h"
 #include "object/Box.h"
 #include "object/Group.h"
+#include "object/Sphere.h"
 #include "util/StringUtil.h"
 #include "buffer/FrameBuffer.h"
 #include "object/Model.h"
 #include "camera/Camera.h"
 #include "render/ViewRenderer.h"
 #include "render/FirstViewRenderer.h"
+#include "render/MazeRenderer.h"
 #include "material/Material.h"
 #include "material/Texture.h"
 
@@ -116,6 +118,7 @@ void initLocale() {
 
 int main() {
 
+#if 0
 	//initLocale();
 
 	auto renderer = new FirstViewRenderer("KEngines");
@@ -126,6 +129,8 @@ int main() {
 	plane->rotate(quaternion(90.f, vec3(-1.f, 0.f, 0.f)));
 	plane->setMaterial(material);
 
+	auto sphere = new Sphere(6.f);
+
 	//auto model = new Model(MODEL_PATH + "SK_Mannequin.FBX");
 	//model->rotate(quaternion(-90.f, vec3(1.f, 0.f, 0.f)));
 	auto model = new Model(MODEL_PATH + "nano/nanosuit2.obj");
@@ -134,7 +139,13 @@ int main() {
 	model->scale(vec3(0.8f));
 
 	renderer->addObject(plane);
+	renderer->addObject(sphere);
 	renderer->addObject(model);
+#else
+
+	auto renderer = new MazeRenderer("Maze");
+
+#endif
 
 	renderer->exec();
 
