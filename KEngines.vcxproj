@@ -168,6 +168,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\material\CubeTexture.cpp" />
     <ClCompile Include="src\material\Material.cpp" />
+    <ClCompile Include="src\material\ShadowMap.cpp" />
     <ClCompile Include="src\material\Texture.cpp" />
     <ClCompile Include="src\object\Box.cpp" />
     <ClCompile Include="src\object\Font.cpp" />
@@ -199,6 +200,7 @@
     <ClInclude Include="src\KHeader.h" />
     <ClInclude Include="src\material\CubeTexture.h" />
     <ClInclude Include="src\material\Material.h" />
+    <ClInclude Include="src\material\ShadowMap.h" />
     <ClInclude Include="src\material\Texture.h" />
     <ClInclude Include="src\math\function.h" />
     <ClInclude Include="src\math\matrix\mat3.h" />

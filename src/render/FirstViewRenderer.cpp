@@ -4,6 +4,7 @@
 #include "../camera/FirstCamera.h"
 #include "../light/DirectionLight.h"
 #include "../material/CubeTexture.h"
+#include "../material/ShadowMap.h"
 #include "../object/Group.h"
 
 namespace KEngines { namespace KRenderer {
@@ -13,11 +14,13 @@ namespace KEngines { namespace KRenderer {
 		hideMouse(true);
 		glViewport(0, 0, swidth, sheight);
 
-		shader = new Shader(SHADER_PATH + "light.vert", SHADER_PATH + "light.frag");
+		shader = new Shader(SHADER_PATH + "shadow.vert", SHADER_PATH + "shadow.frag");
 
 		camera = new KCamera::FirstCamera(60.f, Kfloat(swidth) / Kfloat(sheight), 0.1f, 1000.f, vec3(0.f, 9.f, 20.f));
 
-		light = new KLight::DirectionLight(vec3(-3.f, -3.f, -1.f));
+		shadow_map = new KMaterial::ShadowMap(1920, 1080);
+
+		light = new KLight::DirectionLight(vec3(0.f, -1.f, -1.f));
 
 		cube_map = new KMaterial::CubeTexture({
 			IMAGE_PATH + "darkskies/darkskies_rt.png",
@@ -37,6 +40,7 @@ namespace KEngines { namespace KRenderer {
 		delete camera;
 		delete light;
 		delete cube_map;
+		delete shadow_map;
 		delete shader;
 	}
 
@@ -64,15 +68,42 @@ namespace KEngines { namespace KRenderer {
 		camera->bindUniform(shader);
 		light->bindUniform(shader);
 
+		shadow_map->bindLight(
+		{
+			vec3(-9.f, -9.f,  9.f), vec3( 9.f, -9.f,  9.f),
+			vec3( 9.f,  9.f,  9.f), vec3(-9.f,  9.f,  9.f),
+			vec3(-9.f, -9.f, -9.f), vec3( 9.f, -9.f, -9.f),
+			vec3( 9.f,  9.f, -9.f), vec3(-9.f,  9.f, -9.f)
+		},
+		ZeroVector, light->getDirection());
+		shadow_map->renderShadow(objects->getObject(1), w_size);
+		shadow_map->bindShadowTexture(shader);
+
+		Kfloat depth = -1.f;
+		Kfloat per_depth = 0.1f;
+		Kfloat last_time = window->getCurrentTime();
+
 		const std::wstring frame_display(L"Frame: ");
 		while (!window->closed()) {
 			window->clear();
 
-			//light->rotate(quaternion(1.f, vec3(0.f, 1.f, 0.f)));
-			//light->bindDirection(shader);
+			light->rotate(quaternion(1.f, vec3(0.f, 1.f, 0.f)));
+			light->bindDirection(shader);
+			shadow_map->bindLight(
+			{
+				vec3(-9.f, -9.f,  9.f), vec3(9.f, -9.f,  9.f),
+				vec3(9.f,  9.f,  9.f), vec3(-9.f,  9.f,  9.f),
+				vec3(-9.f, -9.f, -9.f), vec3(9.f, -9.f, -9.f),
+				vec3(9.f,  9.f, -9.f), vec3(-9.f,  9.f, -9.f)
+			},
+				ZeroVector, light->getDirection());
+			shadow_map->renderShadow(objects->getObject(1), w_size);
+			shadow_map->bindShadowTexture(shader);
 			objects->render(shader);
 
 			cube_map->render();
+
+			move();
 
 			consolas_font->renderText(frame_display + std::to_wstring(window->getCurrentFrame()),
 				vec3(0.17f, 0.57f, 0.69f), 6, 6);
@@ -82,6 +113,15 @@ namespace KEngines { namespace KRenderer {
 			kai_font->renderText(L"你好，世界！", vec3(0.17f, 0.57f, 0.69f), 240, 120);
 			kai_font->renderText(L"こんにちは，世界！", vec3(0.17f, 0.57f, 0.69f), 300, 150);
 			kai_font->renderText(L"Hello, World!", vec3(0.17f, 0.57f, 0.69f), 360, 180);
+
+			consolas_font->renderText(L"Depth: " + std::to_wstring(depth), vec3(0.17f, 0.57f, 0.69f), 6, w_size.y - 90);
+			if (window->getCurrentTime() - last_time >= 0.1f) {
+				depth += per_depth;
+				if (depth >= 2.f || depth <= -1.f) per_depth = -per_depth;
+				shader->bind();
+				shader->bindUniform1f("u_depth", depth);
+				last_time = window->getCurrentTime();
+			}
 
 			window->update();
 		}
@@ -109,23 +149,29 @@ namespace KEngines { namespace KRenderer {
 		if (keys[GLFW_KEY_LEFT_CONTROL] && keys[GLFW_KEY_Z]) {
 			window->closeWindow();
 		}
+	}
 
+	void FirstViewRenderer::move()const {
+		static const vec3 speed = vec3(1.f);
+
+		bool moved = false;
 		if (keys[GLFW_KEY_W] || keys[GLFW_KEY_UP]) {
-			camera->translate(camera->getDirection(BACK));
-			camera->bindUniform(shader);
+			camera->translate(camera->getDirection(BACK) *= speed);
+			moved = true;
 		}
-		else if (keys[GLFW_KEY_S] || keys[GLFW_KEY_DOWN]) {
-			camera->translate(camera->getDirection(FORWARD));
-			camera->bindUniform(shader);
+		if (keys[GLFW_KEY_S] || keys[GLFW_KEY_DOWN]) {
+			camera->translate(camera->getDirection(FORWARD) *= speed);
+			moved = true;
 		}
-		else if (keys[GLFW_KEY_D] || keys[GLFW_KEY_RIGHT]) {
-			camera->translate(camera->getDirection(RIGHT));
-			camera->bindUniform(shader);
+		if (keys[GLFW_KEY_D] || keys[GLFW_KEY_RIGHT]) {
+			camera->translate(camera->getDirection(RIGHT) *= speed);
+			moved = true;
 		}
-		else if (keys[GLFW_KEY_A] || keys[GLFW_KEY_LEFT]) {
-			camera->translate(camera->getDirection(LEFT));
-			camera->bindUniform(shader);
+		if (keys[GLFW_KEY_A] || keys[GLFW_KEY_LEFT]) {
+			camera->translate(camera->getDirection(LEFT) *= speed);
+			moved = true;
 		}
+		if (moved) camera->bindUniform(shader);
 	}
 
 	void FirstViewRenderer::cursorEvent(Kdouble xpos, Kdouble ypos) {

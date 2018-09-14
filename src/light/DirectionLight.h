@@ -5,6 +5,8 @@
 #ifndef KENGINES_DIRECTION_LIGHT_H
 #define KENGINES_DIRECTION_LIGHT_H
 
+#include <vector>
+
 #include "BasicLight.h"
 #include "../math/matrix/quaternion.h"
 #include "../Log.h"
@@ -43,6 +45,7 @@ namespace KEngines { namespace KLight {
 
 			this->direction = direction;
 		}
+		const vec3& getDirection()const { return direction; }
 
 		void rotate(const KMatrix::quaternion& q) {
 			direction = q * direction;
@@ -53,6 +56,10 @@ namespace KEngines { namespace KLight {
 		void bindUniform(const KRenderer::Shader* shader)const override;
 
 		void bindDirection(const KRenderer::Shader* shader)const override;
+
+		//Note: just for shadow render.
+		void bindProjectionMatrix(const std::vector<vec3>& bounds,
+			const KVector::vec3& pos, const KRenderer::Shader* shader)const;
 	};
 } }
 

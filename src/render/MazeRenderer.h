@@ -12,18 +12,25 @@ namespace KEngines {
 	namespace KCamera { class FirstCamera; }
 	namespace KLight { class DirectionLight; }
 	namespace KObject { class Group; }
-	namespace KMaterial { class CubeTexture; }
+	namespace KMaterial {
+		class ShadowMap;
+		class CubeTexture;
+	}
 }
 
 namespace KEngines { namespace KRenderer {
 	class MazeRenderer : public Renderer {
 	private:
 		Shader* shader;
+		KMaterial::ShadowMap* shadow_map;
 		KCamera::FirstCamera* camera;
+		KCamera::FirstCamera* default_camera;
 		KLight::DirectionLight* light;
 		KMaterial::CubeTexture* cube_map;
 
 		KObject::Group* objects;
+
+		Kboolean camera_change;
 
 	protected:
 		void cursorEvent(Kdouble xpos, Kdouble ypos)override;
@@ -32,7 +39,7 @@ namespace KEngines { namespace KRenderer {
 
 		void mouseEvent(Kint button, Kint action)override;
 
-		void move();
+		void move()const;
 
 	public:
 		MazeRenderer(const std::string& title, Ksize swidth = 1000, Ksize sheight = 700);

@@ -125,11 +125,9 @@ int main() {
 
 	auto material = new Material(DARKGREY, GREY, GREY, 20.f);
 	material->addTexture(new Texture(IMAGE_PATH + "stone.png", DIFFUSE, 3));
-	auto plane = new Plane(18.f, 18.f, 12, 12);
+	auto plane = new Plane(30.f, 30.f, 12, 12);
 	plane->rotate(quaternion(90.f, vec3(-1.f, 0.f, 0.f)));
 	plane->setMaterial(material);
-
-	auto sphere = new Sphere(6.f);
 
 	//auto model = new Model(MODEL_PATH + "SK_Mannequin.FBX");
 	//model->rotate(quaternion(-90.f, vec3(1.f, 0.f, 0.f)));
@@ -139,7 +137,6 @@ int main() {
 	model->scale(vec3(0.8f));
 
 	renderer->addObject(plane);
-	renderer->addObject(sphere);
 	renderer->addObject(model);
 #else
 

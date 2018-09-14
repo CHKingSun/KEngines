@@ -89,6 +89,7 @@ namespace KEngines {
 
 //Debug
 //OpenGL header
+#include <cassert>
 #include <GL/glew.h>
 #define	glCall(x)	x; \
 					glCheckError(#x, __FILE__, __LINE__)
@@ -117,7 +118,7 @@ static void GLAPIENTRY glDebugOutput(GLenum source,
 	// ignore these non-significant error codes
 
 	KEngines::Log::debug("---------------");
-	KEngines::Log::debug("Debug message (", id, "): ", message);
+	KEngines::Log::debug("Debug message (0x", std::setbase(16), std::setiosflags(std::ios::uppercase), id, "): ", message);
 
 	switch (source)
 	{
@@ -150,6 +151,9 @@ static void GLAPIENTRY glDebugOutput(GLenum source,
 	case GL_DEBUG_SEVERITY_NOTIFICATION: KEngines::Log::debug("Severity: notification"); break;
 	}
 	KEngines::Log::debug();
+	
+	//assert(GL_DEBUG_TYPE_ERROR != type);
+	assert(false);
 }
 
 #else

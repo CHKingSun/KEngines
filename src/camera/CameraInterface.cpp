@@ -19,7 +19,7 @@ namespace KEngines { namespace KCamera {
 		const vec3 v(vec3::cross(u, n).normalize());
 
 		position = eye;
-		view_rotation.fromMatrix(mat3(u, v, -n));
+		view_rotation.fromMatrix(mat3(u, v, n));
 		view_rotation.inverse();
 	}
 
@@ -41,7 +41,7 @@ namespace KEngines { namespace KCamera {
 		const vec3 v(vec3::cross(u, n).normalize());
 
 		position = eye;
-		view_rotation.fromMatrix(mat3(u, v, -n));
+		view_rotation.fromMatrix(mat3(u, v, n));
 		view_rotation.inverse();
 
 		update();

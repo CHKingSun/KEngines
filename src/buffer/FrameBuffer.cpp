@@ -7,28 +7,22 @@ namespace KEngines { namespace KBuffer {
 	KRenderer::Shader* FrameBuffer::shader = nullptr;
 	Kuint FrameBuffer::frame_count = 0;
 
-	FrameBuffer::FrameBuffer(Kuint width, Kuint height) : vao(nullptr), vbo(nullptr) {
+	FrameBuffer::FrameBuffer(Kuint width, Kuint height) :
+		t_size(width, height), vao(nullptr), vbo(nullptr) {
 		const Kfloat vertices[] = {
 			-1.f, -1.f, 0.f, 0.f,
 			 1.f, -1.f, 1.f, 0.f,
-			-1.f,  1.f, 0.f, 1.f,
-			-1.f,  1.f, 0.f, 1.f,
-			 1.f, -1.f, 1.f, 0.f,
 			 1.f,  1.f, 1.f, 1.f,
+			 1.f,  1.f, 1.f, 1.f,
+			-1.f,  1.f, 0.f, 1.f,
+			-1.f, -1.f, 0.f, 0.f,
 
-			 //0.f,  0.f,  0.f, 0.5f,
-			 //1.f,  0.f, 0.5f, 0.5f,
-			 //0.f, -1.f,  0.f,  0.f,
-			 //0.f, -1.f,  0.f,  0.f,
-			 //1.f,  0.f, 0.5f, 0.5f,
-			 //1.f, -1.f, 0.5f,  0.f
-
+			 0.f, -1.f, 0.f, 0.f,
+			 1.f, -1.f, 1.f, 0.f,
+			 1.f,  0.f, 1.f, 1.f,
+			 1.f,  0.f, 1.f, 1.f,
 			 0.f,  0.f, 0.f, 1.f,
-			 1.f,  0.f, 1.f, 1.f,
-			 0.f, -1.f, 0.f, 0.f,
-			 0.f, -1.f, 0.f, 0.f,
-			 1.f,  0.f, 1.f, 1.f,
-			 1.f, -1.f, 1.f, 0.f
+			 0.f, -1.f, 0.f, 0.f
 		};
 
 		if (frame_count == 0) {
@@ -38,19 +32,19 @@ namespace KEngines { namespace KBuffer {
 		}
 		++frame_count;
 
+		shader->bind();
 		vao = new VertexArray();
 		vbo = new VertexBuffer(VERTEX, sizeof(vertices), vertices);
 		vao->allocate(vbo, 0, 4);
 
-		glGenFramebuffers(1, &frame_buffer);
-		glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
-
 		glGenTextures(1, &tex_id);
-		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, tex_id);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		glGenFramebuffers(1, &frame_buffer);
+		glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex_id, 0);
 
 		//Kuint render_buffer;
@@ -82,11 +76,13 @@ namespace KEngines { namespace KBuffer {
 
 	void FrameBuffer::begin()const {
 		glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer); //Bind frame buffer
+		glViewport(0, 0, t_size.x, t_size.y);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
-	void FrameBuffer::end()const {
+	void FrameBuffer::end(const KVector::ivec2& viewport)const {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0); //Bind frame buffer
+		glViewport(0, 0, viewport.x, viewport.y);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
@@ -99,6 +95,7 @@ namespace KEngines { namespace KBuffer {
 		shader->bind();
 		vao->bind();
 		vao->enableVertexArray();
+		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, tex_id);
 		glDrawArrays(GL_TRIANGLES, 0, 12);
 	}

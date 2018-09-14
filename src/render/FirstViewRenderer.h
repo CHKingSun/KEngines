@@ -15,7 +15,10 @@ namespace KEngines {
 		class Object3D;
 		class Group;
 	}
-	namespace KMaterial { class CubeTexture; }
+	namespace KMaterial { 
+		class CubeTexture;
+		class ShadowMap;
+	}
 }
 
 namespace KEngines { namespace KRenderer {
@@ -25,6 +28,7 @@ namespace KEngines { namespace KRenderer {
 			KCamera::FirstCamera* camera;
 			KLight::DirectionLight* light;
 			KMaterial::CubeTexture* cube_map;
+			KMaterial::ShadowMap* shadow_map;
 
 			KObject::Group* objects;
 
@@ -34,6 +38,8 @@ namespace KEngines { namespace KRenderer {
 			void keyEvent(Kint key, Kint action)override;
 
 			void mouseEvent(Kint button, Kint action)override;
+
+			void move()const;
 
 		public:
 			FirstViewRenderer(const std::string& title, Ksize swidth = 1000, Ksize sheight = 700);

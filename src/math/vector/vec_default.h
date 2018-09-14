@@ -28,6 +28,7 @@ namespace KEngines { namespace KVector {
 	static const vec3 ForwardVector(0.f, 0.f, 1.f);
 	static const vec3 BackVector(0.f, 0.f, -1.f);
 	static const vec3 ZeroVector(0.f);
+	static const vec3 Center(0.f);
 
 } }
 

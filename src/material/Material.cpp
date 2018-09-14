@@ -10,18 +10,13 @@ namespace KEngines { namespace KMaterial {
 
 	Material::Material(const vec3& ma /* = GREY */, const vec3& md /* = GREY */,
 		const vec3& ms /* = GREY */, Kfloat msh /* = 1.f */, Kfloat mo /* = 1.f */) :
-		ambient(ma), diffuse(md), specular(ms), shininess(msh), opacity(mo) {
-		Kuint unit = 1;
-		for (const auto& it : textures) {
-			it->setTextureUnit(unit++);
-		}
-	}
+		ambient(ma), diffuse(md), specular(ms), shininess(msh), opacity(mo), textures() {}
 
 	Material::Material(const std::vector<Texture *>& tex, const vec3& ma /* = GREY */,
 		const vec3& md /* = GREY */, const vec3& ms /* = GREY */,
 		Kfloat msh /* = 1.f */, Kfloat mo /* = 1.f */) : textures(tex),
 		ambient(ma), diffuse(md), specular(ms), shininess(msh), opacity(mo) {
-		Kuint unit = 1;
+		Kuint unit = 2;
 		for (const auto& it : textures) {
 			it->setTextureUnit(unit++);
 		}
@@ -71,7 +66,7 @@ namespace KEngines { namespace KMaterial {
 		}
 
 		textures.emplace_back(tex);
-		tex->setTextureUnit(textures.size());
+		tex->setTextureUnit(textures.size() + 1);
 		return true;
 	}
 
@@ -86,7 +81,7 @@ namespace KEngines { namespace KMaterial {
 		delete (*it); (*it) = nullptr;
 		textures.erase(it);
 
-		Kuint unit = 1;
+		Kuint unit = 2;
 		for (const auto& it : textures) {
 			it->setTextureUnit(unit++);
 		}

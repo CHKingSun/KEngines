@@ -4,19 +4,26 @@
 #include "../camera/FirstCamera.h"
 #include "../light/DirectionLight.h"
 #include "../material/CubeTexture.h"
+#include "../material/ShadowMap.h"
 #include "../object/Group.h"
 #include "../object/Maze.h"
+#include "../object/Sphere.h"
 
 namespace KEngines { namespace KRenderer {
 	MazeRenderer::MazeRenderer(const std::string& title, Ksize swidth /* = 1000 */, Ksize sheight /* = 700 */) :
-		Renderer(title, swidth, sheight), shader(nullptr), camera(nullptr),
-		light(nullptr), objects(nullptr), cube_map(nullptr) {
-		hideMouse(true);
+		Renderer(title, swidth, sheight), shader(nullptr), shadow_map(nullptr), camera(nullptr),
+		light(nullptr), objects(nullptr), cube_map(nullptr), default_camera(nullptr), camera_change(false) {
+		//hideMouse(true);
 		glViewport(0, 0, swidth, sheight);
 
-		shader = new Shader(SHADER_PATH + "light.vert", SHADER_PATH + "light.frag");
+		shader = new Shader(SHADER_PATH + "shadow.vert", SHADER_PATH + "shadow.frag");
+
+		shadow_map = new KMaterial::ShadowMap(1920, 1080);
 
 		camera = new KCamera::FirstCamera(60.f, Kfloat(swidth) / Kfloat(sheight), 0.1f, 1000.f, vec3(0.f, 9.f, 20.f));
+		camera->rotateView(quaternion(180.f, UpVector));
+
+		default_camera = new KCamera::FirstCamera(vec3(0.f, 10.f, 0.f), ZeroVector, ForwardVector);
 
 		light = new KLight::DirectionLight(vec3(-3.f, -3.f, -1.f));
 
@@ -39,39 +46,86 @@ namespace KEngines { namespace KRenderer {
 	MazeRenderer::~MazeRenderer() {
 		delete objects;
 		delete camera;
+		delete default_camera;
 		delete light;
 		delete cube_map;
+		delete shadow_map;
 		delete shader;
 	}
 
 	void MazeRenderer::exec() {
 		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LEQUAL);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glDepthFunc(GL_LEQUAL);
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
 
 		auto consolas_font = new KObject::Font(RES_PATH + "fonts/Consolas.ttf", 24.f);
 		KObject::Font::setViewport(w_size);
 
 		camera->bindUniform(shader);
 		light->bindUniform(shader);
+		shadow_map->bindLight(
+		{
+			vec3(-20.f, -20.f,  1.f), vec3( 20.f, -20.f,  1.f),
+			vec3( 20.f,  20.f,  1.f), vec3(-20.f,  20.f,  1.f),
+			vec3(-20.f, -20.f, -1.f), vec3( 20.f, -20.f, -1.f),
+			vec3( 20.f,  20.f, -1.f), vec3(-20.f,  20.f, -1.f)
+		},
+		vec3(10.f, 2.f, 0.f), light->getDirection());
+		shadow_map->renderShadow(objects, w_size);
+
+		Kfloat depth = 0.f;
+		Kfloat per_depth = -0.001f;
+		Kfloat last_time = window->getCurrentTime();
 
 		const std::wstring frame_display(L"Frame: ");
 		while (!window->closed()) {
 			window->clear();
 
-			//light->rotate(quaternion(1.f, vec3(0.f, 1.f, 0.f)));
-			//light->bindDirection(shader);
+			light->rotate(quaternion(1.f, vec3(0.f, 1.f, 0.f)));
+			light->bindDirection(shader);
+			shadow_map->bindLight(
+			{
+				vec3(-9.f, -9.f,  9.f), vec3(9.f, -9.f,  9.f),
+				vec3(9.f,  9.f,  9.f), vec3(-9.f,  9.f,  9.f),
+				vec3(-9.f, -9.f, -9.f), vec3(9.f, -9.f, -9.f),
+				vec3(9.f,  9.f, -9.f), vec3(-9.f,  9.f, -9.f)
+			},
+				ZeroVector, light->getDirection());
+			shadow_map->renderShadow(objects, w_size);
+			shadow_map->bindShadowTexture(shader);
 			objects->render(shader);
 
+			glCullFace(GL_FRONT);
 			cube_map->render();
+			glCullFace(GL_BACK);
 
 			consolas_font->renderText(frame_display + std::to_wstring(window->getCurrentFrame()),
 				vec3(0.17f, 0.57f, 0.69f), 6, 6);
 			consolas_font->renderText(L"Press 'ESC' to display mouse.", vec3(0.17f, 0.57f, 0.69f), 6, w_size.y - 30);
 			consolas_font->renderText(L"Press Ctrl + Z to exit.", vec3(0.17f, 0.57f, 0.69f), 6, w_size.y - 60);
 
+			consolas_font->renderText(L"Depth: " + std::to_wstring(depth), vec3(0.17f, 0.57f, 0.69f), 6, w_size.y - 90);
+			if (window->getCurrentTime() - last_time >= 0.1f) {
+				depth += per_depth;
+				if (depth >= 0.f || depth <= -0.05f) per_depth = -per_depth;
+				shader->bind();
+				shader->bindUniform1f("u_depth", depth);
+				last_time = window->getCurrentTime();
+			}
+
 			move();
+
+			if (camera_change) {
+				default_camera->bindUniform(shader);
+				cube_map->bindMatrix(default_camera);
+			}
+			else {
+				camera->bindUniform(shader);
+				cube_map->bindMatrix(camera);
+			}
 
 			window->update();
 		}
@@ -98,6 +152,8 @@ namespace KEngines { namespace KRenderer {
 		if (keys[GLFW_KEY_LEFT_CONTROL] && keys[GLFW_KEY_Z]) {
 			window->closeWindow();
 		}
+
+		if (keys[GLFW_KEY_V]) camera_change = !camera_change;
 	}
 
 	void MazeRenderer::cursorEvent(Kdouble xpos, Kdouble ypos) {
@@ -121,7 +177,7 @@ namespace KEngines { namespace KRenderer {
 		}
 	}
 
-	void MazeRenderer::move() {
+	void MazeRenderer::move()const {
 		static const vec3 speed = vec3(0.03f, 0.f, 0.03f);
 
 		bool moved = false;

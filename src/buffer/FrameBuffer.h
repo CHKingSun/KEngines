@@ -19,6 +19,8 @@ namespace KEngines { namespace KBuffer {
 		class VertexArray* vao;
 		class VertexBuffer* vbo;
 
+		KVector::ivec2 t_size;
+
 		Kuint frame_buffer;
 		Kuint tex_id;
 
@@ -34,7 +36,7 @@ namespace KEngines { namespace KBuffer {
 		}
 
 		void begin()const;
-		void end()const;
+		void end(const KVector::ivec2& viewport)const;
 
 		void setOpacity(Kfloat opacity = 1.f)const;
 		void render()const;
