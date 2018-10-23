@@ -50,7 +50,7 @@ void dealBasicLight(const in BasicLight light, inout vec3 ambient) {
 
 void dealDirectionLight(const in DirectionLight light, const in float u_shininess, const in vec3 N, const in vec3 E,
                        inout vec3 ambient, inout vec3 diffuse, inout vec3 specular) {
-    vec3 L = normalize(-light.direction);
+    vec3 L = -light.direction;
     float cosT = max(dot(L, N), 0.f);
     float cosA = 0.f;
     if(cosT != 0.f) cosA = max(dot(N, normalize(L + E)), 0.f);
@@ -71,7 +71,7 @@ void dealPointLight(const in PointLight light, const in float u_shininess, const
     if(cosT != 0.f) cosA = max(dot(N, normalize(L + E)), 0.f);
 
     attenuation *= light.intensity;
-    ambient += light.ambient * attenuation;
+    ambient += light.ambient * light.intensity;
     diffuse += light.diffuse * attenuation * cosT;
     specular += light.specular * attenuation * pow(cosA, u_shininess);
 }
@@ -82,8 +82,8 @@ void dealSpotLight(const in SpotLight light, const in float u_shininess, const i
     float attenuation = 1.f / (light.kc + light.kl * dis + light.kq * dis * dis); 
 
     vec3 L = normalize(light.position - world_pos);
-    float intensity = smoothstep(light.outer_cutoff, light.inner_cutoff, dot(normalize(light.direction), -L));
-    if(intensity == 0.f) return;
+    float intensity = max(0.1f, smoothstep(light.outer_cutoff, light.inner_cutoff, dot(light.direction, -L)));
+    // if(intensity == 0.f) return;
     float cosT = max(dot(L, N), 0.f);
     float cosA = 0.f;
     if(cosT != 0.f) cosA = max(dot(N, normalize(L + E)), 0.f);
@@ -94,8 +94,23 @@ void dealSpotLight(const in SpotLight light, const in float u_shininess, const i
     specular += light.specular * attenuation * pow(cosA, u_shininess);
 }
 
-vec4 dealShadowCoord(const in vec4 lgiht_world_space) {
-    return (lgiht_world_space + 1.f) / 2.f;
+uniform float u_depth; //just for test, would be deleted later.
+
+float dealShadow(const in sampler2DShadow shadow_map, const in vec4 lgiht_world_space,
+                const in vec3 normal, const in vec3 light_dir) {
+    vec3 light_world_pos = lgiht_world_space.xyz / lgiht_world_space.w;
+    light_world_pos = (light_world_pos + 1.f) / 2.f;
+
+    float shadow = 0.f;
+    const vec3 tex_size = vec3(1.f / textureSize(shadow_map, 0),
+                        (1.f - dot(normal, -light_dir)) * -0.0024f);
+    for(int x = -1; x <= 1; ++x) {
+        for(int y = -1; y <= 1; ++y) {
+            shadow += texture(shadow_map, light_world_pos + vec3(x, y, 1.f) * tex_size);
+        }
+    }
+
+    return shadow / 9.f;
 }
 
 in V_OUT {
@@ -118,8 +133,6 @@ uniform vec3 u_diffuse;
 uniform vec3 u_specular;
 uniform float u_shininess;
 uniform float u_opacity;
-
-uniform float u_depth;
 
 uniform Texture u_textures[MAX_TEXTURES_NUM];
 uniform sampler2DShadow u_shadow_map;
@@ -144,11 +157,11 @@ void main() {
     }
 
     if(flag[0]) m_ambient *= vec4(u_ambient, u_opacity);
-    else m_ambient = vec4(u_ambient, u_opacity);
+    else m_ambient = vec4(u_ambient, 0.f);
     if(flag[1]) m_diffuse *= vec4(u_diffuse, u_opacity);
-    else m_diffuse = vec4(u_diffuse, u_opacity);
+    else m_diffuse = vec4(u_diffuse, 0.f);
     if(flag[2]) m_specular *= vec4(u_specular, u_opacity);
-    else m_specular = vec4(u_specular, u_opacity);
+    else m_specular = vec4(u_specular, 0.f);
 
     vec3 l_ambient = vec3(0.f);
     vec3 l_diffuse = vec3(0.f);
@@ -172,10 +185,10 @@ void main() {
         }
     }
 
-    vec4 shadow_coord = fs_in.v_light_world_pos;
-    shadow_coord.z -= 0.0014f;
-    float depth = textureProj(u_shadow_map, dealShadowCoord(shadow_coord));
+    float shadow_depth = dealShadow(u_shadow_map, fs_in.v_light_world_pos, fs_in.v_N, u_dLights[0].direction);
+    // float shadow_depth = 1.f;
+    if(m_diffuse.a == 0.f) discard;
     frag_color = m_ambient * vec4(l_ambient, 1.f)
-               + m_diffuse *  vec4(l_diffuse * depth, 1.f)
-               + m_specular * vec4(l_specular * depth, 1.f);
+               + m_diffuse *  vec4(l_diffuse * shadow_depth, 1.f);
+               + m_specular * vec4(l_specular * shadow_depth, 1.f);
 }

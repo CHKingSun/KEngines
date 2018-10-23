@@ -33,6 +33,7 @@ namespace KEngines { namespace KLight {
 			direction(direction), diffuse(diffuse), specular(specular),
 			u_direction("u_dLights[i].direction"), u_diffuse("u_dLights[i].diffuse"),
 			u_specular("u_dLights[i].specular") {
+			this->direction.normalize();
 			setBindId(bind_id);
 		}
 		~DirectionLight() = default;
@@ -44,6 +45,7 @@ namespace KEngines { namespace KLight {
 			}
 
 			this->direction = direction;
+			this->direction.normalize();
 		}
 		const vec3& getDirection()const { return direction; }
 
@@ -56,10 +58,6 @@ namespace KEngines { namespace KLight {
 		void bindUniform(const KRenderer::Shader* shader)const override;
 
 		void bindDirection(const KRenderer::Shader* shader)const override;
-
-		//Note: just for shadow render.
-		void bindProjectionMatrix(const std::vector<vec3>& bounds,
-			const KVector::vec3& pos, const KRenderer::Shader* shader)const;
 	};
 } }
 

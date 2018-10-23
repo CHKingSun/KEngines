@@ -71,7 +71,7 @@ void dealPointLight(const in PointLight light, const in float u_shininess, const
     if(cosT != 0.f) cosA = max(dot(N, normalize(L + E)), 0.f);
 
     attenuation *= light.intensity;
-    ambient += light.ambient * attenuation;
+    ambient += light.ambient * light.intensity;
     diffuse += light.diffuse * attenuation * cosT;
     specular += light.specular * attenuation * pow(cosA, u_shininess);
 }
@@ -82,14 +82,14 @@ void dealSpotLight(const in SpotLight light, const in float u_shininess, const i
     float attenuation = 1.f / (light.kc + light.kl * dis + light.kq * dis * dis); 
 
     vec3 L = normalize(light.position - world_pos);
-    float intensity = smoothstep(light.outer_cutoff, light.inner_cutoff, dot(normalize(light.direction), -L));
-    if(intensity == 0.f) return;
+    float intensity = max(0.1f, smoothstep(light.outer_cutoff, light.inner_cutoff, dot(normalize(light.direction), -L)));
+    // if(intensity == 0.f) return;
     float cosT = max(dot(L, N), 0.f);
     float cosA = 0.f;
     if(cosT != 0.f) cosA = max(dot(N, normalize(L + E)), 0.f);
 
     attenuation *= light.intensity * intensity;
-    ambient += light.ambient * attenuation;
+    ambient += light.ambient * light.intensity * intensity;;
     diffuse += light.diffuse * attenuation * cosT;
     specular += light.specular * attenuation * pow(cosA, u_shininess);
 }

@@ -41,32 +41,4 @@ namespace KEngines { namespace KLight {
 		shader->bind();
 		shader->bindUniform3f(u_direction.c_str(), direction);
 	}
-
-	void DirectionLight::bindProjectionMatrix(const std::vector<vec3>& bounds,
-		const KVector::vec3& pos, const KRenderer::Shader* shader)const {
-		if (shader == nullptr) {
-			Log::error("The shader to bind matrix is null!");
-			return;
-		}
-
-		KMatrix::mat4 proj = KFunction::lookAt(pos, pos - direction, UpVector);
-		Kfloat x_min = FLT_MAX, y_min = FLT_MAX, z_min = FLT_MAX;
-		Kfloat x_max = FLT_MIN, y_max = FLT_MIN, z_max = FLT_MIN;
-
-		for (const auto& point : bounds) {
-			vec4 p = proj * vec4(point, 1.f);
-
-			x_min = min(x_min, p.x);
-			y_min = min(y_min, p.y);
-			z_min = min(z_min, p.z);
-			x_max = max(x_max, p.x);
-			y_max = max(y_max, p.y);
-			z_max = max(z_max, p.z);
-		}
-
-		proj = KFunction::ortho(x_min, x_max, y_min, y_max, z_min, z_max) * proj;
-
-		shader->bind();
-		shader->bindUniformMat4f("u_light_matrix", proj);
-	}
 } }

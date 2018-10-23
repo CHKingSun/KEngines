@@ -1,4 +1,4 @@
-#include "ViewRenderer.h"
+ï»¿#include "ViewRenderer.h"
 #include "Shader.h"
 #include "../math/vector/vec_default.h"
 #include "../camera/Camera.h"
@@ -59,16 +59,16 @@ namespace KEngines { namespace KRenderer {
 
 	void ViewRenderer::exec() {
 		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LEQUAL);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glDepthFunc(GL_LEQUAL);
 
 		auto consolas_font = new KObject::Font(RES_PATH + "fonts/Consolas.ttf", 24.f);
 		auto kai_font = new KObject::Font(RES_PATH + "fonts/STXINGKAI.TTF", 24.f);
 		KObject::Font::setViewport(w_size);
 
-		kai_font->loadText(L"ÄãºÃ£¬ÊÀ½ç£¡");
-		kai_font->loadText(L"¤³¤ó¤Ë¤Á¤Ï£¬ÊÀ½ç£¡");
+		kai_font->loadText(L"ä½ å¥½ï¼Œä¸–ç•Œï¼");
+		kai_font->loadText(L"ã“ã‚“ã«ã¡ã¯ï¼Œä¸–ç•Œï¼");
 
 		camera->bindUniform(shader);
 		light->bindUniform(shader);
@@ -88,8 +88,8 @@ namespace KEngines { namespace KRenderer {
 			consolas_font->renderText(frame_display + std::to_wstring(window->getCurrentFrame()),
 				vec3(0.17f, 0.57f, 0.69f), 6, 6);
 
-			kai_font->renderText(L"ÄãºÃ£¬ÊÀ½ç£¡", vec3(0.17f, 0.57f, 0.69f), 240, 120);
-			kai_font->renderText(L"¤³¤ó¤Ë¤Á¤Ï£¬ÊÀ½ç£¡", vec3(0.17f, 0.57f, 0.69f), 300, 150);
+			kai_font->renderText(L"ï¿½ï¿½Ã£ï¿½ï¿½ï¿½ï¿½ç£¡", vec3(0.17f, 0.57f, 0.69f), 240, 120);
+			kai_font->renderText(L"ï¿½ï¿½ï¿½ï¿½Ë¤ï¿½ï¿½Ï£ï¿½ï¿½ï¿½ï¿½ç£¡", vec3(0.17f, 0.57f, 0.69f), 300, 150);
 			kai_font->renderText(L"Hello, World!", vec3(0.17f, 0.57f, 0.69f), 360, 180);
 
 			window->update();

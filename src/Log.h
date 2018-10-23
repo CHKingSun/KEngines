@@ -152,8 +152,7 @@ static void GLAPIENTRY glDebugOutput(GLenum source,
 	}
 	KEngines::Log::debug();
 	
-	//assert(GL_DEBUG_TYPE_ERROR != type);
-	assert(false);
+	assert(GL_DEBUG_TYPE_ERROR != type);
 }
 
 #else

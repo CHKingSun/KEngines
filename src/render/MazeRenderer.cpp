@@ -8,6 +8,7 @@
 #include "../object/Group.h"
 #include "../object/Maze.h"
 #include "../object/Sphere.h"
+#include "../object/Model.h"
 
 namespace KEngines { namespace KRenderer {
 	MazeRenderer::MazeRenderer(const std::string& title, Ksize swidth /* = 1000 */, Ksize sheight /* = 700 */) :
@@ -23,7 +24,7 @@ namespace KEngines { namespace KRenderer {
 		camera = new KCamera::FirstCamera(60.f, Kfloat(swidth) / Kfloat(sheight), 0.1f, 1000.f, vec3(0.f, 9.f, 20.f));
 		camera->rotateView(quaternion(180.f, UpVector));
 
-		default_camera = new KCamera::FirstCamera(vec3(0.f, 10.f, 0.f), ZeroVector, ForwardVector);
+		default_camera = new KCamera::FirstCamera(vec3(0.f, 10.f, 0.f), ZeroVector, UpVector);
 
 		light = new KLight::DirectionLight(vec3(-3.f, -3.f, -1.f));
 
@@ -41,6 +42,11 @@ namespace KEngines { namespace KRenderer {
 		auto maze = new KObject::Maze();
 		camera->setPostion(maze->getStartPosition());
 		objects->addObject(maze);
+
+		auto alonne = new KObject::Model(MODEL_PATH + "Alonne/Alonne.obj");
+		alonne->scale(vec3(0.3f));
+		alonne->setPosition(maze->getStartPosition() + vec3(-1.f, -0.48f, 1.f));
+		objects->addObject(alonne);
 	}
 
 	MazeRenderer::~MazeRenderer() {
@@ -66,18 +72,19 @@ namespace KEngines { namespace KRenderer {
 
 		camera->bindUniform(shader);
 		light->bindUniform(shader);
-		shadow_map->bindLight(
+		shadow_map->bindDirectionLight(
 		{
 			vec3(-20.f, -20.f,  1.f), vec3( 20.f, -20.f,  1.f),
 			vec3( 20.f,  20.f,  1.f), vec3(-20.f,  20.f,  1.f),
 			vec3(-20.f, -20.f, -1.f), vec3( 20.f, -20.f, -1.f),
 			vec3( 20.f,  20.f, -1.f), vec3(-20.f,  20.f, -1.f)
 		},
-		vec3(10.f, 2.f, 0.f), light->getDirection());
+		light->getDirection());
 		shadow_map->renderShadow(objects, w_size);
+		shadow_map->bindShadowTexture(shader);
 
 		Kfloat depth = 0.f;
-		Kfloat per_depth = -0.001f;
+		Kfloat per_depth = 0.0001f;
 		Kfloat last_time = window->getCurrentTime();
 
 		const std::wstring frame_display(L"Frame: ");
@@ -86,21 +93,21 @@ namespace KEngines { namespace KRenderer {
 
 			light->rotate(quaternion(1.f, vec3(0.f, 1.f, 0.f)));
 			light->bindDirection(shader);
-			shadow_map->bindLight(
+			shadow_map->bindDirectionLight(
 			{
 				vec3(-9.f, -9.f,  9.f), vec3(9.f, -9.f,  9.f),
 				vec3(9.f,  9.f,  9.f), vec3(-9.f,  9.f,  9.f),
 				vec3(-9.f, -9.f, -9.f), vec3(9.f, -9.f, -9.f),
 				vec3(9.f,  9.f, -9.f), vec3(-9.f,  9.f, -9.f)
 			},
-				ZeroVector, light->getDirection());
+			light->getDirection());
 			shadow_map->renderShadow(objects, w_size);
 			shadow_map->bindShadowTexture(shader);
 			objects->render(shader);
 
-			glCullFace(GL_FRONT);
-			cube_map->render();
-			glCullFace(GL_BACK);
+ 			glCullFace(GL_FRONT);
+ 			cube_map->render();
+ 			glCullFace(GL_BACK);
 
 			consolas_font->renderText(frame_display + std::to_wstring(window->getCurrentFrame()),
 				vec3(0.17f, 0.57f, 0.69f), 6, 6);
@@ -110,7 +117,7 @@ namespace KEngines { namespace KRenderer {
 			consolas_font->renderText(L"Depth: " + std::to_wstring(depth), vec3(0.17f, 0.57f, 0.69f), 6, w_size.y - 90);
 			if (window->getCurrentTime() - last_time >= 0.1f) {
 				depth += per_depth;
-				if (depth >= 0.f || depth <= -0.05f) per_depth = -per_depth;
+				if (depth >= 0.008f || depth <= 0.f) per_depth = -per_depth;
 				shader->bind();
 				shader->bindUniform1f("u_depth", depth);
 				last_time = window->getCurrentTime();

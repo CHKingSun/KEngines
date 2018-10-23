@@ -52,8 +52,8 @@ namespace KEngines { namespace KMaterial {
 		}
 	}
 
-	void ShadowMap::bindLight(const std::vector<KVector::vec3>& bounds,
-		const KVector::vec3& pos, const KVector::vec3& direction) {
+	void ShadowMap::bindDirectionLight(const std::vector<KVector::vec3>& bounds,
+		const KVector::vec3& direction, const KVector::vec3& pos) {
 		using namespace KVector;
 		using namespace KMatrix;
 
@@ -66,8 +66,7 @@ namespace KEngines { namespace KMaterial {
 		}
 
 		rot = KFunction::rotate(BackVector.getAngle(direction),
-			vec3::cross(BackVector, direction)).toMat3();
-		rot.transpose();
+			vec3::cross(BackVector, direction)).toMat3().transpose();
 
 		proj = mat4(rot, rot * -pos);
 		Kfloat x_min = FLT_MAX, y_min = FLT_MAX, z_min = FLT_MAX;
@@ -85,6 +84,29 @@ namespace KEngines { namespace KMaterial {
 		}
 
 		proj = KFunction::ortho(x_min, x_max, y_min, y_max, z_min, z_max) * proj;
+
+		shadow_shader->bind();
+		shadow_shader->bindUniformMat4f(U_LIGHT_MATRIX.c_str(), proj);
+	}
+
+	void ShadowMap::bindSpotLight(const KVector::vec3& direction,
+		const KVector::vec3& pos, Kfloat z_near /* = 1.f */, Kfloat z_far /* = 100.f */) {
+		using namespace KVector;
+		using namespace KMatrix;
+
+		mat3 rot(vec3(1.f, 1.f, -1.f));
+		if (direction == vec3(0.f)) {
+			Log::debug("Direction is zero, use BackVector instead.");
+		}
+		else if (direction == ForwardVector) {
+			rot[2][2] = 1.f;
+		}
+
+		rot = KFunction::rotate(BackVector.getAngle(direction),
+			vec3::cross(BackVector, direction)).toMat3().transpose();
+
+		proj = KFunction::perspective(90.f, (Kfloat)t_size.x / (Kfloat)t_size.y, z_near, z_far);
+		proj *= mat4(rot, rot * -pos);
 
 		shadow_shader->bind();
 		shadow_shader->bindUniformMat4f(U_LIGHT_MATRIX.c_str(), proj);

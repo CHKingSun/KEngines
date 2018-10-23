@@ -2,7 +2,7 @@
 #include "Shader.h"
 #include "../math/vector/vec_default.h"
 #include "../camera/FirstCamera.h"
-#include "../light/DirectionLight.h"
+#include "../light/SpotLight.h"
 #include "../material/CubeTexture.h"
 #include "../material/ShadowMap.h"
 #include "../object/Group.h"
@@ -20,7 +20,8 @@ namespace KEngines { namespace KRenderer {
 
 		shadow_map = new KMaterial::ShadowMap(1920, 1080);
 
-		light = new KLight::DirectionLight(vec3(0.f, -1.f, -1.f));
+		light = new KLight::SpotLight(vec3(0.f, 20.f, 10.f), vec3(0.f, -1.f, -1.f));
+		light->intensity = 3.f;
 
 		cube_map = new KMaterial::CubeTexture({
 			IMAGE_PATH + "darkskies/darkskies_rt.png",
@@ -54,9 +55,9 @@ namespace KEngines { namespace KRenderer {
 
 	void FirstViewRenderer::exec() {
 		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LEQUAL);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glDepthFunc(GL_LEQUAL);
 
 		auto consolas_font = new KObject::Font(RES_PATH + "fonts/Consolas.ttf", 24.f);
 		auto kai_font = new KObject::Font(RES_PATH + "fonts/STXINGKAI.TTF", 24.f);
@@ -68,37 +69,28 @@ namespace KEngines { namespace KRenderer {
 		camera->bindUniform(shader);
 		light->bindUniform(shader);
 
-		shadow_map->bindLight(
-		{
-			vec3(-9.f, -9.f,  9.f), vec3( 9.f, -9.f,  9.f),
-			vec3( 9.f,  9.f,  9.f), vec3(-9.f,  9.f,  9.f),
-			vec3(-9.f, -9.f, -9.f), vec3( 9.f, -9.f, -9.f),
-			vec3( 9.f,  9.f, -9.f), vec3(-9.f,  9.f, -9.f)
-		},
-		ZeroVector, light->getDirection());
-		shadow_map->renderShadow(objects->getObject(1), w_size);
-		shadow_map->bindShadowTexture(shader);
+		//shadow_map->bindSpotLight(light->getDirection(), light->getPosition());
+		//shadow_map->renderShadow(objects->getObject(1), w_size);
+		//shadow_map->bindShadowTexture(shader);
 
-		Kfloat depth = -1.f;
-		Kfloat per_depth = 0.1f;
+		Kfloat depth = 0.f;
+		Kfloat per_depth = 0.0001f;
 		Kfloat last_time = window->getCurrentTime();
+
+		Kfloat z_near = 5.f;
+		Kfloat per_near = 0.05f;
 
 		const std::wstring frame_display(L"Frame: ");
 		while (!window->closed()) {
 			window->clear();
 
-			light->rotate(quaternion(1.f, vec3(0.f, 1.f, 0.f)));
-			light->bindDirection(shader);
-			shadow_map->bindLight(
-			{
-				vec3(-9.f, -9.f,  9.f), vec3(9.f, -9.f,  9.f),
-				vec3(9.f,  9.f,  9.f), vec3(-9.f,  9.f,  9.f),
-				vec3(-9.f, -9.f, -9.f), vec3(9.f, -9.f, -9.f),
-				vec3(9.f,  9.f, -9.f), vec3(-9.f,  9.f, -9.f)
-			},
-				ZeroVector, light->getDirection());
-			shadow_map->renderShadow(objects->getObject(1), w_size);
-			shadow_map->bindShadowTexture(shader);
+			if (z_near < 5.f || z_near > 13.f) per_near = -per_near;
+			z_near += per_near;
+			//light->rotate(quaternion(3.f, UpVector));
+			//light->bindDirection(shader);
+			//shadow_map->bindSpotLight(light->getDirection(), light->getPosition(), z_near, 24.f);
+			//shadow_map->renderShadow(objects->getObject(1), w_size);
+			//shadow_map->bindShadowTexture(shader);
 			objects->render(shader);
 
 			cube_map->render();
@@ -114,10 +106,10 @@ namespace KEngines { namespace KRenderer {
 			kai_font->renderText(L"¤³¤ó¤Ë¤Á¤Ï£¬ÊÀ½ç£¡", vec3(0.17f, 0.57f, 0.69f), 300, 150);
 			kai_font->renderText(L"Hello, World!", vec3(0.17f, 0.57f, 0.69f), 360, 180);
 
-			consolas_font->renderText(L"Depth: " + std::to_wstring(depth), vec3(0.17f, 0.57f, 0.69f), 6, w_size.y - 90);
+			consolas_font->renderText(L"Near: " + std::to_wstring(z_near), vec3(0.17f, 0.57f, 0.69f), 6, w_size.y - 90);
 			if (window->getCurrentTime() - last_time >= 0.1f) {
 				depth += per_depth;
-				if (depth >= 2.f || depth <= -1.f) per_depth = -per_depth;
+				if (depth >= 0.008f || depth <= 0.f) per_depth = -per_depth;
 				shader->bind();
 				shader->bindUniform1f("u_depth", depth);
 				last_time = window->getCurrentTime();
@@ -152,7 +144,7 @@ namespace KEngines { namespace KRenderer {
 	}
 
 	void FirstViewRenderer::move()const {
-		static const vec3 speed = vec3(1.f);
+		static const vec3 speed = vec3(0.1f);
 
 		bool moved = false;
 		if (keys[GLFW_KEY_W] || keys[GLFW_KEY_UP]) {

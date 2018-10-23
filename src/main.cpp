@@ -123,18 +123,19 @@ int main() {
 
 	auto renderer = new FirstViewRenderer("KEngines");
 
-	auto material = new Material(DARKGREY, GREY, GREY, 20.f);
-	material->addTexture(new Texture(IMAGE_PATH + "stone.png", DIFFUSE, 3));
+	auto material = new Material(GREY, GREY, GREY, 20.f);
+	material->addTexture(new Texture(IMAGE_PATH + "stone.png", AMBIENT));
+	material->addTexture(new Texture(IMAGE_PATH + "stone.png", DIFFUSE));
 	auto plane = new Plane(30.f, 30.f, 12, 12);
 	plane->rotate(quaternion(90.f, vec3(-1.f, 0.f, 0.f)));
 	plane->setMaterial(material);
 
 	//auto model = new Model(MODEL_PATH + "SK_Mannequin.FBX");
 	//model->rotate(quaternion(-90.f, vec3(1.f, 0.f, 0.f)));
-	auto model = new Model(MODEL_PATH + "nano/nanosuit2.obj");
+	auto model = new Model(MODEL_PATH + "Alonne/Alonne.obj");
 	//auto model = new Model(MODEL_PATH + "cellrain.obj");
 	//auto model = new Model(MODEL_PATH + "pokeball.obj");
-	model->scale(vec3(0.8f));
+	model->scale(vec3(3.6f));
 
 	renderer->addObject(plane);
 	renderer->addObject(model);

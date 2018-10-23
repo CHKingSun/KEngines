@@ -1,0 +1,88 @@
+# Material count: 12
+
+newmtl BD_6800_M_1
+Kd 0.8 0.8 0.8
+Ks 0.48 0.48 0.48
+map_Kd ./tex/BD_6800_M_1_d.png
+map_Ks ./tex/BD_6800_M_1_s.png
+map_Bump ./tex/BD_6800_M_1_n.png
+
+newmtl BD_6800_M_2
+Kd 0.8 0.8 0.8
+Ks 0.48 0.48 0.48
+map_Kd ./tex/BD_6800_M_2_d.png
+map_Ks ./tex/BD_6800_M_2_s.png
+map_Bump ./tex/BD_6800_M_2_n.png
+
+newmtl BD_6800_M_1_twoside
+Kd 0.8 0.8 0.8
+Ks 0.48 0.48 0.48
+map_Kd ./tex/BD_6800_M_1_d.png
+map_Ks ./tex/BD_6800_M_1_s.png
+map_Bump ./tex/BD_6800_M_1_n.png
+
+newmtl BD_6800_M_2_twoside_LV5
+Kd 0.8 0.8 0.8
+Ks 0.48 0.48 0.48
+map_Kd ./tex/BD_6800_M_2_d.png
+map_Ks ./tex/BD_6800_M_2_s.png
+map_Bump ./tex/BD_6800_M_2_n.png
+map_Bump dummy128.png
+
+newmtl BD_6800_M_1_Alp_1bit_twoside
+Kd 0.8 0.8 0.8
+Ks 0.48 0.48 0.48
+map_Kd ./tex/BD_6800_M_1_d.png
+map_Ks ./tex/BD_6800_M_1_s.png
+map_Bump ./tex/BD_6800_M_1_n.png
+
+newmtl BD_6800_M_1_Alp_1bit_twoside_Cloth
+Kd 0.8 0.8 0.8
+Ks 0.48 0.48 0.48
+map_Kd ./tex/BD_6800_M_1_d.png
+map_Ks ./tex/BD_6800_M_1_s.png
+map_Bump ./tex/BD_6800_M_1_n.png
+
+newmtl BD_6800_M_2_twoside_LV5
+Kd 0.8 0.8 0.8
+Ks 0.48 0.48 0.48
+map_Kd ./tex/BD_6800_M_2_d.png
+map_Ks ./tex/BD_6800_M_2_s.png
+map_Bump ./tex/BD_6800_M_2_n.png
+
+newmtl LG_6800_M
+Kd 0.8 0.8 0.8
+Ks 0.48 0.48 0.48
+map_Kd ./tex/LG_AM_HD_c6800_d.png
+map_Ks ./tex/LG_AM_HD_c6800_s.png
+map_Bump ./tex/LG_AM_HD_c6800_n.png
+map_Bump dummy128.png
+
+newmtl LG_6800_M_twoside
+Kd 0.8 0.8 0.8
+Ks 0.48 0.48 0.48
+map_Kd ./tex/LG_AM_HD_c6800_d.png
+map_Ks ./tex/LG_AM_HD_c6800_s.png
+map_Bump ./tex/LG_AM_HD_c6800_n.png
+
+newmtl LG_6800_M_Alp_1bit_twoside
+Kd 0.8 0.8 0.8
+Ks 0.48 0.48 0.48
+map_Kd ./tex/LG_AM_HD_c6800_d.png
+map_Ks ./tex/LG_AM_HD_c6800_s.png
+map_Bump ./tex/LG_AM_HD_c6800_n.png
+
+newmtl WP_1790_M
+Kd 0.8 0.8 0.8
+Ks 0.48 0.48 0.48
+map_Kd ./tex/WP_1790_M_d.png
+map_Ks ./tex/WP_1790_M_s.png
+map_Bump ./tex/WP_1790_M_n.png
+
+newmtl WP_1790_M_Alp_1bit_twoside
+Kd 0.8 0.8 0.8
+Ks 0.48 0.48 0.48
+map_Kd ./tex/WP_1790_M_d.png
+map_Ks ./tex/WP_1790_M_s.png
+map_Bump ./tex/WP_1790_M_n.png
+

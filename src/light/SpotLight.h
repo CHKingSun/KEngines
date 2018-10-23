@@ -36,7 +36,7 @@ namespace KEngines {
 			SpotLight(const vec3& pos = vec3(), const vec3& direction = vec3(0.f, 0.f, -1.f),
 				const vec3& ambient = GREY, const vec3& diffuse = GREY,
 				const vec3& specular = GREY, Kfloat intensity = 1.f,
-				Kfloat kq = 0.032f, Kfloat kl = 0.09f, Kfloat kc = 1.f,
+				Kfloat kq = 0.0075f, Kfloat kl = 0.045f, Kfloat kc = 1.f,
 				Kfloat inner_cutoff = 0.95f, Kfloat outer_cutoff = 0.87f, Kuint bind_id = 0) :
 				BasicLight(ambient, intensity, SPOT, bind_id, "u_sLights[i].enable",
 					"u_sLights[i].intensity", "u_sLights[i].ambient"),
@@ -47,6 +47,7 @@ namespace KEngines {
 				u_kq("u_sLights[i].kq"), u_kl("u_sLights[i].kl"), u_kc("u_sLights[i].kc"),
 				u_inner_cutoff("u_sLights[i].inner_cutoff"),
 				u_outer_cutoff("u_sLights[i].outer_cutoff") {
+				this->direction.normalize();
 				setBindId(bind_id);
 			}
 			~SpotLight() = default;
@@ -62,9 +63,13 @@ namespace KEngines {
 				}
 
 				this->direction = direction;
+				this->direction.normalize();
 			}
 
 			void rotate(const KMatrix::quaternion& q) { direction = q * direction; }
+
+			const vec3& getPosition()const { return position; }
+			const vec3& getDirection()const { return direction; }
 
 			void setBindId(Kuint bind_id)override;
 

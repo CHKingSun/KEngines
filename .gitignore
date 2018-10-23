@@ -89,7 +89,7 @@ StyleCopReport.xml
 
 # Add Model obj files
 !/res/models/*.obj
-!/res/models/*/*obj
+!/res/models/*/*.obj
 
 # Chutzpah Test files
 _Chutzpah*

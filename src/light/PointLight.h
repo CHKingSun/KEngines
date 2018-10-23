@@ -28,7 +28,7 @@ namespace KEngines {
 		public:
 			PointLight(const vec3& pos = vec3(), const vec3& ambient = GREY,
 				const vec3& diffuse = GREY, const vec3& specular = GREY,
-				Kfloat intensity = 1.f, Kfloat kq = 0.032f, Kfloat kl = 0.09f,
+				Kfloat intensity = 1.f, Kfloat kq = 0.0075f, Kfloat kl = 0.045f,
 				Kfloat kc = 1.f, Kuint bind_id = 0) :
 				BasicLight(ambient, intensity, POINT, bind_id, "u_pLights[i].enable",
 					"u_pLights[i].intensity", "u_pLights[i].ambient"),

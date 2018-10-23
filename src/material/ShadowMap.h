@@ -9,7 +9,7 @@
 #include <vector>
 
 #include "../KHeader.h"
-#include "../math/vector/vec3.h"
+#include "../math/vector/vec_default.h"
 #include "../math/matrix/mat4.h"
 
 namespace KEngines { 
@@ -44,8 +44,11 @@ namespace KEngines { namespace KMaterial {
 			return ret;
 		}
 
-		void bindLight(const std::vector<KVector::vec3>& bounds,
-			const KVector::vec3& pos, const KVector::vec3& direction);
+		void bindDirectionLight(const std::vector<KVector::vec3>& bounds,
+			const KVector::vec3& direction, const KVector::vec3& pos = KVector::ZeroVector);
+
+		void bindSpotLight(const KVector::vec3& direction, const KVector::vec3& pos,
+			Kfloat z_near = 1.f, Kfloat z_far = 100.f);
 
 		void renderShadow(const KObject::Object3D* object, const KVector::ivec2& viewport)const;
 
