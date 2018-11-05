@@ -81,6 +81,17 @@ namespace KEngines { namespace KRenderer {
 		Kfloat per_near = 0.05f;
 
 		const std::wstring frame_display(L"Frame: ");
+		consolas_font->addRenderText(frame_display + std::to_wstring(window->getCurrentFrame()),
+			vec3(0.17f, 0.57f, 0.69f), vec2(6, 6));
+		consolas_font->addRenderText(L"Press 'ESC' to display mouse.", vec3(0.17f, 0.57f, 0.69f), vec2(6, w_size.y - 30));
+		consolas_font->addRenderText(L"Press Ctrl + Z to exit.", vec3(0.17f, 0.57f, 0.69f), vec2(6, w_size.y - 60));
+
+		kai_font->addRenderText(L"你好，世界！", vec3(0.17f, 0.57f, 0.69f), vec2(240, 120));
+		kai_font->addRenderText(L"こんにちは，世界！", vec3(0.17f, 0.57f, 0.69f), vec2(300, 150));
+		kai_font->addRenderText(L"Hello, World!", vec3(0.17f, 0.57f, 0.69f), vec2(360, 180));
+
+		consolas_font->addRenderText(L"Near: " + std::to_wstring(z_near), vec3(0.17f, 0.57f, 0.69f), vec2(6, w_size.y - 90));
+
 		while (!window->closed()) {
 			window->clear();
 
@@ -97,16 +108,10 @@ namespace KEngines { namespace KRenderer {
 
 			move();
 
-			consolas_font->renderText(frame_display + std::to_wstring(window->getCurrentFrame()),
-				vec3(0.17f, 0.57f, 0.69f), 6, 6);
-			consolas_font->renderText(L"Press 'ESC' to display mouse.", vec3(0.17f, 0.57f, 0.69f), 6, w_size.y - 30);
-			consolas_font->renderText(L"Press Ctrl + Z to exit.", vec3(0.17f, 0.57f, 0.69f), 6, w_size.y - 60);
+			consolas_font->changeRenderText(0, frame_display + std::to_wstring(window->getCurrentFrame()));
+			consolas_font->changeRenderText(6, L"Near: " + std::to_wstring(z_near));
+			consolas_font->render();
 
-			kai_font->renderText(L"你好，世界！", vec3(0.17f, 0.57f, 0.69f), 240, 120);
-			kai_font->renderText(L"こんにちは，世界！", vec3(0.17f, 0.57f, 0.69f), 300, 150);
-			kai_font->renderText(L"Hello, World!", vec3(0.17f, 0.57f, 0.69f), 360, 180);
-
-			consolas_font->renderText(L"Near: " + std::to_wstring(z_near), vec3(0.17f, 0.57f, 0.69f), 6, w_size.y - 90);
 			if (window->getCurrentTime() - last_time >= 0.1f) {
 				depth += per_depth;
 				if (depth >= 0.008f || depth <= 0.f) per_depth = -per_depth;

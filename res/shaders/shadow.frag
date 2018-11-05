@@ -187,7 +187,7 @@ void main() {
 
     float shadow_depth = dealShadow(u_shadow_map, fs_in.v_light_world_pos, fs_in.v_N, u_dLights[0].direction);
     // float shadow_depth = 1.f;
-    if(m_diffuse.a == 0.f) discard;
+    // if(m_diffuse.a <= 0.096f) discard;
     frag_color = m_ambient * vec4(l_ambient, 1.f)
                + m_diffuse *  vec4(l_diffuse * shadow_depth, 1.f);
                + m_specular * vec4(l_specular * shadow_depth, 1.f);

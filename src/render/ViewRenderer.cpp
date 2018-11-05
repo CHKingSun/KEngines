@@ -75,6 +75,8 @@ namespace KEngines { namespace KRenderer {
 		e_light->bindUniform(shader);
 
 		const std::wstring frame_display(L"Frame: ");
+		consolas_font->addRenderText(frame_display + std::to_wstring(window->getCurrentFrame()),
+			vec3(0.17f, 0.57f, 0.69f), vec2(6, 6));
 		while (!window->closed()) {
 			window->clear();
 
@@ -85,12 +87,8 @@ namespace KEngines { namespace KRenderer {
 
 			cube_map->render();
 
-			consolas_font->renderText(frame_display + std::to_wstring(window->getCurrentFrame()),
-				vec3(0.17f, 0.57f, 0.69f), 6, 6);
-
-			kai_font->renderText(L"��ã����磡", vec3(0.17f, 0.57f, 0.69f), 240, 120);
-			kai_font->renderText(L"����ˤ��ϣ����磡", vec3(0.17f, 0.57f, 0.69f), 300, 150);
-			kai_font->renderText(L"Hello, World!", vec3(0.17f, 0.57f, 0.69f), 360, 180);
+			consolas_font->changeRenderText(0, frame_display + std::to_wstring(window->getCurrentFrame()));
+			consolas_font->render();
 
 			window->update();
 		}

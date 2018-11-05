@@ -24,7 +24,7 @@ namespace KEngines { namespace KRenderer {
 		camera = new KCamera::FirstCamera(60.f, Kfloat(swidth) / Kfloat(sheight), 0.1f, 1000.f, vec3(0.f, 9.f, 20.f));
 		camera->rotateView(quaternion(180.f, UpVector));
 
-		default_camera = new KCamera::FirstCamera(vec3(0.f, 10.f, 0.f), ZeroVector, UpVector);
+		default_camera = new KCamera::FirstCamera(vec3(0.f, 10.f, 0.f), ZeroVector, BackVector);
 
 		light = new KLight::DirectionLight(vec3(-3.f, -3.f, -1.f));
 
@@ -88,6 +88,14 @@ namespace KEngines { namespace KRenderer {
 		Kfloat last_time = window->getCurrentTime();
 
 		const std::wstring frame_display(L"Frame: ");
+
+		consolas_font->addRenderText(frame_display + std::to_wstring(window->getCurrentFrame()),
+			vec3(0.17f, 0.57f, 0.69f), vec2(6.f, 6.f));
+		consolas_font->addRenderText(L"Press 'ESC' to display mouse.", vec3(0.17f, 0.57f, 0.69f), vec2(6, w_size.y - 30));
+		consolas_font->addRenderText(L"Press Ctrl + Z to exit.", vec3(0.17f, 0.57f, 0.69f), vec2(6, w_size.y - 60));
+
+		consolas_font->addRenderText(L"Depth: " + std::to_wstring(depth), vec3(0.17f, 0.57f, 0.69f), vec2(6, w_size.y - 90));
+
 		while (!window->closed()) {
 			window->clear();
 
@@ -109,12 +117,10 @@ namespace KEngines { namespace KRenderer {
  			cube_map->render();
  			glCullFace(GL_BACK);
 
-			consolas_font->renderText(frame_display + std::to_wstring(window->getCurrentFrame()),
-				vec3(0.17f, 0.57f, 0.69f), 6, 6);
-			consolas_font->renderText(L"Press 'ESC' to display mouse.", vec3(0.17f, 0.57f, 0.69f), 6, w_size.y - 30);
-			consolas_font->renderText(L"Press Ctrl + Z to exit.", vec3(0.17f, 0.57f, 0.69f), 6, w_size.y - 60);
+			consolas_font->changeRenderText(0, frame_display + std::to_wstring(window->getCurrentFrame()));
+			consolas_font->changeRenderText(3, L"Depth: " + std::to_wstring(depth));
+			consolas_font->render();
 
-			consolas_font->renderText(L"Depth: " + std::to_wstring(depth), vec3(0.17f, 0.57f, 0.69f), 6, w_size.y - 90);
 			if (window->getCurrentTime() - last_time >= 0.1f) {
 				depth += per_depth;
 				if (depth >= 0.008f || depth <= 0.f) per_depth = -per_depth;

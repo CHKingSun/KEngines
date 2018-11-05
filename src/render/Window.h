@@ -74,7 +74,7 @@ namespace KEngines { namespace KRenderer {
 			}
 #endif
 
-			glClearColor(0.17f, 0.17f, 0.17f, 1.0f);
+			setClearColor();
 			glfwSwapInterval(1);
 
 #ifdef IMGUI_ENABLE
@@ -133,6 +133,7 @@ namespace KEngines { namespace KRenderer {
 
 		void setClearColor(const KVector::vec4& color = KVector::vec4(0.17f, 0.17f, 0.17f, 1.0f)) {
 			glClearColor(color.r, color.g, color.b, color.a);
+			//glClearColor(1.f, 0.f, 1.f, 0.f); //test
 		}
 
 		void update() {

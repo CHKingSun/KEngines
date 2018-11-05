@@ -43,6 +43,17 @@ namespace KEngines { namespace KObject {
 		ivec2 offset;
 	};
 
+	struct RenderText {
+		std::wstring text;
+		vec3 color;
+		vec2 position;
+		Kfloat scale;
+
+		RenderText(const std::wstring& text, const vec3& color,
+			const vec2& pos, Kfloat scale = 1.f) :
+			text(text), color(color), position(pos), scale(scale) {}
+	};
+
 	//Maybe later it will be inherited form Object3D
 	//You should set the right font(which has the charater)
 	//if you want to display the right charater
@@ -55,31 +66,38 @@ namespace KEngines { namespace KObject {
 		std::string font_name;
 		FILE* font_file;
 		Ksize file_size;
-		Kfloat scale;
-		std::unordered_map<Kint, Character>* characters;
+		Kfloat font_scale;
+
+		std::unordered_map<Kint, Character> characters;
+		std::vector<RenderText> render_texts;
 
 		KBuffer::VertexArray* vao;
 		KBuffer::VertexBuffer* vbo;
 
-		void addCharacter(const stbtt_fontinfo& font_info, Kint c)const;
-		void loadBasicCharacters()const;
+		void addCharacter(const stbtt_fontinfo& font_info, Kint c);
+		void loadBasicCharacters();
 
 	public:
-		Font(const std::string& font_name = default_font_name, Kfloat scale = 32.f);
+		Font(const std::string& font_name = default_font_name, Kfloat font_scale = 32.f);
 		~Font();
 
-		void loadCharacter(Kint c)const;
-		void loadText(const std::wstring& text)const;
+		void loadCharacter(Kint c);
+		void loadText(const std::wstring& text);
 
-		//This function will not check whether the character is in characters,
+		//This function will check whether the character is in characters,
 		//Remember to enable blend before render.
-		void renderText(const std::wstring& text, const vec3& color,
-			Kfloat x, Kfloat y, Kfloat scale = 1.f)const;
+		void addRenderText(const std::wstring& text, const vec3& color,
+			const vec2& pos, Kfloat scale = 1.f);
 
-		//This function will load the character if the it is not in characters,
-		//Remember to enable blend before render.
-		void renderTextWithCheck(const std::wstring& text, const vec3& color,
-			Kfloat x, Kfloat y, Kfloat scale = 1.f)const;
+		bool removeRenderText(const std::wstring& text);
+
+		bool removeRenderText(Kuint index);
+
+		bool changeRenderText(const std::wstring& old_text, const std::wstring& new_text);
+
+		bool changeRenderText(Kuint old_index, const std::wstring& new_text);
+
+		void render()const;
 
 		inline static void setViewport(const ivec2& v) {
 			if (font_count != 0) {

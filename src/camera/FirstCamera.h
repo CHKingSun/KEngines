@@ -18,9 +18,9 @@ namespace KEngines { namespace KCamera {
 		void updateMatrix()override;
 
 	public:
-		explicit FirstCamera(const vec3& pos = vec3(), Kfloat angle = 30.f) :
+		explicit FirstCamera(const vec3& pos = vec3(), Kfloat angle = 15.f) :
 			CameraInterface(pos), restrict_angle(angle) { updateMatrix(); }
-		FirstCamera(const vec3& eye, const vec3& center, const vec3& up, Kfloat angle = 30.f) :
+		FirstCamera(const vec3& eye, const vec3& center, const vec3& up, Kfloat angle = 15.f) :
 			CameraInterface(eye, center, up), restrict_angle(angle) { updateMatrix(); }
 		FirstCamera(Kfloat fovy, Kfloat aspect, Kfloat zNear, Kfloat zFar,
 			const vec3 &pos = vec3(), Kfloat angle = 15.f) :

@@ -7,6 +7,8 @@
 
 #include "Window.h"
 
+#include <functional>
+
 namespace KEngines { namespace KRenderer {
 	class Renderer {
 		friend void window_size_callback(GLFWwindow* window, int width, int height);
