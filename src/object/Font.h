@@ -7,8 +7,6 @@
 
 #include <GL/glew.h>
 #include <unordered_map>
-#include <memory>
-#include <cstdio>
 
 #ifndef STB_TRUETYPE_IMPLEMENTATION
 #define STB_TRUETYPE_IMPLEMENTATION
@@ -18,14 +16,7 @@
 
 #include "../KHeader.h"
 #include "../Log.h"
-#include "../render/Shader.h"
-
-namespace KEngines {
-	namespace KBuffer {
-		class VertexArray;
-		class VertexBuffer;
-	}
-}
+#include "../math/vector/vec2.h"
 
 namespace KEngines { namespace KObject {
 	using namespace KEngines::KVector;
@@ -43,68 +34,44 @@ namespace KEngines { namespace KObject {
 		ivec2 offset;
 	};
 
-	struct RenderText {
-		std::wstring text;
-		vec3 color;
-		vec2 position;
-		Kfloat scale;
-
-		RenderText(const std::wstring& text, const vec3& color,
-			const vec2& pos, Kfloat scale = 1.f) :
-			text(text), color(color), position(pos), scale(scale) {}
-	};
-
 	//Maybe later it will be inherited form Object3D
 	//You should set the right font(which has the charater)
 	//if you want to display the right charater
 	class Font {
 	private:
-		static const std::string default_font_name;
-		static KRenderer::Shader* shader;
-		static Kuint font_count;
-
 		std::string font_name;
+		std::string file_name;
 		FILE* font_file;
 		Ksize file_size;
 		Kfloat font_scale;
 
 		std::unordered_map<Kint, Character> characters;
-		std::vector<RenderText> render_texts;
-
-		KBuffer::VertexArray* vao;
-		KBuffer::VertexBuffer* vbo;
 
 		void addCharacter(const stbtt_fontinfo& font_info, Kint c);
 		void loadBasicCharacters();
 
 	public:
-		Font(const std::string& font_name = default_font_name, Kfloat font_scale = 32.f);
+		static const std::string default_font_name;
+		static const std::string default_file_name;
+
+	public:
+		Font(const std::string& font_name = default_font_name,
+			const std::string& file_name = default_file_name, Kfloat font_scale = 30.f);
+		Font(const std::string& file_name, Kfloat font_scale = 30.f);
 		~Font();
+
+		Kboolean operator==(const Font& font)const { return this->font_name == font.font_name; }
+
+		// If character is not exist, then the function will add it.
+		// So the function is not const but return data is const.
+		const Character& operator[](Kint c);
+		const Character& at(Kint c) { return(*this)[c]; }
+
+		const std::string& getFontName()const { return font_name; }
+		const Kfloat& getFontScale()const { return font_scale; }
 
 		void loadCharacter(Kint c);
 		void loadText(const std::wstring& text);
-
-		//This function will check whether the character is in characters,
-		//Remember to enable blend before render.
-		void addRenderText(const std::wstring& text, const vec3& color,
-			const vec2& pos, Kfloat scale = 1.f);
-
-		bool removeRenderText(const std::wstring& text);
-
-		bool removeRenderText(Kuint index);
-
-		bool changeRenderText(const std::wstring& old_text, const std::wstring& new_text);
-
-		bool changeRenderText(Kuint old_index, const std::wstring& new_text);
-
-		void render()const;
-
-		inline static void setViewport(const ivec2& v) {
-			if (font_count != 0) {
-				shader->bind();
-				shader->bindUniform2i("s_size", v);
-			}
-		}
 	};
 } }
 

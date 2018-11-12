@@ -7,9 +7,9 @@
 
 #include "Window.h"
 
-#include <functional>
-
 namespace KEngines { namespace KRenderer {
+	using namespace KVector;
+
 	class Renderer {
 		friend void window_size_callback(GLFWwindow* window, int width, int height);
 		friend void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);

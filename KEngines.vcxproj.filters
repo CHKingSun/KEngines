@@ -21,9 +21,6 @@
     <ClCompile Include="src\render\Shader.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\object\Font.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="src\buffer\FrameBuffer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -96,6 +93,15 @@
     <ClCompile Include="src\material\ShadowMap.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\object\Font.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\object\Text.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\object\TextManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\KHeader.h">
@@ -135,9 +141,6 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="src\buffer\VertexArray.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="src\object\Font.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="src\util\StringUtil.h">
@@ -222,6 +225,18 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="src\material\ShadowMap.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\object\EventCallback.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\object\Text.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\object\Font.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\object\TextManager.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

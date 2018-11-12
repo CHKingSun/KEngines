@@ -30,12 +30,12 @@ namespace KEngines { namespace KObject {
 		indices = new std::vector<Kuint>();
 		indices->reserve(count);
 
-		Kfloat per_xangle = PI * 2.0f / aslices;
-		Kfloat per_yangle = PI / (rslices * 2.0f);
-		Kfloat pertx = 1.0f / aslices;
+		Kfloat per_xangle = PI * 2.f / aslices;
+		Kfloat per_yangle = PI / (rslices * 2.f);
+		Kfloat pertx = 1.f / aslices;
 		Kfloat perty = 0.5f / rslices;
 		Kfloat yangle = PI - per_yangle; //form bottom to top(except two poles).
-		Kfloat ty = 1.0f - perty;
+		Kfloat ty = 1.f - perty;
 		for (int i = 0; i < ((rslices - 1) << 1); ++i, yangle -= per_yangle, ty -= perty) {
 			Kfloat y = radius * cos(yangle);
 			Kfloat r = radius * sin(yangle);
@@ -43,13 +43,13 @@ namespace KEngines { namespace KObject {
 			Kfloat tx = 0;
 			for (int j = 0; j <= aslices; ++j, xangle += per_xangle, tx += pertx) {
 				vertices->emplace_back(cos(xangle) * r, y, sin(xangle) * r);
-				tex_coords->emplace_back(1.0 - tx, ty);
+				tex_coords->emplace_back(1.f - tx, ty);
 			}
 		}
-		vertices->emplace_back(0, -radius, 0); //bottom pole [v_count - 2]
-		tex_coords->emplace_back(1, 1);
-		vertices->emplace_back(0, radius, 0); //top pole [v_count - 1]
-		tex_coords->emplace_back(0, 0);
+		vertices->emplace_back(0.f, -radius, 0.f); //bottom pole [v_count - 2]
+		tex_coords->emplace_back(1.f, 1.f);
+		vertices->emplace_back(0.f, radius, 0.f); //top pole [v_count - 1]
+		tex_coords->emplace_back(0.f, 0.f);
 
 		int rt = aslices + 1;
 		indices->emplace_back(v_count - 2);

@@ -11,8 +11,6 @@
 #include "../KHeader.h"
 #include "../Log.h"
 #include "../math/vector/vec4.h"
-#include "../object/Font.h"
-#include "../buffer/FrameBuffer.h"
 
 #ifdef IMGUI_ENABLE
 #include <imgui.h>
@@ -117,8 +115,8 @@ namespace KEngines { namespace KRenderer {
 		void resize(Kint w, Kint h) {
 			//Log::info("Window resized with ", w, ", ", h);
 			glViewport(0, 0, w, h);
-			KObject::Font::setViewport(ivec2(w, h));
-			KBuffer::FrameBuffer::setViewport(ivec2(w, h));
+			//KObject::Font::setViewport(ivec2(w, h));
+			//KBuffer::FrameBuffer::setViewport(ivec2(w, h));
 		}
 
 		Kboolean closed()const { return glfwWindowShouldClose(window) == GLFW_TRUE; }

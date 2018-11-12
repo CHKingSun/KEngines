@@ -10,6 +10,9 @@
 #include "../object/Sphere.h"
 #include "../object/Model.h"
 
+#include "../object/TextManager.h"
+#include "../object/Text.h"
+
 namespace KEngines { namespace KRenderer {
 	MazeRenderer::MazeRenderer(const std::string& title, Ksize swidth /* = 1000 */, Ksize sheight /* = 700 */) :
 		Renderer(title, swidth, sheight), shader(nullptr), shadow_map(nullptr), camera(nullptr),
@@ -67,8 +70,11 @@ namespace KEngines { namespace KRenderer {
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
 
-		auto consolas_font = new KObject::Font(RES_PATH + "fonts/Consolas.ttf", 24.f);
-		KObject::Font::setViewport(w_size);
+		using namespace KObject;
+
+		TextManager::initial();
+		TextManager::setViewport(w_size);
+		TextManager::loadFont(RES_PATH + "fonts/Consolas.ttf", 24.f);
 
 		camera->bindUniform(shader);
 		light->bindUniform(shader);
@@ -88,13 +94,36 @@ namespace KEngines { namespace KRenderer {
 		Kfloat last_time = window->getCurrentTime();
 
 		const std::wstring frame_display(L"Frame: ");
+		const std::wstring mouse_display(L"Mouse: ");
 
-		consolas_font->addRenderText(frame_display + std::to_wstring(window->getCurrentFrame()),
-			vec3(0.17f, 0.57f, 0.69f), vec2(6.f, 6.f));
-		consolas_font->addRenderText(L"Press 'ESC' to display mouse.", vec3(0.17f, 0.57f, 0.69f), vec2(6, w_size.y - 30));
-		consolas_font->addRenderText(L"Press Ctrl + Z to exit.", vec3(0.17f, 0.57f, 0.69f), vec2(6, w_size.y - 60));
+		auto frame_text = TextManager::loadText(frame_display
+			+ std::to_wstring(window->getCurrentFrame()),
+			vec2(6.f, 6.f), vec3(0.17f, 0.57f, 0.69f));
+		TextManager::attachFontToText("Consolas", frame_text);
 
-		consolas_font->addRenderText(L"Depth: " + std::to_wstring(depth), vec3(0.17f, 0.57f, 0.69f), vec2(6, w_size.y - 90));
+		auto mouse_text = TextManager::loadText(mouse_display
+			+ std::to_wstring(mouse_pos.x) + L", "
+			+ std::to_wstring(mouse_pos.y),
+			vec2(6.f, 30.f), vec3(0.17f, 0.57f, 0.69f));
+		TextManager::attachFontToText("Consolas", mouse_text);
+		
+		TextManager::attachFontToText("Consolas",
+			TextManager::loadText(L"Press 'ESC' to display mouse.",
+			vec2(6, w_size.y - 30), vec3(0.17f, 0.57f, 0.69f)));
+
+		TextManager::attachFontToText("Consolas",
+			TextManager::loadText(L"Press Ctrl + Z to exit.",
+			vec2(6, w_size.y - 60), vec3(0.17f, 0.57f, 0.69f)));
+
+		TextManager::attachFontToText("Consolas",
+			TextManager::loadText(L"Click (30, 600) to close.",
+			vec2(6, w_size.y - 90), vec3(0.17f, 0.57f, 0.69f), 1.f,
+				[&](Text& t) -> void { window->closeWindow(); }
+		));
+
+		auto depth_text = TextManager::loadText(L"Depth: " + std::to_wstring(depth),
+			vec2(6, w_size.y - 120), vec3(0.17f, 0.57f, 0.69f));
+		TextManager::attachFontToText("Consolas", depth_text);
 
 		while (!window->closed()) {
 			window->clear();
@@ -117,9 +146,12 @@ namespace KEngines { namespace KRenderer {
  			cube_map->render();
  			glCullFace(GL_BACK);
 
-			consolas_font->changeRenderText(0, frame_display + std::to_wstring(window->getCurrentFrame()));
-			consolas_font->changeRenderText(3, L"Depth: " + std::to_wstring(depth));
-			consolas_font->render();
+			frame_text->setRenderText(frame_display + std::to_wstring(window->getCurrentFrame()));
+			mouse_text->setRenderText(mouse_display
+				+ std::to_wstring(mouse_pos.x) + L","
+				+ std::to_wstring(mouse_pos.y));
+			depth_text->setRenderText(L"Depth: " + std::to_wstring(depth));
+			TextManager::render();
 
 			if (window->getCurrentTime() - last_time >= 0.1f) {
 				depth += per_depth;
@@ -143,11 +175,13 @@ namespace KEngines { namespace KRenderer {
 			window->update();
 		}
 
-		delete consolas_font;
+		TextManager::destroy();
 	}
 
 	void MazeRenderer::resize(Kint w, Kint h) {
 		Renderer::resize(w, h);
+
+		KObject::TextManager::setViewport(ivec2(w, h));
 
 		if (w != 0 && h != 0) {
 			camera->setPerspectiveProjection(60.f, Kfloat(w) / Kfloat(h), 0.1, 1000.f);
@@ -158,6 +192,7 @@ namespace KEngines { namespace KRenderer {
 
 	void MazeRenderer::keyEvent(Kint key, Kint action) {
 		keys[key] = (action != GLFW_RELEASE);
+
 		if (keys[GLFW_KEY_ESCAPE]) {
 			hideMouse(false);
 		}
@@ -167,6 +202,8 @@ namespace KEngines { namespace KRenderer {
 		}
 
 		if (keys[GLFW_KEY_V]) camera_change = !camera_change;
+
+		KObject::TextManager::keyEvent(key, action);
 	}
 
 	void MazeRenderer::cursorEvent(Kdouble xpos, Kdouble ypos) {
@@ -180,6 +217,8 @@ namespace KEngines { namespace KRenderer {
 		}
 
 		Renderer::cursorEvent(xpos, ypos);
+
+		if(!mouse_hide) KObject::TextManager::cursorEvent(xpos, ypos);
 	}
 
 	void MazeRenderer::mouseEvent(Kint button, Kint action) {
@@ -188,6 +227,8 @@ namespace KEngines { namespace KRenderer {
 		if (window->focused() && mouse[GLFW_MOUSE_BUTTON_LEFT]) {
 			hideMouse(true);
 		}
+
+		KObject::TextManager::mouseEvent(button, action);
 	}
 
 	void MazeRenderer::move()const {

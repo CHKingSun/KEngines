@@ -63,20 +63,20 @@ namespace KEngines { namespace KRenderer {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		auto consolas_font = new KObject::Font(RES_PATH + "fonts/Consolas.ttf", 24.f);
-		auto kai_font = new KObject::Font(RES_PATH + "fonts/STXINGKAI.TTF", 24.f);
-		KObject::Font::setViewport(w_size);
+		//auto consolas_font = new KObject::Font(RES_PATH + "fonts/Consolas.ttf", 24.f);
+		//auto kai_font = new KObject::Font(RES_PATH + "fonts/STXINGKAI.TTF", 24.f);
+		//KObject::Font::setViewport(w_size);
 
-		kai_font->loadText(L"你好，世界！");
-		kai_font->loadText(L"こんにちは，世界！");
+		//kai_font->loadText(L"你好，世界！");
+		//kai_font->loadText(L"こんにちは，世界！");
 
 		camera->bindUniform(shader);
 		light->bindUniform(shader);
 		e_light->bindUniform(shader);
 
 		const std::wstring frame_display(L"Frame: ");
-		consolas_font->addRenderText(frame_display + std::to_wstring(window->getCurrentFrame()),
-			vec3(0.17f, 0.57f, 0.69f), vec2(6, 6));
+		//consolas_font->addRenderText(frame_display + std::to_wstring(window->getCurrentFrame()),
+		//	vec3(0.17f, 0.57f, 0.69f), vec2(6, 6));
 		while (!window->closed()) {
 			window->clear();
 
@@ -87,14 +87,14 @@ namespace KEngines { namespace KRenderer {
 
 			cube_map->render();
 
-			consolas_font->changeRenderText(0, frame_display + std::to_wstring(window->getCurrentFrame()));
-			consolas_font->render();
+			//consolas_font->changeRenderText(0, frame_display + std::to_wstring(window->getCurrentFrame()));
+			//consolas_font->render();
 
 			window->update();
 		}
 
-		delete consolas_font;
-		delete kai_font;
+		//delete consolas_font;
+		//delete kai_font;
 	}
 
 	void ViewRenderer::resize(Kint w, Kint h) {
